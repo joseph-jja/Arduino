@@ -63,7 +63,6 @@ void writeString(long value, char type, long writeDot)
   int i;
   int len;
   char data[64];
-  char buf[10];
 
   memset(&data, '\0', sizeof(data));
   //sprintf(data, "%d", value);
