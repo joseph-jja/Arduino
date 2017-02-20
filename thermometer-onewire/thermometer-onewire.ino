@@ -1,8 +1,3 @@
-// Connect + pins to 3-5V
-// Connect GND to ground
-// Connect Data to #0
-// Connect Clock to #2
-
 // OneWire - Version: Latest 
 #include <OneWire.h>
 
