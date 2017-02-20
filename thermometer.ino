@@ -1,4 +1,4 @@
-// For use with Gemma or Trinket (Attiny85) - requires TinyWireM
+  // For use with Gemma or Trinket (Attiny85) - requires TinyWireM
 // https://github.com/adafruit/TinyWireM
 
 // this for Attiny85 based like Trinket & Gemma
@@ -63,7 +63,6 @@ void writeString(long value, char type, long writeDot)
   int i;
   int len;
   char data[64];
-  char buf[10];
 
   memset(&data, '\0', sizeof(data));
   //sprintf(data, "%d", value);
@@ -81,6 +80,12 @@ void writeString(long value, char type, long writeDot)
 
   // initialize i
   i = 0;
+
+  // if we get 72 it is really 7.2 so we want a leading space
+  if ( len < 3 ) {
+    alpha4.writeDigitAscii(i, ' ');
+    i = 1;
+  }
 
   // 100 i will be 0, 1, then 2
   // 80 i will be 0, 1
