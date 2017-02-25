@@ -101,6 +101,7 @@ void writeString(long value, char type, long writeDot)
 
   alpha4.writeDisplay();
 
+  // all this code to write a decimal place display 
   if ( writeDot > 0 ) { 
     // https://learn.adafruit.com/adafruit-led-backpack/0-54-alphanumeric
     // DP N M L K J H G2 G1 F E D C B A
