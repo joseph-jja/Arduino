@@ -91,7 +91,10 @@ void writeDotToDisplay(long val) {
         break;      
       case 9:
         alpha4.writeDigitRaw(1, 0x40EF);
-        break;      
+        break;  
+    default:
+        alpha4.writeDigitRaw(1, 0x4000);
+  break;
      }
   alpha4.writeDisplay();
 }
