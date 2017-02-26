@@ -12,7 +12,8 @@
 #include "Adafruit_LEDBackpack.h"
 #include "Adafruit_GFX.h"
 
-#include <stdlib.h>
+#include <stdio.h>
+//#include <stdlib.h>
 #include <string.h>
 
 //TMP36 Pin Variables
@@ -107,7 +108,7 @@ void writeString(long value, char type, long writeDot)
   char data[(sizeof(long)*3)+1];
 
   memset(&data, '\0', sizeof(data));
-  ltoa(value, data, 10);
+  sprintf(data, "%3d", value);
   len = strlen(data);
 
   alpha4.clear();
@@ -121,29 +122,6 @@ void writeString(long value, char type, long writeDot)
   alpha4.writeDigitAscii(3, type);
 
   i = 0;
-  
-  // if we get 7 or 4 then it should be 0.7 or 0.4
-  if ( len < 2 ) {
-    data[1] = '0';
-    data[2] = data[0];
-    data[3] = '\0';
-    data[0] = ' ';
-    len = 3;
-  }
-  
-  // now handle 72 or 70 which would be 7.2
-  if ( len < 3 ) {
-    data[2] = data[1];
-    data[3] = '\0';
-    data[1] = data[0];
-    data[0] = ' ';
-  }
-  
-  // now handle 72 or 70 which would be 7.2
-  if ( len < 3 ) {
-    alpha4.writeDigitAscii(0, ' ');
-    i = 1;
-  }
   
   // 100 i will be 0, 1, then 2
   // 80 i will be 0, 1
