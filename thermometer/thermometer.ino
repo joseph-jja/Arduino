@@ -189,7 +189,7 @@ void loop()
   long voltage = (long)( ( reading * ( ( 3375L * 1000L ) / 1024L ) ) / 100L );
   if ( isHigh ) {
     // using pin 3 we can now see the voltage if the pin goes high
-    writeString( voltage, 'V', 0L );
+    writeString( voltage / 10L, 'V', 0L );
     delay( 2000 );
   }
 
