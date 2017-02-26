@@ -120,7 +120,7 @@ void writeString(long value, char type, long writeDot)
   i = 0;
   
   // we need to handle 0 
-  if ( value === 0L ) { 
+  if ( value == 0L ) { 
     data[0] = ' ';
     data[1] = '0';
     data[2] = ' ';
