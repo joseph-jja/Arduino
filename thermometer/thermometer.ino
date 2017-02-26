@@ -92,7 +92,8 @@ void writeDotToDisplay(long val) {
       case 9:
         alpha4.writeDigitRaw(1, 0x40EF);
         break;      
-      }
+     }
+  alpha4.writeDisplay();
 }
 
 // method to write a float to screen
@@ -101,6 +102,7 @@ void writeString(long value, char type, long writeDot)
   int i;
   int len;
   char data[64];
+  boolean doWriteDot = (writeDot > 0);
 
   memset(&data, '\0', sizeof(data));
   ltoa(value, data, 10);
@@ -116,19 +118,27 @@ void writeString(long value, char type, long writeDot)
   // F = Fahrenheit
   alpha4.writeDigitAscii(3, type);
 
+  i = 0;
+  
   // we need to handle 0 
   if ( value === 0L ) { 
-    memcpy(&data, " 0 ", 3);
+    data[0] = ' ';
+    data[1] = '0';
+    data[2] = ' ';
+    data[3] = '\0';
   }
   
-  // now handle 72 which would be 7.2
+  // if we get 7 or 4 then it should be 7.0
+  if ( len < 2 ) {
+    
+  }
+  
+  // now handle 72 or 70 which would be 7.2
   if ( len < 3 ) {
     alpha4.writeDigitAscii(0, ' ');
     i = 1;
   }
   
-  // TODO handle .7 which we would get as just 7?
-
   // 100 i will be 0, 1, then 2
   // 80 i will be 0, 1
   while (i < 3)
@@ -142,7 +152,7 @@ void writeString(long value, char type, long writeDot)
   }
 
   // all this code to write a decimal place display 
-  if ( writeDot > 0 ) { 
+  if ( doWriteDot ) { 
     // https://learn.adafruit.com/adafruit-led-backpack/0-54-alphanumeric
     // DP N M L K J H G2 G1 F E D C B A
     // 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 = dot or 0x4000 or 16384
