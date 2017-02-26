@@ -101,7 +101,7 @@ void writeString(long value, char type, long writeDot)
 {
   int i;
   int len;
-  char data[64];
+  char data[(sizeof(long)*3)+1];
 
   memset(&data, '\0', sizeof(data));
   ltoa(value, data, 10);
