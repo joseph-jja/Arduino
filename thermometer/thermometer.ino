@@ -122,20 +122,21 @@ void writeString(long value, char type, long writeDot)
 
   i = 0;
   
-  // we need to handle 0 
-  if ( value == 0L ) { 
-    data[0] = ' ';
-    data[1] = '0';
-    data[2] = ' ';
-    data[3] = '\0';
-  }
-  
   // if we get 7 or 4 then it should be 0.7 or 0.4
   if ( len < 2 ) {
-    alpha4.writeDigitAscii(0, ' ');
+    data[1] = '0';
+    data[2] = data[0];
+    data[3] = '\0';
+    data[0] = ' ';
+    len = 3;
+  }
+  
+  // now handle 72 or 70 which would be 7.2
+  if ( len < 3 ) {
+    data[2] = data[1];
+    data[3] = '\0';
     data[1] = data[0];
-    data[2] = '\0';
-    data[0] = '0';
+    data[0] = ' ';
   }
   
   // now handle 72 or 70 which would be 7.2
