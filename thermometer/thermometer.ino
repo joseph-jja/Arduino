@@ -22,6 +22,8 @@
 int sensorPin = 2;
 int togglePin = 3;
 
+long subtractor = 5000L;
+
 Adafruit_AlphaNum4 alpha4 = Adafruit_AlphaNum4();
 
 void setup()
@@ -153,8 +155,14 @@ void loop()
 {
   //getting the voltage reading from the temperature sensor
   long reading = (long)analogRead( sensorPin );
-  //writeString( reading, 'R' );
-  delay( 1000 );
+  // wait a little before trying to read the digital pin
+  delay(500);
+  
+  boolean isHigh = digitalRead(togglePin);
+  if ( isHigh ) {
+    writeString( reading, 'R', 0L );
+    delay( 1000 );
+  }
 
   // converting that reading to voltage, for 3.3v arduino use 3.3
   // so the real voltage at my pin is 3.25 volts but this does not give me the correct voltage
@@ -163,15 +171,12 @@ void loop()
   // making everything in milivolts and remove floats
   // because we are using longs we need to multiply by 1000 and divide by 1000 for better accuracy
   long voltage = (long)( ( reading * ( ( 3375L * 1000L ) / 1024L ) ) / 100L );
-  //writeString( voltage, 'V', 0L );
-  //delay( 2000 );
+  if ( isHigh ) {
+    // using pin 3 we can now see the voltage if the pin goes high
+    writeString( voltage, 'V', 0L );
+    delay( 2000 );
+  }
 
-  // determine if we use 500 or 430
-  // pin defaults to high, so you have to hook ground to it
-  long subtractor = 5000L; // ( digitalRead( togglePin ) ? 500L : 430L );
-  //writeString( subtractor, 'S', 0L );
-  //delay( 2000 );
-  
   // now print out the temperature (16.7)
   //converting from 10 mv per degree with 500 mV offset
   // I'm using 430 as I have a lower voltage?
