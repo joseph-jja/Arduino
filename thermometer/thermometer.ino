@@ -67,27 +67,31 @@ void writeString(long value, char type, long writeDot)
   char data[64];
 
   memset(&data, '\0', sizeof(data));
-  //sprintf(data, "%d", value);
-  ltoa( value, data, 10);
+  ltoa(value, data, 10);
   len = strlen(data);
 
   alpha4.clear();
   alpha4.writeDisplay();
 
   // last character will be the measurement type
+  // R = Analog Read
   // V = voltage
   // C = Celcius
   // F = Fahrenheit
   alpha4.writeDigitAscii(3, type);
 
-  // initialize i
-  i = 0;
-
-  // if we get 72 it is really 7.2 so we want a leading space
+  // we need to handle 0 
+  if ( value === 0L ) { 
+    memset(&data, " 0 ", sizeof(data));
+  }
+  
+  // now handle 72 which would be 7.2
   if ( len < 3 ) {
-    alpha4.writeDigitAscii(i, ' ');
+    alpha4.writeDigitAscii(0, ' ');
     i = 1;
   }
+  
+  // TODO handle .7?
 
   // 100 i will be 0, 1, then 2
   // 80 i will be 0, 1
