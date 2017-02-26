@@ -102,7 +102,6 @@ void writeString(long value, char type, long writeDot)
   int i;
   int len;
   char data[64];
-  boolean doWriteDot = (writeDot > 0);
 
   memset(&data, '\0', sizeof(data));
   ltoa(value, data, 10);
@@ -128,9 +127,12 @@ void writeString(long value, char type, long writeDot)
     data[3] = '\0';
   }
   
-  // if we get 7 or 4 then it should be 7.0
+  // if we get 7 or 4 then it should be 0.7 or 0.4
   if ( len < 2 ) {
-    
+    alpha4.writeDigitAscii(0, ' ');
+    data[1] = data[0];
+    data[2] = '\0';
+    data[0] = '0';
   }
   
   // now handle 72 or 70 which would be 7.2
@@ -152,7 +154,7 @@ void writeString(long value, char type, long writeDot)
   }
 
   // all this code to write a decimal place display 
-  if ( doWriteDot ) { 
+  if ( writeDot > 0 ) { 
     // https://learn.adafruit.com/adafruit-led-backpack/0-54-alphanumeric
     // DP N M L K J H G2 G1 F E D C B A
     // 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 = dot or 0x4000 or 16384
@@ -194,8 +196,12 @@ void loop()
   }
 
   // now print out the temperature (16.7)
-  //converting from 10 mv per degree with 500 mV offset
+  // converting from 10 mv per degree with 500 mV offset
   // I'm using 430 as I have a lower voltage?
+  // because we multiplied by 1000 and divided voltage by 100 our results would be
+  // 7 => .7
+  // 70 => 7.0
+  // 102 => 10.2 
   long temperatureC = (long)( ( voltage - subtractor ) / 10L );
   writeString( temperatureC, 'C', 1L );
   delay( 2500 );
