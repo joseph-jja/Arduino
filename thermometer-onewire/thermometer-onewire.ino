@@ -1,3 +1,8 @@
+// Connect + pins to 3-5V
+// Connect GND to ground
+// Connect Data to #0
+// Connect Clock to #2
+
 // OneWire - Version: Latest 
 #include <OneWire.h>
 
@@ -57,54 +62,9 @@ void setup()
   sensors.begin();
 }
 
-// method to write a float to screen
-void writeString(long value, char type, long writeDot)
-{
-  int i;
-  int len;
-  char data[64];
+void writeDotToDisplay(long val) {
 
-  memset(&data, '\0', sizeof(data));
-  //sprintf(data, "%d", value);
-  ltoa( value, data, 10);
-  len = strlen(data);
-
-  alpha4.clear();
-  alpha4.writeDisplay();
-
-  // last character will be the measurement type
-  // V = voltage
-  // C = Celcius
-  // F = Fahrenheit
-  alpha4.writeDigitAscii(3, type);
-
-  // initialize i
-  i = 0;
-
-  // 100 i will be 0, 1, then 2
-  // 80 i will be 0, 1
-  while (i < 3)
-  {
-    if ( i >= len )
-    {
-      break;
-    }
-    alpha4.writeDigitAscii(i, data[i]);
-    i++;
-  }
-
-  alpha4.writeDisplay();
-
-  if ( writeDot > 0 ) { 
-    // https://learn.adafruit.com/adafruit-led-backpack/0-54-alphanumeric
-    // DP N M L K J H G2 G1 F E D C B A
-    // 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 = dot or 0x4000 or 16384
-    char buf[1]; 
-    memset(&buf, '\0', sizeof(buf));
-    buf[0] = data[1];
-
-    long val = atol(buf);
-    switch (val) {
+  switch (val) {
       case 0:
         alpha4.writeDigitRaw(1, 0x4C3F);
         break; 
@@ -134,13 +94,65 @@ void writeString(long value, char type, long writeDot)
         break;      
       case 9:
         alpha4.writeDigitRaw(1, 0x40EF);
-        break;      
-      }
-      alpha4.writeDisplay();
-      delay(1000);    
+        break; 
+      default:
+        alpha4.writeDigitRaw(1, 0x4000);
+      break;
+     }
+  alpha4.writeDisplay();
+}
+
+// method to write a float to screen
+void writeString(long value, char type, long writeDot)
+{
+  int i;
+  int len;
+  char data[(sizeof(long)*3)+1];
+
+  memset(&data, '\0', sizeof(data));
+  sprintf(data, "%3d", value);
+  len = strlen(data);
+
+  alpha4.clear();
+  alpha4.writeDisplay();
+
+  // last character will be the measurement type
+  // R = Analog Read
+  // V = voltage
+  // C = Celcius
+  // F = Fahrenheit
+  alpha4.writeDigitAscii(3, type);
+
+  i = 0;
+  
+  // 100 i will be 0, 1, then 2
+  // 80 i will be 0, 1
+  while (i < 3)
+  {
+    if ( i >= len )
+    {
+      break;
+    }
+    alpha4.writeDigitAscii(i, data[i]);
+    i++;
   }
 
+  // all this code to write a decimal place display 
+  if ( writeDot > 0 ) { 
+    // https://learn.adafruit.com/adafruit-led-backpack/0-54-alphanumeric
+    // DP N M L K J H G2 G1 F E D C B A
+    // 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 = dot or 0x4000 or 16384
+    char buf[1]; 
+    memset(&buf, '\0', sizeof(buf));
+    buf[0] = data[1];
+
+    long val = atol(buf);
+    writeDotToDisplay(val);
+  }
+  alpha4.writeDisplay();
+  delay(1000);    
 }
+
 
 void loop()
 {
@@ -163,4 +175,3 @@ void loop()
   }
   delay( 2500 );
 }
-
