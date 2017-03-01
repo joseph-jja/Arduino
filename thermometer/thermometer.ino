@@ -12,9 +12,8 @@
 #include "Adafruit_LEDBackpack.h"
 #include "Adafruit_GFX.h"
 
-#include <stdio.h>
-//#include <stdlib.h>
-#include <string.h>
+//#include <stdio.h>
+//#include <string.h>
 
 //TMP36 Pin Variables
 //the analog pin the TMP36's Vout (sense) pin is connected to
@@ -23,7 +22,7 @@
 int sensorPin = 2;
 int togglePin = 3;
 
-long subtractor = 5000L;
+long voltageIn = 3300L;
 
 Adafruit_AlphaNum4 alpha4 = Adafruit_AlphaNum4();
 
@@ -158,11 +157,11 @@ void loop()
   // wait a little before trying to read the digital pin
   delay(500);
   
-  boolean isHigh = digitalRead(togglePin);
-  if ( isHigh ) {
-    writeString( reading, 'R', 0L );
-    delay( 1000 );
-  }
+  //boolean isHigh = digitalRead(togglePin);
+  //if ( isHigh ) {
+  //  writeString( reading, 'R', 0L );
+  //  delay( 1000 );
+  //}
 
   // converting that reading to voltage, for 3.3v arduino use 3.3
   // so the real voltage at my pin is 3.25 volts but this does not give me the correct voltage
@@ -170,12 +169,12 @@ void loop()
   // 156 * 330 / 1024 = 500
   // making everything in milivolts and remove floats
   // because we are using longs we need to multiply by 1000 and divide by 1000 for better accuracy
-  long voltage = (long)( ( reading * ( ( 3375L * 1000L ) / 1024L ) ) / 100L );
-  if ( isHigh ) {
+  long voltage = (long)( ( reading * ( ( voltageIn * 1000L ) / 1024L ) ) / 100L );
+  //if ( isHigh ) {
     // using pin 3 we can now see the voltage if the pin goes high
-    writeString( voltage / 10L, 'V', 0L );
+  //  writeString( voltage / 10L, 'V', 0L );
     delay( 2000 );
-  }
+  //}
 
   // now print out the temperature (16.7)
   // converting from 10 mv per degree with 500 mV offset
@@ -184,7 +183,7 @@ void loop()
   // 7 => .7
   // 70 => 7.0
   // 102 => 10.2 
-  long temperatureC = (long)( ( voltage - subtractor ) / 10L );
+  long temperatureC = (long)( ( voltage - 5000L ) / 10L );
   writeString( temperatureC, 'C', 1L );
   delay( 2500 );
 
