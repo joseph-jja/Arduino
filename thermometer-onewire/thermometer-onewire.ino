@@ -54,12 +54,6 @@ void setup()
   delay(100);
 
   delay(2000);
-  // not clearing all make em wiat!
-  // clear all
-  //alpha4.clear();
-  //alpha4.writeDisplay();
-  
-  sensors.begin();
 }
 
 void writeDotToDisplay(long val) {
@@ -94,10 +88,10 @@ void writeDotToDisplay(long val) {
         break;      
       case 9:
         alpha4.writeDigitRaw(1, 0x40EF);
-        break; 
-      default:
+        break;  
+    default:
         alpha4.writeDigitRaw(1, 0x4000);
-      break;
+  break;
      }
   alpha4.writeDisplay();
 }
