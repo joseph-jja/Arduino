@@ -15,11 +15,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-//TMP36 Pin Variables
-//the analog pin the TMP36's Vout (sense) pin is connected to
-//the resolution is 10 mV / degree centigrade with a
-//500 mV offset to allow for negative temperatures
-#define TEMPERATURE_PIN 2
+// DS18B20 pin
+#define TEMPERATURE_PIN 10
 
 // Setup a oneWire instance to communicate with any OneWire devices (not just Maxim/Dallas temperature ICs)
 OneWire oneWire(TEMPERATURE_PIN);
@@ -28,6 +25,10 @@ OneWire oneWire(TEMPERATURE_PIN);
 DallasTemperature sensors(&oneWire);
 
 Adafruit_AlphaNum4 alpha4 = Adafruit_AlphaNum4();
+
+DeviceAddress insideThermometer;
+
+boolean debugMode = false;
 
 void setup()
 {
@@ -53,6 +54,23 @@ void setup()
   alpha4.writeDisplay();
   delay(100);
 
+  sensors.begin();
+
+ if ( debugMode ) { 
+   Serial.begin(9600);
+
+   Serial.print("Dallas Temperature Sensor - DS18B20. Found ");
+    Serial.print(sensors.getDeviceCount(), DEC);
+    Serial.println(" sensors.");
+
+    if (!sensors.getAddress(insideThermometer, 0)) {
+      Serial.println("Unable to find address for Device 0"); 
+    }
+    
+    Serial.print("Device 0 Resolution: ");
+    Serial.print(sensors.getResolution(insideThermometer), DEC); 
+    Serial.println();
+  }
   delay(2000);
 }
 
@@ -152,16 +170,24 @@ void loop()
 {
   // get temperatures
   sensors.requestTemperatures();
-    
+   
   // now print out the temperature (16.7)
   //converting from 10 mv per degree with 500 mV offset
   // I'm using 430 as I have a lower voltage?
   long temperatureC = (long)(sensors.getTempCByIndex(0) * 10);
+  if ( debugMode ) {
+    Serial.println( "C temperature" );
+    Serial.println( temperatureC, DEC );
+  }
   writeString( temperatureC, 'C', 1L );
   delay( 2500 );
 
   // now convert to Fahrenheit (62)
   long temperatureF = (long)( ( ( ( ( temperatureC / 10 ) * 9 ) / 5 ) + 32 ) * 10);
+  if ( debugMode ) {
+      Serial.println( "F temperature" );
+      Serial.println( temperatureF );
+  }
   if ( temperatureF >= 1000 ) { 
     writeString( temperatureF, 'F', 0L );
   } else {
