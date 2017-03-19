@@ -3,10 +3,10 @@
 // Connect Data to #0
 // Connect Clock to #2
 
-// OneWire - Version: Latest 
+// OneWire - Version: Latest
 #include <OneWire.h>
 
-// DallasTemperature - Version: Latest 
+// DallasTemperature - Version: Latest
 #include <DallasTemperature.h>
 
 #include "Adafruit_LEDBackpack.h"
@@ -21,14 +21,14 @@
 // Setup a oneWire instance to communicate with any OneWire devices (not just Maxim/Dallas temperature ICs)
 OneWire oneWire(TEMPERATURE_PIN);
 
-// Pass our oneWire reference to Dallas Temperature. 
+// Pass our oneWire reference to Dallas Temperature.
 DallasTemperature sensors(&oneWire);
 
 Adafruit_AlphaNum4 alpha4 = Adafruit_AlphaNum4();
 
 DeviceAddress insideThermometer;
 
-boolean debugMode = false;
+boolean debugMode = true;
 long index;
 
 void setup()
@@ -57,71 +57,71 @@ void setup()
 
   sensors.begin();
 
-  if ( sensors.getDeviceCount() > 0 ) { 
+  if ( sensors.getDeviceCount() > 0 ) {
     index = 0;
   }
 
- if ( debugMode ) { 
-   Serial.begin(9600);
+  if ( debugMode ) {
+    Serial.begin(9600);
 
-   Serial.print("Dallas Temperature Sensor - DS18B20. Found ");
+    Serial.print("Dallas Temperature Sensor - DS18B20. Found ");
     Serial.print(sensors.getDeviceCount(), DEC);
     Serial.println(" sensors.");
- }
-    if (!sensors.getAddress(insideThermometer, 0)) {
-      Serial.println("Unable to find address for Device 0"); 
-    } else {
+  }
+  if (!sensors.getAddress(insideThermometer, 0)) {
+    Serial.println("Unable to find address for Device 0");
+  } else {
 
-      sensors.setResolution(insideThermometer, 12);
-      if ( debugMode ) { 
-        Serial.print("Device 0 Resolution: ");
-        Serial.print(sensors.getResolution(insideThermometer), DEC); 
-        Serial.println();
-      
-        Serial.print("Parasite mode?: ");
-        Serial.println(sensors.getUserData(insideThermometer), DEC);
-      }
+    sensors.setResolution(insideThermometer, 9);
+    if ( debugMode ) {
+      Serial.print("Device 0 Resolution: ");
+      Serial.print(sensors.getResolution(insideThermometer), DEC);
+      Serial.println();
+
+      Serial.print("Parasite mode?: ");
+      Serial.println(sensors.isParasitePowerMode(), DEC);
     }
+  }
   delay(2000);
 }
 
 void writeDotToDisplay(long val) {
 
   switch (val) {
-      case 0:
-        alpha4.writeDigitRaw(1, 0x4C3F);
-        break; 
-      case 1:
-        alpha4.writeDigitRaw(1, 0x4006);
-        break; 
-      case 2:
-        alpha4.writeDigitRaw(1, 0x40DB);
-        break; 
-      case 3:
-        alpha4.writeDigitRaw(1, 0x40CF);
-        break; 
-      case 4:
-        alpha4.writeDigitRaw(1, 0x40E6);
-        break; 
-      case 5:
-        alpha4.writeDigitRaw(1, 0x40ED);
-        break; 
-      case 6:
-        alpha4.writeDigitRaw(1, 0x40FD);
-        break; 
-      case 7:
-        alpha4.writeDigitRaw(1, 0x4007);
-        break;      
-      case 8:
-        alpha4.writeDigitRaw(1, 0x40FF);
-        break;      
-      case 9:
-        alpha4.writeDigitRaw(1, 0x40EF);
-        break;  
+    case 0:
+      alpha4.writeDigitRaw(1, 0x4C3F);
+      break;
+    case 1:
+      alpha4.writeDigitRaw(1, 0x4006);
+      break;
+    case 2:
+      alpha4.writeDigitRaw(1, 0x40DB);
+      break;
+    case 3:
+      alpha4.writeDigitRaw(1, 0x40CF);
+      break;
+    case 4:
+      alpha4.writeDigitRaw(1, 0x40E6);
+      break;
+    case 5:
+      alpha4.writeDigitRaw(1, 0x40ED);
+      break;
+    case 6:
+      alpha4.writeDigitRaw(1, 0x40FD);
+      break;
+    case 7:
+      alpha4.writeDigitRaw(1, 0x4007);
+      break;
+    case 8:
+      alpha4.writeDigitRaw(1, 0x40FF);
+      break;
+    case 9:
+      alpha4.writeDigitRaw(1, 0x40EF);
+      break;
     default:
-        alpha4.writeDigitRaw(1, 0x4000);
-  break;
-     }
+      alpha4.writeDigitRaw(1, 0x4000);
+      break;
+  }
   alpha4.writeDisplay();
 }
 
@@ -130,7 +130,7 @@ void writeString(long value, char type, long writeDot)
 {
   int i;
   int len;
-  char data[(sizeof(long)*3)+1];
+  char data[(sizeof(long) * 3) + 1];
 
   memset(&data, '\0', sizeof(data));
   sprintf(data, "%3d", value);
@@ -147,7 +147,7 @@ void writeString(long value, char type, long writeDot)
   alpha4.writeDigitAscii(3, type);
 
   i = 0;
-  
+
   // 100 i will be 0, 1, then 2
   // 80 i will be 0, 1
   while (i < 3)
@@ -160,12 +160,12 @@ void writeString(long value, char type, long writeDot)
     i++;
   }
 
-  // all this code to write a decimal place display 
-  if ( writeDot > 0 ) { 
+  // all this code to write a decimal place display
+  if ( writeDot > 0 ) {
     // https://learn.adafruit.com/adafruit-led-backpack/0-54-alphanumeric
     // DP N M L K J H G2 G1 F E D C B A
     // 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 = dot or 0x4000 or 16384
-    char buf[1]; 
+    char buf[1];
     memset(&buf, '\0', sizeof(buf));
     buf[0] = data[1];
 
@@ -173,7 +173,7 @@ void writeString(long value, char type, long writeDot)
     writeDotToDisplay(val);
   }
   alpha4.writeDisplay();
-  delay(1000);    
+  delay(1000);
 }
 
 void raw() {
@@ -183,7 +183,7 @@ void raw() {
   byte data[12];
   byte addr[8];
   float celsius, fahrenheit;
-  
+
   if ( !oneWire.search(addr)) {
     Serial.println("No more addresses.");
     Serial.println();
@@ -191,19 +191,19 @@ void raw() {
     delay(250);
     return;
   }
-  
+
   Serial.print("ROM =");
-  for( i = 0; i < 8; i++) {
+  for ( i = 0; i < 8; i++) {
     Serial.write(' ');
     Serial.print(addr[i], HEX);
   }
 
   if (OneWire::crc8(addr, 7) != addr[7]) {
-      Serial.println("CRC is not valid!");
-      return;
+    Serial.println("CRC is not valid!");
+    return;
   }
   Serial.println();
- 
+
   // the first ROM byte indicates which chip
   switch (addr[0]) {
     case 0x10:
@@ -221,17 +221,17 @@ void raw() {
     default:
       Serial.println("Device is not a DS18x20 family device.");
       return;
-  } 
+  }
 
   oneWire.reset();
   oneWire.select(addr);
   oneWire.write(0x44, 1);        // start conversion, with parasite power on at the end
-  
+
   delay(1000);     // maybe 750ms is enough, maybe not
   // we might do a oneWire.depower() here, but the reset will take care of it.
-  
+
   present = oneWire.reset();
-  oneWire.select(addr);    
+  oneWire.select(addr);
   oneWire.write(0xBE);         // Read Scratchpad
 
   Serial.print("  Data = ");
@@ -266,11 +266,11 @@ void raw() {
     //// default is 12 bit resolution, 750 ms conversion time
   }
   celsius = (float)raw / 16.0;
-  fahrenheit = celsius * 1.8 + 32.0;
+  fahrenheit = (celsius) * 1.8 + 32.0;
   Serial.print("  RAW = ");
   Serial.print((float)raw);
   Serial.print("  Temperature = ");
-  Serial.print(celsius);
+  Serial.print(celsius - 3.5);
   Serial.print(" Celsius, ");
   Serial.print(fahrenheit);
   Serial.println(" Fahrenheit");
@@ -278,33 +278,38 @@ void raw() {
 
 void loop()
 {
-  
+
   //raw();
   //delay(1000);
   //return;
   // get temperatures
-  //sensors.requestTemperatures();
-  sensors.requestTemperaturesByIndex(index);
-   
+  bool isSuccess = sensors.requestTemperaturesByIndex(index);
+  if ( debugMode ) {
+    Serial.print( "Read " );
+    Serial.println( isSuccess );
+  }
+  
   // get C temp
-  long temperatureC = (long)(sensors.getTempCByIndex(index) * 10);
+  long temperatureC = (long)((sensors.getTempCByIndex(index)) * 10);
   if ( debugMode ) {
     Serial.println( "C temperature" );
     Serial.println( temperatureC, DEC );
+    delay(250);
   }
   writeString( temperatureC, 'C', 1L );
   delay( 2500 );
 
   // get F temp
-  long temperatureF = (long)(sensors.getTempFByIndex(index)*10);
+  long temperatureF = (long)( ( sensors.getTempFByIndex(index) ) * 10);
   if ( debugMode ) {
-      Serial.println( "F temperature" );
-      Serial.println( temperatureF );
+    Serial.println( "F temperature" );
+    Serial.println( temperatureF );
   }
-  if ( temperatureF >= 1000 ) { 
+  if ( temperatureF >= 1000 ) {
     writeString( temperatureF, 'F', 0L );
   } else {
     writeString( temperatureF, 'F', 1L );
   }
   delay( 2500 );
 }
+

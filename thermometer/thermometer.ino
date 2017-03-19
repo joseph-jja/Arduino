@@ -159,8 +159,8 @@ void loop()
   
   //boolean isHigh = digitalRead(togglePin);
   //if ( isHigh ) {
-  //  writeString( reading, 'R', 0L );
-  //  delay( 1000 );
+    writeString( reading, 'R', 0L );
+    delay( 1000 );
   //}
 
   // converting that reading to voltage, for 3.3v arduino use 3.3
@@ -172,7 +172,7 @@ void loop()
   long voltage = (long)( ( reading * ( ( voltageIn * 1000L ) / 1024L ) ) / 100L );
   //if ( isHigh ) {
     // using pin 3 we can now see the voltage if the pin goes high
-  //  writeString( voltage / 10L, 'V', 0L );
+    writeString( voltage / 10L, 'V', 0L );
     delay( 2000 );
   //}
 
