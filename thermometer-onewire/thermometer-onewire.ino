@@ -202,11 +202,13 @@ float getCTemp(){
   oneWire.select(addr);
   oneWire.write(0x44,0); // start conversion, with parasite power off at the end
 
+  // I read we need a delay?
+  delay(750);
+  
   byte present = oneWire.reset();
   oneWire.select(addr);    
   oneWire.write(0xBE); // Read Scratchpad
 
-  // I read we need a delay?
   delay(750);
   
   for (int i = 0; i < 9; i++) { // we need 9 bytes
@@ -219,9 +221,10 @@ float getCTemp(){
   byte LSB = data[0];
 
   float tempRead = ((MSB << 8) | LSB); //using two's compliment
-  float TemperatureSum = tempRead / 16;
-
-  return (TemperatureSum * 18 + 5)/10 + 32;
+  float TemperatureSum = tempRead / 16 - 2;
+  Serial.print("  Raw = ");
+ Serial.println( TemperatureSum);
+  return TemperatureSum;
 }
 
 void loop()
