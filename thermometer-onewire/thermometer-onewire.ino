@@ -218,7 +218,7 @@ void loop()
 
   writeString( celsius*10, 'C', 1L );
   delay( 2500 );
-  writeString( fahrenheit*10, 'C', 1L );
+  writeString( fahrenheit*10, 'F', 1L );
   delay( 2500 );
 }
 
