@@ -20,9 +20,10 @@
 //the resolution is 10 mV / degree centigrade with a
 //500 mV offset to allow for negative temperatures
 int sensorPin = 2;
-int togglePin = 3;
 
-long voltageIn = 3300L;
+boolean debug = false;
+
+long voltageIn = 3300;
 
 Adafruit_AlphaNum4 alpha4 = Adafruit_AlphaNum4();
 
@@ -56,7 +57,6 @@ void setup()
   //alpha4.clear();
   //alpha4.writeDisplay();
   
-  pinMode( togglePin, INPUT );
 }
 
 void writeDotToDisplay(long val) {
@@ -155,26 +155,23 @@ void loop()
   //getting the voltage reading from the temperature sensor
   long reading = (long)analogRead( sensorPin );
   // wait a little before trying to read the digital pin
-  delay(500);
-  
-  //boolean isHigh = digitalRead(togglePin);
-  //if ( isHigh ) {
+  if ( debug ) { 
     writeString( reading, 'R', 0L );
     delay( 1000 );
-  //}
-
+  }
+  
   // converting that reading to voltage, for 3.3v arduino use 3.3
   // so the real voltage at my pin is 3.25 volts but this does not give me the correct voltage
   // analogRead return 156 so
-  // 156 * 330 / 1024 = 500
+  // 200 * 3300 / 1024 = 614
   // making everything in milivolts and remove floats
   // because we are using longs we need to multiply by 1000 and divide by 1000 for better accuracy
   long voltage = (long)( ( reading * ( ( voltageIn * 1000L ) / 1024L ) ) / 100L );
-  //if ( isHigh ) {
+  if ( debug ) {
     // using pin 3 we can now see the voltage if the pin goes high
     writeString( voltage / 10L, 'V', 0L );
     delay( 2000 );
-  //}
+  }
 
   // now print out the temperature (16.7)
   // converting from 10 mv per degree with 500 mV offset
