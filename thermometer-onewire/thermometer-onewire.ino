@@ -6,9 +6,6 @@
 // OneWire - Version: Latest
 #include <OneWire.h>
 
-// DallasTemperature - Version: Latest
-#include <DallasTemperature.h>
-
 #include "Adafruit_LEDBackpack.h"
 #include "Adafruit_GFX.h"
 
@@ -21,15 +18,9 @@
 // Setup a oneWire instance to communicate with any OneWire devices (not just Maxim/Dallas temperature ICs)
 OneWire oneWire(TEMPERATURE_PIN);
 
-// Pass our oneWire reference to Dallas Temperature.
-DallasTemperature sensors(&oneWire);
-
 Adafruit_AlphaNum4 alpha4 = Adafruit_AlphaNum4();
 
-DeviceAddress insideThermometer;
-
-boolean debugMode = true;
-long index;
+boolean debugMode = false;
 
 void setup()
 {
@@ -55,33 +46,7 @@ void setup()
   alpha4.writeDisplay();
   delay(100);
 
-  sensors.begin();
-
-  if ( sensors.getDeviceCount() > 0 ) {
-    index = 0;
-  }
-
-  if ( debugMode ) {
-    Serial.begin(9600);
-
-    Serial.print("Dallas Temperature Sensor - DS18B20. Found ");
-    Serial.print(sensors.getDeviceCount(), DEC);
-    Serial.println(" sensors.");
-  }
-  if (!sensors.getAddress(insideThermometer, 0)) {
-    Serial.println("Unable to find address for Device 0");
-  } else {
-
-    sensors.setResolution(insideThermometer, 9);
-    if ( debugMode ) {
-      Serial.print("Device 0 Resolution: ");
-      Serial.print(sensors.getResolution(insideThermometer), DEC);
-      Serial.println();
-
-      Serial.print("Parasite mode?: ");
-      Serial.println(sensors.isParasitePowerMode(), DEC);
-    }
-  }
+   Serial.begin(9600);;
   delay(2000);
 }
 
@@ -182,19 +147,27 @@ float getCTemp(){
   byte data[12];
   byte addr[8];
 
+  oneWire.reset_search();
   if ( !oneWire.search(addr)) {
       //no more sensors on chain, reset search
+      if ( debugMode ) { 
+        Serial.println("No sensors on the chain!");
+      }
       oneWire.reset_search();
       return -1000;
   }
 
   if ( OneWire::crc8( addr, 7) != addr[7]) {
-      Serial.println("CRC is not valid!");
+      if ( debugMode ) { 
+        Serial.println("CRC is not valid!");
+      }
       return -1000;
   }
 
   if ( addr[0] != 0x10 && addr[0] != 0x28) {
-      Serial.print("Device is not recognized");
+      if ( debugMode ) { 
+        Serial.print("Device is not recognized");
+      }
       return -1000;
   }
 
@@ -222,51 +195,30 @@ float getCTemp(){
 
   float tempRead = ((MSB << 8) | LSB); //using two's compliment
   float TemperatureSum = tempRead / 16 - 2;
-  Serial.print("  Raw = ");
- Serial.println( TemperatureSum);
+
+  if ( debugMode ) { 
+    Serial.print("  Raw = ");
+   Serial.println( TemperatureSum);
+  }
   return TemperatureSum;
 }
 
 void loop()
 {
-     float celsius = getCTemp();
-     float fahrenheit = celsius * 1.8 + 32.0;
-  Serial.print("  Temperature = ");
-  Serial.print(celsius);
-  Serial.print(" Celsius, ");
-  Serial.print(fahrenheit);
-  Serial.println(" Fahrenheit");
+  float celsius = getCTemp();
+  float fahrenheit = celsius * 1.8 + 32.0;
+  if ( debugMode ) { 
+    Serial.print("  Temperature = ");
+    Serial.print(celsius);
+    Serial.print(" Celsius, ");
+    Serial.print(fahrenheit);
+    Serial.println(" Fahrenheit");
+ }
   delay(1000);
-  return;
-  
-  // get temperatures
-  bool isSuccess = sensors.requestTemperaturesByIndex(index);
-  if ( debugMode ) {
-    Serial.print( "Read " );
-    Serial.println( isSuccess );
-  }
-  
-  // get C temp
-  long temperatureC = (long)((sensors.getTempCByIndex(index)) * 10);
-  if ( debugMode ) {
-    Serial.println( "C temperature" );
-    Serial.println( temperatureC, DEC );
-    delay(250);
-  }
-  writeString( temperatureC, 'C', 1L );
-  delay( 2500 );
 
-  // get F temp
-  long temperatureF = (long)( ( sensors.getTempFByIndex(index) ) * 10);
-  if ( debugMode ) {
-    Serial.println( "F temperature" );
-    Serial.println( temperatureF );
-  }
-  if ( temperatureF >= 1000 ) {
-    writeString( temperatureF, 'F', 0L );
-  } else {
-    writeString( temperatureF, 'F', 1L );
-  }
+  writeString( celsius*10, 'C', 1L );
+  delay( 2500 );
+  writeString( fahrenheit*10, 'C', 1L );
   delay( 2500 );
 }
 
