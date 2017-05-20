@@ -185,7 +185,10 @@ void loop()
   delay( 2500 );
 
   // now convert to Fahrenheit (62)
-  long temperatureF = (long)( ( ( ( ( temperatureC / 10 ) * 9 ) / 5 ) + 32 ) * 10);
+  // 9/5 is equal to 1.8 so we can use 18 and remove the divide by 10
+  // then we add 3200 and divide by 100 ( well 10 for decimal place )
+  // the below will take 19.5 as 195 and covert it to 671 or 67.1 for display
+  long temperatureF = (long)( ( ( temperatureC * 18 ) + 3200 ) * 10);
   if ( temperatureF >= 1000 ) { 
     writeString( temperatureF, 'F', 0L );
   } else {
