@@ -54,11 +54,11 @@ float getCTemp(OneWire wire){
   }
 
   if ( OneWire::crc8( addr, 7) != addr[7]) {
-      return -1000;
+      return -2000;
   }
 
   if ( addr[0] != 0x10 && addr[0] != 0x28) {
-      return -1000;
+      return -3000;
   }
 
   wire.reset();
@@ -120,7 +120,7 @@ void writeTemps(float c1, float c2, float f1, float f2) {
 
   display.setCursor(0,24);
   memset(buff, '\0', sizeof(buff));
-  sprintf(buff, "1     %d", (long)c2);
+  sprintf(buff, "2     %d", (long)c2);
   display.println(buff);
 
   display.setCursor(78,24);
