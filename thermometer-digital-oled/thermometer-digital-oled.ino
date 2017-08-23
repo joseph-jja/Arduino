@@ -22,14 +22,10 @@ Adafruit_SSD1306 display(OLED_RESET);
 #endif
 
 // DS18B20 pin
-#define TEMPERATURE_PIN_ONE 10
 #define TEMPERATURE_PIN_TWO 12
 
 // Setup a oneWire instance to communicate with any OneWire devices (not just Maxim/Dallas temperature ICs)
-OneWire pinOne(TEMPERATURE_PIN_ONE);
 OneWire pinTwo(TEMPERATURE_PIN_TWO);
-
-boolean debugMode = true;
 
 void setup()
 {
@@ -89,7 +85,7 @@ float getCTemp(OneWire wire){
   return TemperatureSum;
 }
 
-void writeTemps(float c1, float c2, float f1, float f2) {
+void writeTemps(float c1, float f1) {
   
   char buff[24];
 
@@ -97,35 +93,20 @@ void writeTemps(float c1, float c2, float f1, float f2) {
   display.clearDisplay();
 
   // setup text size
-  display.setTextSize(1);
+  display.setTextSize(2);
 
   // text color
   display.setTextColor(WHITE);
 
   // write data at positions
-  display.setCursor(0,0);
+  display.setCursor(5,10);
   memset(buff, '\0', sizeof(buff));
-  sprintf(buff, "Tank   C      F");
-  display.println(buff);
-  
-  display.setCursor(0,12);
-  memset(buff, '\0', sizeof(buff));
-  sprintf(buff, "1     %d", (long)c1);
+  sprintf(buff, "%dC", (long)c1);
   display.println(buff);
 
-  display.setCursor(78,12);
+  display.setCursor(70, 10);
   memset(buff, '\0', sizeof(buff));
-  sprintf(buff, "%d", (long)f1);
-  display.println(buff);
-
-  display.setCursor(0,24);
-  memset(buff, '\0', sizeof(buff));
-  sprintf(buff, "2     %d", (long)c2);
-  display.println(buff);
-
-  display.setCursor(78,24);
-  memset(buff, '\0', sizeof(buff));
-  sprintf(buff, "%d", (long)f2);
+  sprintf(buff, "%dF", (long)f1);
   display.println(buff);
 
   // display data
@@ -135,14 +116,10 @@ void writeTemps(float c1, float c2, float f1, float f2) {
 
 void loop()
 {
-  float celsius1 = getCTemp(pinOne);
+  float celsius1 = getCTemp(pinTwo);
   float fahrenheit1 = (celsius1 * 1.8) + 32.0;
-  delay(1000);
 
-  float celsius2 = getCTemp(pinTwo);
-  float fahrenheit2 = (celsius2 * 1.8) + 32.0;
-
-  writeTemps(celsius1, celsius2, fahrenheit1, fahrenheit2);
-  delay( 2500 );
+  writeTemps(celsius1, fahrenheit1);
+  delay( 1000 );
 }
 
