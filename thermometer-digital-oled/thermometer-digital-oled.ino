@@ -27,6 +27,8 @@ Adafruit_SSD1306 display(OLED_RESET);
 // Setup a oneWire instance to communicate with any OneWire devices (not just Maxim/Dallas temperature ICs)
 OneWire pinTwo(TEMPERATURE_PIN_TWO);
 
+boolean swap = false;
+
 void setup()
 {
   display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
@@ -76,13 +78,31 @@ float getCTemp(OneWire wire){
 
   wire.reset_search();
 
-  byte MSB = data[1];
   byte LSB = data[0];
+  byte MSB = data[1];
 
-  float tempRead = ((MSB << 8) | LSB); //using two's compliment
-  float TemperatureSum = tempRead / 16 - 2;
+  int tempRead = ((MSB << 8) | LSB); //using two's compliment
 
-  return TemperatureSum;
+  int SignBit = tempRead & 0x8000;  // test most sig bit
+  if (SignBit) // negative
+  {
+    tempRead = (tempRead ^ 0xffff) + 1; // 2's comp
+  }
+  // for ds18b20
+  int Tc_100 = (6 * tempRead) + tempRead / 4;    // multiply by (100 * 0.0625) or 6.25
+  //int Tc_100 = (tempRead*100/2);    
+
+  int Whole = Tc_100 / 100;  // separate off the whole and fractional portions
+  int Fract = Tc_100 % 100;
+
+  Fract = (Fract < 10 ? 0 : Fract);
+
+  //if (swap) {
+    return Whole + (Fract/100);
+  //}
+    
+  //int TemperatureSum = tempRead / 16 - 2;
+  //return TemperatureSum;
 }
 
 void writeTemps(float c1, float f1) {
@@ -98,20 +118,31 @@ void writeTemps(float c1, float f1) {
   // text color
   display.setTextColor(WHITE);
 
+  int celciusLeft = 5,
+    fahrenheitLeft = 70;
+  
+  if (swap) {
+    celciusLeft = 70;
+    fahrenheitLeft = 5;
+    swap = false;
+  } else {
+    swap = true;
+  }
+
   // write data at positions
-  display.setCursor(5,10);
+  display.setCursor(celciusLeft, 10);
   memset(buff, '\0', sizeof(buff));
   sprintf(buff, "%dC", (long)c1);
   display.println(buff);
 
-  display.setCursor(70, 10);
+  display.setCursor(fahrenheitLeft, 10);
   memset(buff, '\0', sizeof(buff));
   sprintf(buff, "%dF", (long)f1);
   display.println(buff);
 
   // display data
   display.display();
-  delay(1);
+  delay( 1000 );
 }
 
 void loop()

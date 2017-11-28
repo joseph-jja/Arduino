@@ -190,17 +190,31 @@ float getCTemp(){
 
   oneWire.reset_search();
 
-  byte MSB = data[1];
   byte LSB = data[0];
+  byte MSB = data[1];
 
-  float tempRead = ((MSB << 8) | LSB); //using two's compliment
-  float TemperatureSum = tempRead / 16 - 2;
+  int tempRead = ((MSB << 8) | LSB); //using two's compliment
 
-  if ( debugMode ) { 
-    Serial.print("  Raw = ");
-   Serial.println( TemperatureSum);
+  int SignBit = tempRead & 0x8000;  // test most sig bit
+  if (SignBit) // negative
+  {
+    tempRead = (tempRead ^ 0xffff) + 1; // 2's comp
   }
-  return TemperatureSum;
+  // for ds18b20
+  int Tc_100 = (6 * tempRead) + tempRead / 4;    // multiply by (100 * 0.0625) or 6.25
+  //int Tc_100 = (tempRead*100/2);    
+
+  int Whole = Tc_100 / 100;  // separate off the whole and fractional portions
+  int Fract = Tc_100 % 100;
+
+  Fract = (Fract < 10 ? 0 : Fract);
+
+  //if (swap) {
+    return Whole + (Fract/100);
+  //}
+    
+  //int TemperatureSum = tempRead / 16 - 2;
+  //return TemperatureSum;
 }
 
 void loop()
