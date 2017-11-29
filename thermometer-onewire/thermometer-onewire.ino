@@ -210,11 +210,16 @@ float getCTemp(){
   Fract = (Fract < 10 ? 0 : Fract);
 
   //if (swap) {
-    return Whole + (Fract/100);
+  //  return Whole + (Fract/100);
   //}
-    
-  //int TemperatureSum = tempRead / 16 - 2;
-  //return TemperatureSum;
+  float TemperatureSum = ( ( tempRead / 16 - 2 ) + ( Whole + ( Fract / 100 ) ) ) / 2;
+  //Serial.print("  Temperature = ");
+  //Serial.print(Whole);
+  //Serial.print(" . ");
+  //Serial.print(Fract);
+  //Serial.print(" or ");
+  //Serial.println(TemperatureSum);
+  return TemperatureSum;
 }
 
 void loop()
