@@ -21,6 +21,10 @@ Adafruit_SSD1306 display(OLED_RESET);
 //#error("Height incorrect, please fix Adafruit_SSD1306.h!");
 #endif
 
+// define the address of the DS18*20 sensors we know about
+#define DS18S20      0x10
+#define DS18B20      0x28
+
 // DS18B20 pin
 #define TEMPERATURE_PIN_TWO 12
 
