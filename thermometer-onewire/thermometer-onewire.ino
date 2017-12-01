@@ -207,7 +207,7 @@ float getCTemp(OneWire wire){
      //Serial.println("18S");
   } else {
     // can't remember where this came from?
-    Tc_100 = tempRead / 16 - 2;
+    Tc_100 = ( tempRead / 16 - 2) * 100;
     //Serial.println("How is this happening?");
   }
 
