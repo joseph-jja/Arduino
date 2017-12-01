@@ -59,7 +59,7 @@ float getCTemp(OneWire wire){
       return -2000;
   }
 
-  if ( addr[0] != 0x10 && addr[0] != 0x28) {
+  if ( addr[0] != DS18S20 && addr[0] != DS18B20) {
       return -3000;
   }
 
