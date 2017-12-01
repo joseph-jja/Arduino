@@ -100,7 +100,7 @@ float getCTemp(OneWire wire){
   	Tc_100 = (tempRead * 100 / 2); 
   } else {
     // can't remember where this came from?
-    Tc_100 = tempRead / 16 - 2;
+        Tc_100 = ( tempRead / 16 - 2) * 100;
   }
 
   int Whole = Tc_100 / 100;  // separate off the whole and fractional portions
