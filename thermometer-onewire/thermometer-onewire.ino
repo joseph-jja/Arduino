@@ -12,6 +12,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+// define the address of the DS18*20 sensors we know about
+#define DS18S20      0x10
+#define DS18B20      0x28
+
 // DS18B20 pin
 #define TEMPERATURE_PIN 10
 
@@ -141,54 +145,45 @@ void writeString(long value, char type, long writeDot)
   delay(1000);
 }
 
-float getCTemp(){
+float getCTemp(OneWire wire){
   //returns the temperature from one DS18S20 in DEG Celsius
 
   byte data[12];
   byte addr[8];
 
-  oneWire.reset_search();
-  if ( !oneWire.search(addr)) {
+  wire.reset_search();
+  if ( !wire.search(addr)) {
       //no more sensors on chain, reset search
-      if ( debugMode ) { 
-        Serial.println("No sensors on the chain!");
-      }
-      oneWire.reset_search();
+      wire.reset_search();
       return -1000;
   }
 
   if ( OneWire::crc8( addr, 7) != addr[7]) {
-      if ( debugMode ) { 
-        Serial.println("CRC is not valid!");
-      }
-      return -1000;
+      return -2000;
   }
 
-  if ( addr[0] != 0x10 && addr[0] != 0x28) {
-      if ( debugMode ) { 
-        Serial.print("Device is not recognized");
-      }
-      return -1000;
+  if ( addr[0] != DS18S20 && addr[0] != DS18B20) {
+      return -3000;
   }
 
-  oneWire.reset();
-  oneWire.select(addr);
-  oneWire.write(0x44,0); // start conversion, with parasite power off at the end
+  wire.reset();
+  wire.select(addr);
+  wire.write(0x44,0); // start conversion, with parasite power off at the end
 
   // I read we need a delay?
   delay(750);
   
-  byte present = oneWire.reset();
-  oneWire.select(addr);    
-  oneWire.write(0xBE); // Read Scratchpad
+  byte present = wire.reset();
+  wire.select(addr);    
+  wire.write(0xBE); // Read Scratchpad
 
   delay(750);
   
   for (int i = 0; i < 9; i++) { // we need 9 bytes
-    data[i] = oneWire.read();
+    data[i] = wire.read();
   }
 
-  oneWire.reset_search();
+  wire.reset_search();
 
   byte LSB = data[0];
   byte MSB = data[1];
@@ -203,25 +198,31 @@ float getCTemp(){
   // for ds18b20
   int Tc_100 = 0;    // multiply by (100 * 0.0625) or 6.25
   if (addr[0] == DS18B20) { /* DS18B20 0.0625 deg resolution */
-     Tc_100 = (6 * tempRead) + tempRead / 4; 
+     // so looks like the sensor I have is .0575 
+     // instead of .0625 we just do .06
+     Tc_100 = (6 * tempRead);// + tempRead / 4; 
+     //Serial.println("18B");
   } else if ( addr[0] == DS18S20) { /* DS18S20 0.5 deg resolution */
-  	Tc_100 = (tempRead * 100 / 2); 
+    Tc_100 = (tempRead * 100 / 2); 
+     //Serial.println("18S");
   } else {
     // can't remember where this came from?
     Tc_100 = tempRead / 16 - 2;
+    //Serial.println("How is this happening?");
   }
 
   int Whole = Tc_100 / 100;  // separate off the whole and fractional portions
   int Fract = Tc_100 % 100;
 
   Fract = (Fract < 10 ? 0 : Fract);
-
+  //Serial.print("Result C temp ");
+  //Serial.println(Tc_100);
   return Whole + (Fract/100);
 }
 
 void loop()
 {
-  float celsius = getCTemp();
+  float celsius = getCTemp(oneWire);
   float fahrenheit = celsius * 1.8 + 32.0;
   if ( debugMode ) { 
     Serial.print("  Temperature = ");
