@@ -201,25 +201,22 @@ float getCTemp(){
     tempRead = (tempRead ^ 0xffff) + 1; // 2's comp
   }
   // for ds18b20
-  int Tc_100 = (6 * tempRead) + tempRead / 4;    // multiply by (100 * 0.0625) or 6.25
-  //int Tc_100 = (tempRead*100/2);    
+  int Tc_100 = 0;    // multiply by (100 * 0.0625) or 6.25
+  if (addr[0] == DS18B20) { /* DS18B20 0.0625 deg resolution */
+     Tc_100 = (6 * tempRead) + tempRead / 4; 
+  } else if ( addr[0] == DS18S20) { /* DS18S20 0.5 deg resolution */
+  	Tc_100 = (tempRead * 100 / 2); 
+  } else {
+    // can't remember where this came from?
+    Tc_100 = tempRead / 16 - 2;
+  }
 
   int Whole = Tc_100 / 100;  // separate off the whole and fractional portions
   int Fract = Tc_100 % 100;
 
   Fract = (Fract < 10 ? 0 : Fract);
 
-  //if (swap) {
-  //  return Whole + (Fract/100);
-  //}
-  float TemperatureSum = ( ( tempRead / 16 - 2 ) + ( Whole + ( Fract / 100 ) ) ) / 2;
-  //Serial.print("  Temperature = ");
-  //Serial.print(Whole);
-  //Serial.print(" . ");
-  //Serial.print(Fract);
-  //Serial.print(" or ");
-  //Serial.println(TemperatureSum);
-  return TemperatureSum;
+  return Whole + (Fract/100);
 }
 
 void loop()
