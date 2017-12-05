@@ -127,6 +127,9 @@ float getCTemp(OneWire wire){
 
 // so I could include math.h and use round from there
 // but theoretically this will do the same thing 
+// the difference is that I want 22.68 to be 23 not 23.0000
+// which would be the same as doing (int)roundf(inputValue) 
+// but I find if I don't need the lib why use it :) 
 int round(float inputValue) { 
  
   int inValTimes100 = inputValue * 100;
