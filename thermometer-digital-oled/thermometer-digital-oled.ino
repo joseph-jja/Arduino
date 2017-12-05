@@ -125,6 +125,24 @@ float getCTemp(OneWire wire){
   return (whole + (fract/100));
 }
 
+// so I could include math.h and use round from there
+// but theoretically this will do the same thing 
+int round(float inputValue) { 
+ 
+  int inValTimes100 = inputValue * 100;
+  
+  int whole = inValTimes100 / 100;  
+  int fract = inValTimes100 % 100;
+  // int round = fract % 10;
+  
+  // if the fractional part is greater than 50 we add 1 to the whole number
+  if ( fract >= 50 ) {
+    whole++;
+  }
+  
+  return whole;  
+}
+
 void writeTemps(float c1, float f1) {
   
   char buff[24];
@@ -152,12 +170,12 @@ void writeTemps(float c1, float f1) {
   // write data at positions
   display.setCursor(celciusLeft, 10);
   memset(buff, '\0', sizeof(buff));
-  sprintf(buff, "%dC", (long)c1);
+  sprintf(buff, "%dC", round(c1));
   display.println(buff);
 
   display.setCursor(fahrenheitLeft, 10);
   memset(buff, '\0', sizeof(buff));
-  sprintf(buff, "%dF", (long)f1);
+  sprintf(buff, "%dF", round(f1));
   display.println(buff);
 
   // display data
