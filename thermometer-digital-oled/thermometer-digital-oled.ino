@@ -92,23 +92,37 @@ float getCTemp(OneWire wire){
   {
     tempRead = (tempRead ^ 0xffff) + 1; // 2's comp
   }
-  // for ds18b20
-  int Tc_100 = 0;    // multiply by (100 * 0.0625) or 6.25
-  if (addr[0] == DS18B20) { /* DS18B20 0.0625 deg resolution */
-     Tc_100 = (6 * tempRead) + tempRead / 4; 
-  } else if ( addr[0] == DS18S20) { /* DS18S20 0.5 deg resolution */
-  	Tc_100 = (tempRead * 100 / 2); 
+  
+  // after reading the sensor we will convert it
+  // to the temperature in celcius times 100
+  // this way it stays an int
+  int tcTimes100 = -4000;    
+
+  // for ds18b20 
+  if (addr[0] == DS18B20) { 
+    // DS18B20 0.0625 deg resolution 
+    // multiply by (100 * 0.0625) or 6.25 or 6 + 1/4
+     tcTimes100 = (6 * tempRead) + tempRead / 4; 
+  } else if (addr[0] == DS18S20) {
+    // DS18S20 sensor has .05 resolution
+    // this is the same as dividing by 2 and multiplying by 10
+    // to get 1920 value
+  	tcTimes100 = (tempRead / 2) * 10; 
   } else {
     // can't remember where this came from?
-        Tc_100 = ( tempRead / 16 - 2) * 100;
+    // but I thimk it ends up being the same 0.625 resolution
+    tcTimes100 = (tempRead / 16 - 2) * 100;
   }
 
-  int Whole = Tc_100 / 100;  // separate off the whole and fractional portions
-  int Fract = Tc_100 % 100;
-
-  Fract = (Fract < 10 ? 0 : Fract);
-
-  return Whole + (Fract/100);
+  // at this point
+  // tempRead will now be 2200 for 22.00C or 2268 for 22.68C
+  
+  // separate off the whole and fractional portions
+  int whole = tcTimes100 / 100;  
+  int fract = tcTimes100 % 100;
+  
+  // we return a float
+  return (whole + (fract/100));
 }
 
 void writeTemps(float c1, float f1) {
@@ -154,7 +168,7 @@ void writeTemps(float c1, float f1) {
 void loop()
 {
   float celsius1 = getCTemp(pinTwo);
-  float fahrenheit1 = (celsius1 * 1.8) + 32.0;
+  float fahrenheit1 = (celsius1 * 100 * 180) + 32.0;
 
   writeTemps(celsius1, fahrenheit1);
   delay( 1000 );
