@@ -3,6 +3,8 @@
 // Connect Data to #0
 // Connect Clock to #2
 
+#include <math.h>
+
 // OneWire - Version: Latest
 #include <OneWire.h>
 
@@ -63,6 +65,23 @@ float getCTemp(OneWire wire){
       return -3000;
   }
 
+  //wire.reset();
+  //wire.select(addr);
+  //wire.write(0x4E);
+  //wire.write(0x00);
+  //wire.write(0x00);
+  //wire.write(0x7F);
+
+  // I read we need a delay?
+  //delay(750);
+
+  //wire.reset(); // reset 1-Wire
+  //wire.select(addr); // select DS18B20
+  //wire.write(0x48); // copy scratchpad to l’EE
+
+  // I read we need a delay?
+  delay(750);
+
   wire.reset();
   wire.select(addr);
   wire.write(0x44,0); // start conversion, with parasite power off at the end
@@ -75,7 +94,8 @@ float getCTemp(OneWire wire){
   wire.write(0xBE); // Read Scratchpad
 
   delay(750);
-  
+
+  // we have resolution accurate to +/-.5C
   for (int i = 0; i < 9; i++) { // we need 9 bytes
     data[i] = wire.read();
   }
@@ -171,12 +191,24 @@ void writeTemps(float c1, float f1) {
   // write data at positions
   display.setCursor(celciusLeft, top);
   memset(buff, '\0', sizeof(buff));
-  sprintf(buff, "%d.%dC", (int)c1, getFractionPart(c1));
+  //if (swap) {
+  //  float x1 = c1 + 0.50;
+  //  float x2 = c1 - 0.50;
+  //  sprintf(buff, "R %d-%dC", (int)roundf(x2), (int)roundf(x1));
+  //} else{
+    sprintf(buff, "%d.%dC", (int)c1, getFractionPart(c1));
+  //}
   display.println(buff);
 
   display.setCursor(fahrenheitLeft, bottom);
   memset(buff, '\0', sizeof(buff));
-  sprintf(buff, "%d.%dF", (int)f1, getFractionPart(f1));
+  //if (swap) {
+    sprintf(buff, "%d.%dF", (int)f1, getFractionPart(f1));
+  //} else{
+  //  float x1 = f1 + 0.90;
+  //  float x2 = f1 - 0.90;
+  //  sprintf(buff, "R %d-%dF", (int)roundf(x2), (int)roundf(x1));
+  //}
   display.println(buff);
 
   // display data
@@ -190,6 +222,6 @@ void loop()
   float fahrenheit1 = (celsius1 * 1.80) + 32.00;
 
   writeTemps(celsius1, fahrenheit1);
-  delay( 1000 );
+  delay( 1500 );
 }
 
