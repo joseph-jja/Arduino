@@ -125,25 +125,21 @@ float getCTemp(OneWire wire){
   return (whole + (fract/100));
 }
 
-// so I could include math.h and use round from there
-// but theoretically this will do the same thing 
-// the difference is that I want 22.68 to be 23 not 23.0000
-// which would be the same as doing (int)roundf(inputValue) 
+// so I could probably include math.h and use round from there
+// I wanted something slightly different  
 // but I find if I don't need the lib why use it :) 
-int round(float inputValue) { 
- 
+int getFractionPart(float inputValue) {
+
   int inValTimes100 = inputValue * 100;
-  
-  int whole = inValTimes100 / 100;  
   int fract = inValTimes100 % 100;
-  // int round = fract % 10;
-  
+  int fractRound = fract % 10;
+    
   // if the fractional part is greater than 50 we add 1 to the whole number
-  if ( fract >= 50 ) {
-    whole++;
+  if ( fractRound >= 5 && fract < 90 ) {
+    fract += 10;
   }
   
-  return whole;  
+  return (fract / 10); 
 }
 
 void writeTemps(float c1, float f1) {
@@ -159,26 +155,28 @@ void writeTemps(float c1, float f1) {
   // text color
   display.setTextColor(WHITE);
 
-  int celciusLeft = 5,
-    fahrenheitLeft = 70;
+  int celciusLeft = 10,
+    fahrenheitLeft = 50, 
+    top = 10, 
+    bottom = 30;
   
   if (swap) {
-    celciusLeft = 70;
-    fahrenheitLeft = 5;
+    celciusLeft = 50;
+    fahrenheitLeft = 10;
     swap = false;
   } else {
     swap = true;
   }
-
+  
   // write data at positions
-  display.setCursor(celciusLeft, 10);
+  display.setCursor(celciusLeft, top);
   memset(buff, '\0', sizeof(buff));
-  sprintf(buff, "%dC", round(c1));
+  sprintf(buff, "%d.%dC", (int)c1, getFractionPart(c1));
   display.println(buff);
 
-  display.setCursor(fahrenheitLeft, 10);
+  display.setCursor(fahrenheitLeft, bottom);
   memset(buff, '\0', sizeof(buff));
-  sprintf(buff, "%dF", round(f1));
+  sprintf(buff, "%d.%dF", (int)f1, getFractionPart(f1));
   display.println(buff);
 
   // display data
@@ -189,7 +187,7 @@ void writeTemps(float c1, float f1) {
 void loop()
 {
   float celsius1 = getCTemp(pinTwo);
-  float fahrenheit1 = (celsius1 * 100 * 180) + 32.0;
+  float fahrenheit1 = (celsius1 * 1.80) + 32.00;
 
   writeTemps(celsius1, fahrenheit1);
   delay( 1000 );
