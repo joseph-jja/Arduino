@@ -122,7 +122,7 @@ float getCTemp(OneWire wire){
   if (addr[0] == DS18B20) { 
     // DS18B20 0.0625 deg resolution 
     // multiply by (100 * 0.0625) or 6.25 or 6 + 1/4
-     tcTimes100 = (6 * tempRead) + tempRead / 4; 
+    tcTimes100 = (6 * tempRead) + tempRead / 4; 
   } else if (addr[0] == DS18S20) {
     // DS18S20 sensor has .05 resolution
     // this is the same as dividing by 2 and multiplying by 10
