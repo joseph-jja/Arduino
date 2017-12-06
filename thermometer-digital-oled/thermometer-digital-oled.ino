@@ -3,7 +3,7 @@
 // Connect Data to #0
 // Connect Clock to #2
 
-#include <math.h>
+//#include <math.h>
 
 // OneWire - Version: Latest
 #include <OneWire.h>
