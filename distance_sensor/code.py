@@ -5,7 +5,7 @@ import time
 led = digitalio.DigitalInOut(board.D13)
 led.direction = digitalio.Direction.OUTPUT
 
-// distance = digitalio.DigitalInOut(1)
+// distance = digitalio.DigitalInOut(board.A1)
 // distance.direction = digitalio.Direction.INPUT
 
 while True:
