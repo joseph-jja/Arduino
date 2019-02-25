@@ -1,15 +1,16 @@
 import board
 import digitalio
 import time
- 
+from analogio import AnalogIn
+
 led = digitalio.DigitalInOut(board.D13)
 led.direction = digitalio.Direction.OUTPUT
 
-// distance = digitalio.DigitalInOut(board.A1)
-// distance.direction = digitalio.Direction.INPUT
+distance = AnalogIn(board.A1)
 
 while True:
-    val = distance.value
+    voltage = ( distance.value * 3.3 ) / 65536
+    print (voltage)
     led.value = True
     time.sleep(0.5)
     led.value = False
