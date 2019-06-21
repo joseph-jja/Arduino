@@ -72,7 +72,7 @@ uint16_t mode(uint16_t *x,int n){
       count++;
       i++;
     }
-    if( count > prevCount & count > maxCount) {
+    if( count > prevCount && count > maxCount) {
       mode=x[i];
       maxCount=count;
       bimodal=0;
@@ -86,6 +86,6 @@ uint16_t mode(uint16_t *x,int n){
     if( mode==0 || bimodal==1 ) {  // Return the median if there is no mode.
       mode=x[(n/2)];
     }
-    return mode;
   }
+  return mode;
 }
