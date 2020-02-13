@@ -149,8 +149,23 @@ while True:
     ds = ds + 1
     if (ds > colorCount ):
         ds = 0
-        
+     
+    # get time from RTC 
+    
+    # set hours minutes seconds
+    setHours(12)
+    setMinutes(23)
+    setSeconds(45)
+    
     for y in range(num_pixels):
         #    
-        onColor = colors.get(x)
-        offCOlor = anti_colors.get(x)
+        if (timeBlock[y] == 0): 
+            pixels[y] = anti_colors.get(x)
+        else:
+            pixels[y] = colors.get(x)        
+
+     # sleep baby sleep
+    sleep(1)
+
+    
+    
