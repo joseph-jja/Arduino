@@ -26,7 +26,7 @@ LIGHT_BLUE = (0, 255, 150)
 PINKISH = (255, 0, 150)
 PURPLE = (255, 0, 255)
 WHITE = (255, 255, 255)
-ORANGE = (255, 0, 150)
+BLACK = (0, 0, 0)
 
 colors = {
     0: RED,
@@ -36,13 +36,25 @@ colors = {
     4: CYAN,
     5: LIGHT_BLUE,
     6: BLUE,
-    7: PINKISH,
-    8: PURPLE,
-    9: WHITE,
-    10: ORANGE
+    7: PURPLE,
+    8: WHITE,
+    9: BLACK
 }
 
-colorCount = 10
+anti_colors = {
+    0: LIGHT_BLUE,
+    1: BLUE,
+    2: GREEN,
+    3: YELLOW,
+    4: PURPLE,
+    5: LIGHT_RED,
+    6: RED,
+    7: CYAN,
+    8: BLACK,
+    9: WHITE
+}
+
+colorCount = 9
 
 decimal2hex = {
     0: [0, 0, 0, 0],
@@ -137,3 +149,8 @@ while True:
     ds = ds + 1
     if (ds > colorCount ):
         ds = 0
+        
+    for y in range(num_pixels):
+        #    
+        onColor = colors.get(x)
+        offCOlor = anti_colors.get(x)
