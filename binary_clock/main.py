@@ -1,4 +1,48 @@
 from array import *
+from time import sleep
+
+import board
+import adafruit_dotstar
+import neopixel
+
+# onboard LED
+led = adafruit_dotstar.DotStar(board.APA102_SCK, board.APA102_MOSI, 1)
+
+# neopixels
+pixel_pin = board.A4
+num_pixels = 24
+pixels = neopixel.NeoPixel(pixel_pin, num_pixels, brightness=0.3, auto_write=False)
+
+# millivolts per inch
+mvPerInch = 10
+
+RED = (255, 0, 0)
+LIGHT_RED = (150, 0, 0)
+YELLOW = (255, 255, 0)
+GREEN = (0, 255, 0)
+CYAN = (0, 255, 255)
+BLUE = (0, 0, 255)
+LIGHT_BLUE = (0, 255, 150)
+PINKISH = (255, 0, 150)
+PURPLE = (255, 0, 255)
+WHITE = (255, 255, 255)
+ORANGE = (255, 0, 150)
+
+colors = {
+    0: RED,
+    1: LIGHT_RED,
+    2: YELLOW,
+    3: GREEN,
+    4: CYAN,
+    5: LIGHT_BLUE,
+    6: BLUE,
+    7: PINKISH,
+    8: PURPLE,
+    9: WHITE,
+    10: ORANGE
+}
+
+colorCount = 10
 
 decimal2hex = {
     0: [0, 0, 0, 0],
@@ -79,7 +123,17 @@ def setHours(timeIn):
     timeBlock[17] = tensx[2]
     timeBlock[18] = tensx[3]
 
-setSeconds(12)
-setHours(1)
-setMinutes(21)
+def change_dot_star(x):
+    led[0] = colors.get(x)
+    sleep(1)
 
+x = 0
+p = 0
+ds = 0
+while True:
+    
+    # this is the little neopixel on the board
+    change_dot_star(ds)
+    ds = ds + 1
+    if (ds > colorCount ):
+        ds = 0
