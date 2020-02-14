@@ -10,7 +10,7 @@ led = adafruit_dotstar.DotStar(board.APA102_SCK, board.APA102_MOSI, 1)
 # neopixels
 pixel_pin = board.A4
 num_pixels = 24
-pixels = neopixel.NeoPixel(pixel_pin, num_pixels, brightness=0.5, auto_write=False)
+pixels = neopixel.NeoPixel(pixel_pin, num_pixels, brightness=0.7, auto_write=False)
 
 RED = (255, 0, 0)
 LIGHT_RED = (150, 0, 0)
@@ -54,14 +54,14 @@ colorCount = 9
 
 decimal2binary = {
     0: [0, 0, 0, 0],
-    1: [0, 0, 0, 1], 
-    2: [0, 0, 1, 0], 
-    3: [0, 0, 1, 1], 
-    4: [0, 1, 0, 0], 
-    5: [0, 1, 0, 1], 
-    6: [0, 1, 1, 0], 
-    7: [0, 1, 1, 1], 
-    8: [1, 0, 0, 0], 
+    1: [0, 0, 0, 1],
+    2: [0, 0, 1, 0],
+    3: [0, 0, 1, 1],
+    4: [0, 1, 0, 0],
+    5: [0, 1, 0, 1],
+    6: [0, 1, 1, 0],
+    7: [0, 1, 1, 1],
+    8: [1, 0, 0, 0],
     9: [1, 0, 0, 1]
 }
 
@@ -96,7 +96,7 @@ def change_dot_star(x):
 x = 0
 p = 0
 ds = 0
-sec = 10
+sec = 0
 while True:
 
     # this is the little neopixel on the board
@@ -106,15 +106,12 @@ while True:
         ds = 0
 
     # seconds, then minutes, then hours
-    setTimepart(0, 11, 12, 23, 1, 10, 13, 22, sec)
+    setTimepart(23, 12, 11, 0, 1, 10, 13, 22, sec)
     setTimepart(2, 9, 14, 21, 3, 9, 15, 20, 23)
     setTimepart(4, 7, 16, 19, 5, 6, 17, 18, 45)
 
     print ("--------------")
-    print (timeBlock[0])
-    print (timeBlock[11])
-    print (timeBlock[12])
-    print (timeBlock[23])
+    print (sec, timeBlock[0], timeBlock[11], timeBlock[12], timeBlock[23])
 
     for y in range(num_pixels):
         if (timeBlock[y] == 0):
@@ -125,10 +122,9 @@ while True:
     pixels.show()
 
     sec = sec + 1
-    if (sec > 60):
-        sec = 10
+    if (sec >= 60):
+        sec = 0
 
     # Increase or decrease to change the speed of the solid color change.
-    sleep(10)
-
+    sleep(5)
 
