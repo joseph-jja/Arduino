@@ -1,7 +1,7 @@
-from array import *
+from math import floor
 from time import sleep
 import board
-import adafruit_dotstar 
+import adafruit_dotstar
 import neopixel
 
 # onboard LED
@@ -10,10 +10,7 @@ led = adafruit_dotstar.DotStar(board.APA102_SCK, board.APA102_MOSI, 1)
 # neopixels
 pixel_pin = board.A4
 num_pixels = 24
-pixels = neopixel.NeoPixel(pixel_pin, num_pixels, brightness=0.3, auto_write=False)
-
-# millivolts per inch
-mvPerInch = 10
+pixels = neopixel.NeoPixel(pixel_pin, num_pixels, brightness=0.5, auto_write=False)
 
 RED = (255, 0, 0)
 LIGHT_RED = (150, 0, 0)
@@ -55,7 +52,7 @@ anti_colors = {
 
 colorCount = 9
 
-decimal2hex = {
+decimal2binary = {
     0: [0, 0, 0, 0],
     1: [0, 0, 0, 1], 
     2: [0, 0, 1, 0], 
@@ -65,16 +62,10 @@ decimal2hex = {
     6: [0, 1, 1, 0], 
     7: [0, 1, 1, 1], 
     8: [1, 0, 0, 0], 
-    9: [1, 0, 0, 1], 
-    10: [1, 0, 1, 0], 
-    11: [1, 0, 1, 1], 
-    12: [1, 1, 0, 0], 
-    13: [1, 1, 0, 1], 
-    14: [1, 1, 1, 0], 
-    15: [1, 1, 1, 1]
+    9: [1, 0, 0, 1]
 }
 
-timeBlock = array('i', [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+timeBlock = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 # 18 19 20 21 22 23
 # 17 16 15 14 13 12
@@ -82,21 +73,21 @@ timeBlock = array('i', [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 #  5  4  3  2  1  0
 def setTimepart(a, b, c, d, e, f, g, h, timeIn):
 
-    tens = round(timeIn/10)
+    tens = floor(timeIn/10)
     remainder = timeIn - (tens*10)
 
-    tensx = decimal2hex[tens]
-    secx = decimal2hex[remainder]
+    tensx = decimal2binary[tens]
+    secx = decimal2binary[remainder]
 
-    timeBlock[a] = secx[0];
-    timeBlock[b] = secx[1];
-    timeBlock[c] = secx[2];
-    timeBlock[d] = secx[3];
+    timeBlock[a] = secx[0]
+    timeBlock[b] = secx[1]
+    timeBlock[c] = secx[2]
+    timeBlock[d] = secx[3]
 
-    timeBlock[e] = tensx[0];
-    timeBlock[f] = tensx[1];
-    timeBlock[g] = tensx[2];
-    timeBlock[h] = tensx[3];
+    timeBlock[e] = tensx[0]
+    timeBlock[f] = tensx[1]
+    timeBlock[g] = tensx[2]
+    timeBlock[h] = tensx[3]
 
 def change_dot_star(x):
     led[0] = colors.get(x)
@@ -105,6 +96,7 @@ def change_dot_star(x):
 x = 0
 p = 0
 ds = 0
+sec = 10
 while True:
 
     # this is the little neopixel on the board
@@ -114,20 +106,29 @@ while True:
         ds = 0
 
     # seconds, then minutes, then hours
-    setTimepart(0, 11, 12, 23, 1, 10, 13, 23, 15)
+    setTimepart(0, 11, 12, 23, 1, 10, 13, 22, sec)
     setTimepart(2, 9, 14, 21, 3, 9, 15, 20, 23)
     setTimepart(4, 7, 16, 19, 5, 6, 17, 18, 45)
-    
+
+    print ("--------------")
+    print (timeBlock[0])
+    print (timeBlock[11])
+    print (timeBlock[12])
+    print (timeBlock[23])
+
     for y in range(num_pixels):
-        #    
-        if (timeBlock[y] == 0): 
-            pixels[y] = anti_colors.get(x)
+        if (timeBlock[y] == 0):
+            pixels[y] = anti_colors.get(ds)
         else:
-            pixels[y] = colors.get(x)     
+            pixels[y] = colors.get(ds)
 
     pixels.show()
-    # Increase or decrease to change the speed of the solid color change.
-    sleep(0.25)
 
+    sec = sec + 1
+    if (sec > 60):
+        sec = 10
+
+    # Increase or decrease to change the speed of the solid color change.
+    sleep(10)
 
 
