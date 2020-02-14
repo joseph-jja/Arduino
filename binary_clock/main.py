@@ -106,7 +106,7 @@ while True:
         ds = 0
 
     # seconds, then minutes, then hours
-    setTimepart(23, 12, 11, 0, 1, 10, 13, 22, sec)
+    setTimepart(0, 11, 12, 23, 1, 10, 13, 22, sec)
     setTimepart(2, 9, 14, 21, 3, 9, 15, 20, 23)
     setTimepart(4, 7, 16, 19, 5, 6, 17, 18, 45)
 
