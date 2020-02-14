@@ -1,8 +1,7 @@
 from array import *
 from time import sleep
-
 import board
-import adafruit_dotstar
+import adafruit_dotstar 
 import neopixel
 
 # onboard LED
@@ -81,7 +80,7 @@ timeBlock = array('i', [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 # 17 16 15 14 13 12
 #  6  7  8  9 10 11
 #  5  4  3  2  1  0
-def setSeconds(timeIn):
+def setTimepart(a, b, c, d, e, f, g, h, timeIn):
 
     tens = round(timeIn/10)
     remainder = timeIn - (tens*10)
@@ -89,51 +88,15 @@ def setSeconds(timeIn):
     tensx = decimal2hex[tens]
     secx = decimal2hex[remainder]
 
-    timeBlock[0] = secx[0];
-    timeBlock[11] = secx[1];
-    timeBlock[12] = secx[2];
-    timeBlock[23] = secx[3];
+    timeBlock[a] = secx[0];
+    timeBlock[b] = secx[1];
+    timeBlock[c] = secx[2];
+    timeBlock[d] = secx[3];
 
-    timeBlock[1] = tensx[0];
-    timeBlock[10] = tensx[1];
-    timeBlock[13] = tensx[2];
-    timeBlock[22] = tensx[3];
-
-def setMinutes(timeIn):
-
-    tens = round(timeIn/10)
-    remainder = timeIn - (tens*10)
-
-    tensx = decimal2hex[tens]
-    secx = decimal2hex[remainder]
-
-    timeBlock[2] = secx[0]
-    timeBlock[9] = secx[1]
-    timeBlock[14] = secx[2]
-    timeBlock[21] = secx[3]
-
-    timeBlock[3] = tensx[0]
-    timeBlock[8] = tensx[1]
-    timeBlock[15] = tensx[2]
-    timeBlock[20] = tensx[3]
-
-def setHours(timeIn):
-
-    tens = round(timeIn/10)
-    remainder = timeIn - (tens*10)
-
-    tensx = decimal2hex[tens]
-    secx = decimal2hex[remainder]
-
-    timeBlock[4] = secx[0]
-    timeBlock[7] = secx[1]
-    timeBlock[16] = secx[2]
-    timeBlock[19] = secx[3]
-
-    timeBlock[5] = tensx[0]
-    timeBlock[6] = tensx[1]
-    timeBlock[17] = tensx[2]
-    timeBlock[18] = tensx[3]
+    timeBlock[e] = tensx[0];
+    timeBlock[f] = tensx[1];
+    timeBlock[g] = tensx[2];
+    timeBlock[h] = tensx[3];
 
 def change_dot_star(x):
     led[0] = colors.get(x)
@@ -143,29 +106,28 @@ x = 0
 p = 0
 ds = 0
 while True:
-    
+
     # this is the little neopixel on the board
     change_dot_star(ds)
     ds = ds + 1
     if (ds > colorCount ):
         ds = 0
-     
-    # get time from RTC 
-    
-    # set hours minutes seconds
-    setHours(12)
-    setMinutes(23)
-    setSeconds(45)
+
+    # seconds, then minutes, then hours
+    setTimepart(0, 11, 12, 23, 1, 10, 13, 23, 15)
+    setTimepart(2, 9, 14, 21, 3, 9, 15, 20, 23)
+    setTimepart(4, 7, 16, 19, 5, 6, 17, 18, 45)
     
     for y in range(num_pixels):
         #    
         if (timeBlock[y] == 0): 
             pixels[y] = anti_colors.get(x)
         else:
-            pixels[y] = colors.get(x)        
+            pixels[y] = colors.get(x)     
 
-     # sleep baby sleep
-    sleep(1)
+    pixels.show()
+    # Increase or decrease to change the speed of the solid color change.
+    sleep(0.25)
 
-    
-    
+
+
