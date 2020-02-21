@@ -3,6 +3,7 @@ from time import sleep
 import board
 import adafruit_dotstar
 import neopixel
+import busio
 
 # onboard LED
 led = adafruit_dotstar.DotStar(board.APA102_SCK, board.APA102_MOSI, 1)
