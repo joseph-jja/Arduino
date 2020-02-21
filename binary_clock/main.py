@@ -4,14 +4,19 @@ import board
 import adafruit_dotstar
 import neopixel
 import busio
+import adafruit_pcf8523
 
 # onboard LED
 led = adafruit_dotstar.DotStar(board.APA102_SCK, board.APA102_MOSI, 1)
+
+i2c = busio.I2C(board.SCL, board.SDA)
 
 # neopixels
 pixel_pin = board.A4
 num_pixels = 24
 pixels = neopixel.NeoPixel(pixel_pin, num_pixels, brightness=0.7, auto_write=False)
+
+import adafruit_pcf8523
 
 RED = (255, 0, 0)
 LIGHT_RED = (150, 0, 0)
@@ -93,6 +98,15 @@ def setTimepart(a, b, c, d, e, f, g, h, timeIn):
 def change_dot_star(x):
     led[0] = colors.get(x)
     sleep(1)
+
+while not i2c.try_lock():
+    pass
+ 
+print("I2C addresses found:", [hex(device_address)
+                               for device_address in i2c.scan()])
+i2c.unlock()
+
+rtc = adafruit_pcf8523.PCF8523(myI2C)
 
 x = 0
 p = 0
