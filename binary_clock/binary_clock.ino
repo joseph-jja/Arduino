@@ -6,7 +6,7 @@
 
 #define    PIXEL_COUNT     24
 
-#define    PIXEL_PIN       5
+#define    PIXEL_PIN       4
 
 #define    COLOR_COUNT     10
 
@@ -194,11 +194,19 @@ void get_time(int *ohour, int *omin, int *osec) {
     int isec = localNow->tm_sec;
     int imin = localNow->tm_min;
     int ihours = localNow->tm_hour;
+    
+    isec = (millis() % 60000);
 
     *osec = isec;
     *omin = imin;
     *ohour = ihours;
+    
+    Serial.print(isec);
+    Serial.print(imin);
+    Serial.print(ihours);
 }
+
+int change = 0;
 
 void loop() {
 
@@ -212,17 +220,19 @@ void loop() {
     }
 
     // seconds, then minutes, then hours
-    setTimepart(0, 11, 12, 23, 1, 10, 13, 22, 5);
+    setTimepart(0, 11, 12, 23, 1, 10, 13, 22, osec);
     setTimepart(2, 9, 14, 21, 3, 9, 15, 20, 23);
     setTimepart(4, 7, 16, 19, 5, 6, 17, 18, 15);
 
     Serial.println("--------------");
     for (int i =0; i < PIXEL_COUNT; i++ ) {
-        Serial.print(timeBlock[i]);
-        Serial.print(" -- ");
+        //Serial.print(timeBlock[i]);
+        //Serial.print(" -- ");
     }
-    Serial.println("  ");
+    Serial.println("===");
 
+    change++;
+    if (change >= 5) {
     for (int y = 0; y < PIXEL_COUNT; y++) {
         int color[3];
         if (timeBlock[y] == 0) {
@@ -232,6 +242,9 @@ void loop() {
         }
         pixels.setPixelColor(y, color[0], color[1], color[2]);
     }
+        change = 0;
+    }
+    //Serial.println(pixels);
     pixels.show();
 
     delay(500);
