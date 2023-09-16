@@ -266,4 +266,3 @@ void loop()
   writeString( fahrenheit*10, 'F', 1L );
   delay( 2500 );
 }
-
