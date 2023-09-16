@@ -56,14 +56,14 @@ void setup()
 }
 
 // method to write a float to screen
-void writeString(long value)
+void writeString(long value, char type)
 {
   int i;
   int len;
   char data[(sizeof(long) * 4) + 1];
 
   memset(&data, '\0', sizeof(data));
-  sprintf(data, "%4d", value);
+  sprintf(data, "%c%3d", type, value);
   len = strlen(data);
 
   alpha4.clear();
@@ -71,8 +71,7 @@ void writeString(long value)
 
   i = 0;
 
-  // 100 i will be 0, 1, then 2
-  // 80 i will be 0, 1
+  // 100 i will be 0, 1, then 0 then 0 
   while (i < 4)
   {
     if ( i >= len )
@@ -97,34 +96,32 @@ void loop()
   memset(&buff, '\0', sizeof(buff));
   sprintf(buff, "Start %d ", avail);
   Serial.println(buff);
+  writeString(avail, 'A');
   delay(2000);
-  memset(&buff, '\0', sizeof(buff));
-  sprintf(buff, "Read %d ", ss.read());
-  Serial.println(buff);
-  delay(2000);
-  
-  delay(2000);
-  writeString(avail);
-  // This sketch displays information every time a new sentence is correctly encoded.
-  /*while (ss.available() > 0) {
-    Serial.println("here");
-    if (gps.encode(ss.read()))
-      {
-        memset(&buff, '\0', sizeof(buff));
-        //sprintf(buff, "Start %d %d", ss.available());
-        //Serial.println(buff);
-        if (gps.location.isValid())
-        {
+  if (avail > 0) {
+    Serial.println("We finally have data");
+    bool encode = gps.encode(ss.read());
+    if (encode) {
+      // encoded data read
+      writeString(1, 'E');
+      delay(2000);
+      if (gps.location.isValid()) {
           Serial.print(gps.location.lat(), 6);
           Serial.print(F(","));
           Serial.print(gps.location.lng(), 6);
-        }
-        else
-        {
-          Serial.print(F("INVALID"));
-        }
+      } else {
+        Serial.print(F("INVALID"));
       }
-  }*/
+    }
+
+  } else {
+    long l = ss.read();
+    memset(&buff, '\0', sizeof(buff));
+    sprintf(buff, "Read %d ", l);
+    Serial.println(buff);
+    writeString(l, 'D');
+    delay(2000);
+  }
 
   /*if (millis() > 5000 && gps.charsProcessed() < 10)
   {
