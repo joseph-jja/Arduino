@@ -13,7 +13,7 @@
    It requires the use of SoftwareSerial, and assumes that you have a
    4800-baud serial GPS device hooked up on pins 4(rx) and 3(tx).
 */
-static const int RXPin = 10, TXPin = 11;
+static const int RXPin = 0, TXPin = 1;
 static const int GPSBaud = 9600;
 
 // The TinyGPS object
@@ -41,8 +41,6 @@ void setup()
   alpha4.writeDigitRaw(3, 0xFFFF);
   alpha4.writeDisplay();
   
-  ss.begin(GPSBaud);
-
   delay(250);
   alpha4.writeDigitRaw(0, 0x0);
   alpha4.writeDigitRaw(1, 0x0);
@@ -50,9 +48,11 @@ void setup()
   alpha4.writeDigitRaw(3, 0x0);
   alpha4.writeDisplay();
 
-  Serial.begin(9600);
+  Serial.begin(GPSBaud);
   Serial.println("Application setup!");
   Serial.println(TinyGPSPlus::libraryVersion());
+
+  ss.begin(GPSBaud);
 }
 
 // method to write a float to screen
@@ -115,11 +115,15 @@ void loop()
     }
 
   } else {
-    long l = ss.read();
+    char l = ss.read();
     memset(&buff, '\0', sizeof(buff));
-    sprintf(buff, "Read %d ", l);
-    Serial.println(buff);
-    writeString(l, 'D');
+    if (l == NULL) {
+      Serial.println("No data found :(");
+    } else {
+      sprintf(buff, "Read %c ", l);
+      Serial.println(buff);
+      writeString((long)l, 'D');
+    }
     delay(2000);
   }
 
