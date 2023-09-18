@@ -13,7 +13,7 @@
    It requires the use of SoftwareSerial, and assumes that you have a
    4800-baud serial GPS device hooked up on pins 4(rx) and 3(tx).
 */
-static const int RXPin = 0, TXPin = 1;
+static const int RXPin = 10, TXPin = 11;
 static const int GPSBaud = 9600;
 
 // The TinyGPS object
@@ -90,6 +90,7 @@ void loop()
 
   char buff[255];
   
+  
   bool newData = false;
 
   long avail = ss.available();
@@ -97,40 +98,46 @@ void loop()
   sprintf(buff, "Start %d ", avail);
   Serial.println(buff);
   writeString(avail, 'A');
-  delay(2000);
-  if (avail > 0) {
-    Serial.println("We finally have data");
-    bool encode = gps.encode(ss.read());
-    if (encode) {
-      // encoded data read
-      writeString(1, 'E');
-      delay(2000);
-      if (gps.location.isValid()) {
-          Serial.print(gps.location.lat(), 6);
-          Serial.print(F(","));
-          Serial.print(gps.location.lng(), 6);
-      } else {
-        Serial.print(F("INVALID"));
-      }
-    }
 
-  } else {
-    char l = ss.read();
-    memset(&buff, '\0', sizeof(buff));
-    if (l == NULL) {
-      Serial.println("No data found :(");
-    } else {
-      sprintf(buff, "Read %c ", l);
-      Serial.println(buff);
-      writeString((long)l, 'D');
+  while (avail > 0) {
+    //Serial.println("Trying to get GPS data obtained");
+    if (gps.encode(ss.read())) {
+        Serial.println("GPS data obtained");
+        writeString(100, 'B');
+        //if (gps.location.isValid()) {
+          memset(&buff, '\0', sizeof(buff));
+          sprintf(buff, "Latitude: %6d \t Longitude: %6d ", gps.location.lat(), gps.location.lng()); 
+          Serial.println(buff);
+          //Serial.println("Latitude: %6d \t Longitude: %6d");
+          //Serial.print(gps.location.lat(), 6);
+          //Serial.print(F(","));
+          //Serial.print(gps.location.lng(), 6);
+        //}
+        if (gps.location.isValid()) {
+          writeString(300, 'C');
+          delay(2000);
+        }
+        if (gps.time.isValid()) {
+          if (gps.time.hour() < 10) Serial.print(F("0"));
+          Serial.print(gps.time.hour());
+          Serial.print(F(":"));
+          if (gps.time.minute() < 10) Serial.print(F("0"));
+          Serial.print(gps.time.minute());
+          Serial.print(F(":"));
+          if (gps.time.second() < 10) Serial.print(F("0"));
+          Serial.print(gps.time.second());
+          Serial.print(F("."));
+          if (gps.time.centisecond() < 10) Serial.print(F("0"));
+          Serial.print(gps.time.centisecond());
+        }
     }
-    delay(2000);
+    avail = ss.available();
   }
 
-  /*if (millis() > 5000 && gps.charsProcessed() < 10)
-  {
+  /*if (millis() > 5000 && gps.charsProcessed() < 10) {
     Serial.println(F("No GPS detected: check wiring."));
     while(true);
   }*/
+  delay(5000);
 }
 
