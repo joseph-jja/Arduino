@@ -29,6 +29,7 @@ void setup()
   
   // it does not seem to work unless you pass in the address?
   alpha4.begin(0x70);
+  alpha4.setBrightness(5);
   alpha4.writeDigitRaw(0, 0xFFFF);
   alpha4.writeDisplay();
 
@@ -53,6 +54,7 @@ void setup()
   Serial.println(TinyGPSPlus::libraryVersion());
 
   ss.begin(GPSBaud);
+
 }
 
 // method to write a float to screen
@@ -60,10 +62,16 @@ void writeString(long value, char type)
 {
   int i;
   int len;
-  char data[(sizeof(long) * 4) + 1];
+  char data[(sizeof(long) * 4) + sizeof(char) + 1];
+
+  bool isTime = (type == 'd');
 
   memset(&data, '\0', sizeof(data));
-  sprintf(data, "%c%3d", type, value);
+  if (isTime) {
+    sprintf(data, "%d", value);
+  } else {
+    sprintf(data, "%c%3d", type, value);
+  }
   len = strlen(data);
 
   alpha4.clear();
@@ -78,44 +86,48 @@ void writeString(long value, char type)
     {
       break;
     }
-    alpha4.writeDigitAscii(i, data[i]);
+    bool writeDot = (isTime & i == 1);
+    alpha4.writeDigitAscii(i, data[i], writeDot);
     i++;
   }
   alpha4.writeDisplay();
   delay(1000);
 }
 
+long currentHour, 
+   currentMinute;
+
+signed long tzOffset = -7;
+
 void loop()
 {
 
   char buff[255];
   
-  
-  bool newData = false;
+  bool isLatLongValid = false;
 
   long avail = ss.available();
-  memset(&buff, '\0', sizeof(buff));
+  /*memset(&buff, '\0', sizeof(buff));
   sprintf(buff, "Start %d ", avail);
   Serial.println(buff);
-  writeString(avail, 'A');
+  writeString(avail, 'A');*/
 
   while (avail > 0) {
     //Serial.println("Trying to get GPS data obtained");
     if (gps.encode(ss.read())) {
         Serial.println("GPS data obtained");
-        writeString(100, 'B');
-        //if (gps.location.isValid()) {
-          memset(&buff, '\0', sizeof(buff));
-          sprintf(buff, "Latitude: %6d \t Longitude: %6d ", gps.location.lat(), gps.location.lng()); 
-          Serial.println(buff);
-          //Serial.println("Latitude: %6d \t Longitude: %6d");
-          //Serial.print(gps.location.lat(), 6);
-          //Serial.print(F(","));
-          //Serial.print(gps.location.lng(), 6);
-        //}
+        //writeString(100, 'B');
+        
+        memset(&buff, '\0', sizeof(buff));
+        sprintf(buff, "Latitude: %6d \t Longitude: %6d ", gps.location.lat(), gps.location.lng()); 
+        Serial.println(buff);
         if (gps.location.isValid()) {
-          writeString(300, 'C');
-          delay(2000);
+          long ll = floor(gps.location.lat() + gps.location.lng());
+          writeString(ll, 'C');
+          Serial.print(gps.location.lat(), 6);
+          Serial.print(gps.location.lng(), 6);
+          isLatLongValid = true;
+          delay(1000);
         }
         if (gps.time.isValid()) {
           if (gps.time.hour() < 10) Serial.print(F("0"));
@@ -123,21 +135,23 @@ void loop()
           Serial.print(F(":"));
           if (gps.time.minute() < 10) Serial.print(F("0"));
           Serial.print(gps.time.minute());
-          Serial.print(F(":"));
-          if (gps.time.second() < 10) Serial.print(F("0"));
+          //Serial.print(F(":"));
+          /*if (gps.time.second() < 10) Serial.print(F("0"));
           Serial.print(gps.time.second());
           Serial.print(F("."));
           if (gps.time.centisecond() < 10) Serial.print(F("0"));
-          Serial.print(gps.time.centisecond());
+          Serial.print(gps.time.centisecond());*/
+          Serial.println(" ");
+          long hour = gps.time.hour();
+          if (!isLatLongValid) {
+            hour += tzOffset;
+          }
+          long time = (hour * 100) + gps.time.minute();
+          writeString(time, 'd');
         }
     }
     avail = ss.available();
   }
-
-  /*if (millis() > 5000 && gps.charsProcessed() < 10) {
-    Serial.println(F("No GPS detected: check wiring."));
-    while(true);
-  }*/
-  delay(5000);
+  delay(1000);
 }
 
