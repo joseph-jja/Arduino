@@ -30,24 +30,17 @@ void setup()
   // it does not seem to work unless you pass in the address?
   alpha4.begin(0x70);
   alpha4.setBrightness(5);
-  alpha4.writeDigitRaw(0, 0xFFFF);
-  alpha4.writeDisplay();
 
-  alpha4.writeDigitRaw(1, 0xFFFF);
-  alpha4.writeDisplay();
-
-  alpha4.writeDigitRaw(2, 0xFFFF);
-  alpha4.writeDisplay();
-
-  alpha4.writeDigitRaw(3, 0xFFFF);
-  alpha4.writeDisplay();
+  for (int i = 0; i < 4; i++) {
+    alpha4.writeDigitRaw(i, 0xFFFF);
+    alpha4.writeDisplay();
+  }
   
   delay(250);
-  alpha4.writeDigitRaw(0, 0x0);
-  alpha4.writeDigitRaw(1, 0x0);
-  alpha4.writeDigitRaw(2, 0x0);
-  alpha4.writeDigitRaw(3, 0x0);
-  alpha4.writeDisplay();
+  for (int i = 0; i < 4; i++) {
+    alpha4.writeDigitRaw(i, 0x0);
+    alpha4.writeDisplay();
+  }
 
   Serial.begin(GPSBaud);
   Serial.println("Application setup!");
@@ -57,7 +50,10 @@ void setup()
 
 }
 
-// method to write a float to screen
+// method to write a long to screen
+// 4 characters like 1000 if type is d
+// 3 characters and type in space 0 otherwise
+// 1 second delay after write
 void writeString(long value, char type)
 {
   int i;
@@ -99,18 +95,22 @@ long currentHour,
 
 signed long tzOffset = -7;
 
+bool gotGPSTime = false;
+bool isLatLongValid = false;
+
 void loop()
 {
 
   char buff[255];
   
-  bool isLatLongValid = false;
-
   long avail = ss.available();
   /*memset(&buff, '\0', sizeof(buff));
   sprintf(buff, "Start %d ", avail);
   Serial.println(buff);
   writeString(avail, 'A');*/
+
+  isLatLongValid = false;
+  gotGPSTime = false;
 
   while (avail > 0) {
     //Serial.println("Trying to get GPS data obtained");
@@ -126,10 +126,12 @@ void loop()
           writeString(ll, 'C');
           Serial.print(gps.location.lat(), 6);
           Serial.print(gps.location.lng(), 6);
+          Serial.println(" ");
           isLatLongValid = true;
           delay(1000);
         }
         if (gps.time.isValid()) {
+          gotGPSTime = true;
           if (gps.time.hour() < 10) Serial.print(F("0"));
           Serial.print(gps.time.hour());
           Serial.print(F(":"));
@@ -153,5 +155,8 @@ void loop()
     avail = ss.available();
   }
   delay(1000);
+  long gps = (isLatLongValid ? 100 : 0) + (gotGPSTime ? 5 : 0);
+  writeString(gps, 'X');
+  delay(500);
 }
 
