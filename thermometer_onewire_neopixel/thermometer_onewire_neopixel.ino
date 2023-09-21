@@ -144,14 +144,39 @@ void loop()
   float celsius = getCTemp(oneWire) - 0.50;
   float fahrenheit = (celsius * 1.80) + 32.00;
 
+  // clear all pixels colors 
+  // for ( int i=0; i < len; i++ ) {
+  //  xx.setPixelColor(0, 0, 0, 0);  
+  //}
+
   if (fahrenheit < 10) {
     strip.setPixelColor(0, 255, 255, 0);
+    // set all led this colod
   } else if (fahrenheit > 100) {
     strip.setPixelColor(0, 255, 0, 0);
+    // set all led this colod
   } else {
-    strip.setPixelColor(0, 0, 0, 255);
+    strip.setPixelColor(0, 0, 0, 255);    
+
+    long hundreds = floor(fahrenheit/10);
+    // xxx.setPixelColor([hundreds], 0, 0, 255);
+    /*if (tenx < 9 ) {
+      xxx.setPixelColor([hundreds+1], 0, 255, 0);
+    } else if (tens > 0) {
+      xxx.setPixelColor([hundreds=-1], 255, 0, 255);
+    }
+
+    long tens = fahrenheit - (hundreds * 10);
+    // xxx.setPixelColor([tens], 0, 0, 255);
+    /*if (tenx < 9 ) {
+      xxx.setPixelColor([tens+1], 0, 255, 0);
+    } else if (tens > 0) {
+      xxx.setPixelColor([tens=-1], 255, 0, 255);
+    }
+
+    */ 
   }
   strip.show();
-  
+
   delay(1000);
 }
