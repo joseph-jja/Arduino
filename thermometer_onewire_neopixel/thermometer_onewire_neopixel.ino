@@ -20,10 +20,14 @@
 // DS18B20 pin
 #define TEMPERATURE_PIN 10
 
+#define PIXELS_PIN 6
+#define NUMPIXELS 20
+
 // Setup a oneWire instance to communicate with any OneWire devices (not just Maxim/Dallas temperature ICs)
 OneWire oneWire(TEMPERATURE_PIN);
 
 Adafruit_DotStar strip(DOTSTAR_NUM, PIN_DOTSTAR_DATA, PIN_DOTSTAR_CLK, DOTSTAR_BRG);
+//Adafruit_NeoPixel pixels(NUMPIXELS, PIXELS_PIN, NEO_GRB + NEO_KHZ800);
 
 boolean debugMode = false;
 
@@ -33,7 +37,17 @@ void setup()
   strip.setBrightness(50);
   strip.show(); 
 
-  //Serial.begin(9600);
+  /* basic startup test to make sure pixels are all lighting up
+  pixels.begin(); // Initialize pins for output
+  pixels.setBrightness(50);
+  pixels.clear();
+
+  for(int i=0; i<NUMPIXELS; i++) {
+    pixels.setPixelColor(i, pixels.Color(255, 255, 255));
+  }
+
+  pixels.show();
+  delay(500);*/
 }
 
 float getCTemp(OneWire wire){
@@ -159,21 +173,21 @@ void loop()
     strip.setPixelColor(0, 0, 0, 255);    
 
     long hundreds = floor(fahrenheit/10);
-    // xxx.setPixelColor([hundreds], 0, 0, 255);
-    /*if (tenx < 9 ) {
-      xxx.setPixelColor([hundreds+1], 0, 255, 0);
+    /*
+    pixels.setPixelColor(hundreds, 0, 0, 255);
+    if (tenx < 9 ) {
+      pixels.setPixelColor(hundreds+1, 0, 255, 0);
     } else if (tens > 0) {
-      xxx.setPixelColor([hundreds=-1], 255, 0, 255);
+      pixels.setPixelColor(hundreds-1, 255, 0, 255);
     }
 
     long tens = fahrenheit - (hundreds * 10);
-    // xxx.setPixelColor([tens], 0, 0, 255);
-    /*if (tenx < 9 ) {
-      xxx.setPixelColor([tens+1], 0, 255, 0);
+    pixels.setPixelColor(tens, 0, 0, 255);
+    if (tenx < 9 ) {
+      pixels.setPixelColor(tens+1, 0, 255, 0);
     } else if (tens > 0) {
-      xxx.setPixelColor([tens=-1], 255, 0, 255);
+      pixels.setPixelColor(tens=-1, 255, 0, 255);
     }
-
     */ 
   }
   strip.show();
