@@ -8,7 +8,7 @@ from busio import I2C
 from math import floor
 
 distance = AnalogIn(board.A0)
-print("starting...")
+#print("starting...")
 
 # Seven Segment FeatherWing setup
 i2c = I2C(board.D1, board.D0)
@@ -21,22 +21,33 @@ if i2c.try_lock():
     i2c.unlock()
 display = Seg14x4(i2c)
 #display.brightness = 15
-display.fill(0)  # Clear the display
 display.fill(1)  # Test
 sleep(1)
-#display.fill(0)  # Clear the display
+display.fill(0)  # Clear the display
 
 feet_convert = 147 * 12
+
+array_of_values = []
+i = 0
 
 while True:
     # so I don't know if this is the correct formula
     # it seems to be better than what I read :)
-    voltage = floor(((distance.value * distance.reference_voltage) / 65536) * 100) / 10
-    feets = floor((distance.value / feet_convert) * 10) / 10
-    display.fill(0)
+    value = distance.value
+    voltage = floor(((value * distance.reference_voltage) / 65536) * 100) / 10
+    feets = floor((value / feet_convert) * 10) / 10
     average = (feets + voltage) / 2
-    print("Approximate distance: ", voltage, feets, average)
-    display_value = str(voltage)
-    display.print(display_value)
-    sleep(1)
+    array_of_values.append(average)
+    
+    if i > 6:
+        i = 0
+        array_of_values.sort()
+        print("Approximate distance: ", voltage, feets, average, array_of_values[3])
+        display.fill(0)
+        display_value = str(array_of_values[3])
+        display.print(display_value)
+        array_of_values.clear()
+    
+    i = i + 1
+    sleep(0.25)
 
