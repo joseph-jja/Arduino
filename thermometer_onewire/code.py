@@ -35,10 +35,27 @@ ds18b20 = adafruit_ds18x20.DS18X20(ow_bus, devices[0])
 while True:
     # so I don't know if this is the correct formula
     # it seems to be better than what I read :)
-    value = ds18b20.temperature
-    print("Got temperature", value)
+    celsius = ds18b20.temperature
+    fahrenheit = (celsius * 1.80) + 32.00;
+
+    celsius = floor(celsius * 10) / 10
+    fahrenheit = floor(fahrenheit * 10) / 10
+    
+    celsiusStr = str(celsius) + "C"
+    fahrenheitStr = str(fahrenheit) + "F"
+    if celsius > 100: 
+        celsius = floor(celcius)
+        celsiusStr = str(celsius) + "C"
+    
+    if fahrenheit > 100: 
+        fahrenheit = floor(fahrenheit)
+        fahrenheitStr = str(fahrenheit) + "F"
+    
+    print("Got temperature C", celsius)
+    print("Got temperature F", fahrenheit)
     display.fill(0)
     
-    display.print(floor(value))
-
-    sleep(0.25)
+    display.print(celsiusStr)
+    sleep(1)
+    display.print(fahrenheitStr)
+    sleep(1)
