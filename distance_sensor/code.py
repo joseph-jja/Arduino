@@ -3,26 +3,40 @@ import digitalio
 import time
 from time import sleep
 from analogio import AnalogIn
-from adafruit_ht16k33.segments import Seg7x4
+from adafruit_ht16k33.segments import Seg14x4
+from busio import I2C
+from math import floor
 
-led = digitalio.DigitalInOut(board.D13)
-led.direction = digitalio.Direction.OUTPUT
-
-distance = AnalogIn(board.A1)
+distance = AnalogIn(board.A0)
+print("starting...")
 
 # Seven Segment FeatherWing setup
-i2c = board.I2C()  # uses board.SCL and board.SDA
-display = Seg7x4(i2c, address=0x70)
-display.brightness = 15
+i2c = I2C(board.D1, board.D0)
+
+if i2c.try_lock():
+    
+    for x in i2c.scan():
+        print("testing")
+        print(x, hex(x))
+    i2c.unlock()
+display = Seg14x4(i2c)
+#display.brightness = 15
 display.fill(0)  # Clear the display
-#display_A.print(1234) will display 1234
-#display_A.set_digit_raw(3, 0b00000001) will light up the top segment of the fourth digit (far right) only.
-#display[0] = '6'
+display.fill(1)  # Test
+sleep(1)
+#display.fill(0)  # Clear the display
+
+feet_convert = 147 * 12
 
 while True:
-    voltage = ( distance.value * 3.3 ) / 65536
-    print (voltage)
-    led.value = True
-    sleep(0.5)
-    led.value = False
-    sleep(0.5)
+    # so I don't know if this is the correct formula
+    # it seems to be better than what I read :)
+    voltage = floor(((distance.value * distance.reference_voltage) / 65536) * 100) / 10
+    feets = floor((distance.value / feet_convert) * 10) / 10
+    display.fill(0)
+    average = (feets + voltage) / 2
+    print("Approximate distance: ", voltage, feets, average)
+    display_value = str(voltage)
+    display.print(display_value)
+    sleep(1)
+
