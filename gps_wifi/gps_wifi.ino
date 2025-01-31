@@ -3,8 +3,12 @@
 #include <string.h>
 #include <math.h>
 
-#include "Adafruit_LEDBackpack.h"
-#include "Adafruit_GFX.h"
+// Import required libraries for esp8266
+#include <Arduino.h>
+#include <ESP8266WiFi.h>
+#include <Hash.h>
+#include <ESPAsyncTCP.h>
+#include <ESPAsyncWebServer.h>
 
 #include <TinyGPSPlus.h>
 #include <SoftwareSerial.h>
@@ -16,82 +20,118 @@
 static const int RXPin = 10, TXPin = 11;
 static const int GPSBaud = 9600;
 
+const char* ssid     = "ESP8266-Access-Point";
+const char* password = "123456789";
+
 // The TinyGPS object
 TinyGPSPlus gps;
 
 // The serial connection to the GPS device
 SoftwareSerial ss(RXPin, TXPin);
 
-Adafruit_AlphaNum4 alpha4 = Adafruit_AlphaNum4();
+// Create AsyncWebServer object on port 80
+AsyncWebServer server(80);
+
+const char index_html[] PROGMEM = R"rawliteral(
+<!DOCTYPE HTML><html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    html {
+     font-family: Arial;
+     display: inline-block;
+     margin: 0px auto;
+     text-align: center;
+    }
+    h2 { font-size: 3.0rem; }
+    p { font-size: 3.0rem; }
+    .units { font-size: 1.2rem; }
+    .dht-labels{
+      font-size: 1.5rem;
+      vertical-align:middle;
+      padding-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+  <h2>ESP8266 DHT Server</h2>
+  <p>
+    <span class="dht-labels">Temperature</span> 
+    <span id="temperature">%TEMPERATURE%</span>
+    <sup class="units">&deg;C</sup>
+  </p>
+  <p>
+    <span class="dht-labels">Humidity</span>
+    <span id="humidity">%HUMIDITY%</span>
+    <sup class="units">%</sup>
+  </p>
+</body>
+<script>
+setInterval(function ( ) {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      document.getElementById("temperature").innerHTML = this.responseText;
+    }
+  };
+  xhttp.open("GET", "/temperature", true);
+  xhttp.send();
+}, 10000 ) ;
+
+setInterval(function ( ) {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      document.getElementById("humidity").innerHTML = this.responseText;
+    }
+  };
+  xhttp.open("GET", "/humidity", true);
+  xhttp.send();
+}, 10000 ) ;
+</script>
+</html>)rawliteral";
 
 void setup()
 {
   
-  // it does not seem to work unless you pass in the address?
-  alpha4.begin(0x70);
-  alpha4.setBrightness(5);
-
-  for (int i = 0; i < 4; i++) {
-    alpha4.writeDigitRaw(i, 0xFFFF);
-    alpha4.writeDisplay();
-  }
-  
-  delay(250);
-  for (int i = 0; i < 4; i++) {
-    alpha4.writeDigitRaw(i, 0x0);
-    alpha4.writeDisplay();
-  }
-
   Serial.begin(GPSBaud);
   Serial.println("Application setup!");
   Serial.println(TinyGPSPlus::libraryVersion());
 
   ss.begin(GPSBaud);
 
+  Serial.print("Setting AP (Access Point)…");
+  // Remove the password parameter, if you want the AP (Access Point) to be open
+  WiFi.softAP(ssid, password);
+
+  IPAddress IP = WiFi.softAPIP();
+  Serial.print("AP IP address: ");
+  Serial.println(IP);
+
+  // Print ESP8266 Local IP Address
+  Serial.println(WiFi.localIP());
+
+  // Route for root / web page
+  server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send_P(200, "text/html", index_html, processor);
+  });
+  server.on("/temperature", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send_P(200, "text/plain", String(t).c_str());
+  });
+  server.on("/humidity", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send_P(200, "text/plain", String(h).c_str());
+  });
+
+  // Start server
+  server.begin();
+
 }
 
-// method to write a long to screen
-// 4 characters like 1000 if type is d
-// 3 characters and type in space 0 otherwise
-// 1 second delay after write
-void writeString(long value, char type)
-{
-  int i;
-  int len;
-  char data[(sizeof(long) * 4) + sizeof(char) + 1];
-
-  bool isTime = (type == 'd');
-
-  memset(&data, '\0', sizeof(data));
-  if (isTime) {
-    sprintf(data, "%d", value);
-  } else {
-    sprintf(data, "%c%3d", type, value);
-  }
-  len = strlen(data);
-
-  alpha4.clear();
-  alpha4.writeDisplay();
-
-  i = 0;
-
-  // 100 i will be 0, 1, then 0 then 0 
-  while (i < 4)
-  {
-    if ( i >= len )
-    {
-      break;
-    }
-    bool writeDot = (isTime & i == 1);
-    alpha4.writeDigitAscii(i, data[i], writeDot);
-    i++;
-  }
-  alpha4.writeDisplay();
-  delay(1000);
-}
 
 long currentHour, 
-   currentMinute;
+   currentMinute,
+   latitude,
+   longitude;
 
 signed long tzOffset = -7;
 
@@ -149,14 +189,16 @@ void loop()
             hour += tzOffset;
           }
           long time = (hour * 100) + gps.time.minute();
-          writeString(time, 'd');
+
+          latitude = gps.location.lat();
+          longitude = gps.location.lng();
         }
     }
     avail = ss.available();
   }
   delay(1000);
   long gps = (isLatLongValid ? 100 : 0) + (gotGPSTime ? 5 : 0);
-  writeString(gps, 'X');
   delay(500);
 }
+
 
