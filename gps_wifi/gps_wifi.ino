@@ -7,8 +7,8 @@
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
 #include <Hash.h>
-#include <ESPAsyncTCP.h>
-#include <ESPAsyncWebServer.h>
+//#include <ESPAsyncTCP.h>
+//#include <ESPAsyncWebServer.h>
 
 #include<Wire.h>
 const int MPU=0x68; 
@@ -16,6 +16,7 @@ int16_t AcX,AcY,AcZ,Tmp,GyX,GyY,GyZ;
 
 #include <TinyGPSPlus.h>
 #include <SoftwareSerial.h>
+
 /*
    This sample sketch demonstrates the normal use of a TinyGPS++ (TinyGPSPlus) object.
    It requires the use of SoftwareSerial, and assumes that you have a
@@ -34,66 +35,10 @@ TinyGPSPlus gps;
 SoftwareSerial ss(RXPin, TXPin);
 
 // Create AsyncWebServer object on port 80
-AsyncWebServer server(80);
+//AsyncWebServer server(80);
 
-const char index_html[] PROGMEM = R"rawliteral(
-<!DOCTYPE HTML><html>
-<head>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    html {
-     font-family: Arial;
-     display: inline-block;
-     margin: 0px auto;
-     text-align: center;
-    }
-    h2 { font-size: 3.0rem; }
-    p { font-size: 3.0rem; }
-    .units { font-size: 1.2rem; }
-    .dht-labels{
-      font-size: 1.5rem;
-      vertical-align:middle;
-      padding-bottom: 15px;
-    }
-  </style>
-</head>
-<body>
-  <h2>ESP8266 DHT Server</h2>
-  <p>
-    <span class="dht-labels">Temperature</span> 
-    <span id="temperature">%TEMPERATURE%</span>
-    <sup class="units">&deg;C</sup>
-  </p>
-  <p>
-    <span class="dht-labels">Humidity</span>
-    <span id="humidity">%HUMIDITY%</span>
-    <sup class="units">%</sup>
-  </p>
-</body>
-<script>
-setInterval(function ( ) {
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-      document.getElementById("temperature").innerHTML = this.responseText;
-    }
-  };
-  xhttp.open("GET", "/temperature", true);
-  xhttp.send();
-}, 10000 ) ;
-
-setInterval(function ( ) {
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-      document.getElementById("humidity").innerHTML = this.responseText;
-    }
-  };
-  xhttp.open("GET", "/humidity", true);
-  xhttp.send();
-}, 10000 ) ;
-</script>
-</html>)rawliteral";
+// separate file for this lovely HTML 
+#include "static_html.h"
 
 void setup()
 {
@@ -116,7 +61,8 @@ void setup()
   Serial.println(WiFi.localIP());
 
   // Route for root / web page
-  server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
+  Serial.println(index_html);
+  /*server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send_P(200, "text/html", index_html, processor);
   });
   server.on("/temperature", HTTP_GET, [](AsyncWebServerRequest *request){
@@ -127,7 +73,7 @@ void setup()
   });
 
   // Start server
-  server.begin();
+  server.begin();*/
 
   Wire.begin();
   Wire.beginTransmission(MPU);
@@ -174,7 +120,7 @@ void loop()
         Serial.println(buff);
         if (gps.location.isValid()) {
           long ll = floor(gps.location.lat() + gps.location.lng());
-          writeString(ll, 'C');
+          //writeString(ll, 'C');
           Serial.print(gps.location.lat(), 6);
           Serial.print(gps.location.lng(), 6);
           Serial.println(" ");
@@ -214,7 +160,7 @@ void loop()
   Wire.beginTransmission(MPU);
   Wire.write(0x3B);  
   Wire.endTransmission(false);
-  Wire.requestFrom(MPU,12,true);  
+  /*int bytesRead = Wire.requestFrom(MPU,12,true);  
   AcX=Wire.read()<<8|Wire.read();    
   AcY=Wire.read()<<8|Wire.read();  
   AcZ=Wire.read()<<8|Wire.read();  
@@ -231,8 +177,6 @@ void loop()
   Serial.print("X  = "); Serial.print(GyX);
   Serial.print(" | Y = "); Serial.print(GyY);
   Serial.print(" | Z = "); Serial.println(GyZ);
-  Serial.println(" ");
+  Serial.println(" ");*/
   delay(333);
 }
-
-

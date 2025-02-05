@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-#include <TimeLib.h>
+#include <time.h>
 
 #include "Adafruit_LEDBackpack.h"
 #include "Adafruit_GFX.h"
@@ -17,7 +17,10 @@ RTC_PCF8523 rtc;
 
 void setup()
 {
-  
+
+    Serial.begin(SERIAL_BAUD);
+    Serial.println("Application setup!");
+
     // it does not seem to work unless you pass in the address?
     alpha4.begin(0x70);
     alpha4.setBrightness(5);
@@ -27,38 +30,52 @@ void setup()
         alpha4.writeDisplay();
     }
   
-    delay(250);
+    delay(1000);
     for (int i = 0; i < 4; i++) {
         alpha4.writeDigitRaw(i, 0x0);
         alpha4.writeDisplay();
     }
-
-    Serial.begin(SERIAL_BAUD);
-    Serial.println("Application setup!");
+    Serial.println("Display initialized!");
 
     // clock found so initialize to current data time from computer
     if (rtc.begin()) {
+        Serial.print("Begin RTC!");
         if (!rtc.initialized()) {
-            // following line sets the RTC to the date & time this sketch was compiled
-            rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
+            Serial.print("Not initialized!");
         }
+        // following line sets the RTC to the date & time this sketch was compiled
+        rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
+    } else {
+        Serial.print("Could NOT Begin RTC!");        
     }
 }
 
+static time_t rawtime;
+long currentHour, 
+   currentMinute;
+
 void get_time() {
 
+    int uptime = millis();
+    int seconds = uptime/1000;
+    Serial.print("Uptime: ");
+    Serial.println(uptime);
 
-    time_t tm = now();
-    int hours = hour(tm);
-    int minutes = minute(tm);
+    if (rawtime == NULL) { 
+        time (&rawtime);
+    }
+    static tm *now = localtime(&rawtime);
+    currentHour = now->tm_hour;
+    currentMinute = now->tm_min;
 
-    char ampm[4];
+    char ampm[10];
 
     memset(ampm, '\0', sizeof(ampm) + 1);
-    sprintf(ampm, "%2d%2d", hours, minutes);
+    sprintf(ampm, "%2d:%2d", currentHour, currentMinute);
 
+    Serial.print("Arduino Time Shows ");
     Serial.println(ampm);
-        
+    
     // no rtc so just pull time from thin air
     if (!rtc.begin()) {
         return;
@@ -67,10 +84,10 @@ void get_time() {
     if (!rtc.initialized()) {
         // following line sets the RTC to the date & time this sketch was compiled
         rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
-    } else {
-        rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
     }
+    // gets the time from the RTC clock
     DateTime rtnow = rtc.now();
+    Serial.print("RTC Time Shows ");
     Serial.print(rtnow.year(), DEC);
     Serial.print('/');
     Serial.print(rtnow.month(), DEC);
@@ -82,60 +99,54 @@ void get_time() {
     Serial.print(rtnow.minute(), DEC);
     Serial.print(':');
     Serial.println(rtnow.second(), DEC);
-    
-    // set time
-    setTime(rtnow.hour(), 
-        rtnow.minute(),
-        rtnow.second(),
-        rtnow.day(),
-        rtnow.month(),
-        rtnow.year());
-    
+
+    // updates the clock time 
+    now->tm_hour = rtnow.hour();
+    now->tm_min = rtnow.minute();
+    now->tm_sec = rtnow.second();
+    rawtime = mktime ( now );
+
+    // separator
+    Serial.println("##################################################");
 }
 
-// method to write a long to screen
-// 4 characters like 1000 if type is d
-// 3 characters and type in space 0 otherwise
-// 1 second delay after write
-void writeString(long value, char type)
+// called after get time and uses the values or currentHour and currentMinute
+void writeString()
 {
-  int i;
-  int len;
-  char data[(sizeof(long) * 4) + sizeof(char) + 1];
+    char hours[3];
+    char minutes[3];
 
-  bool isTime = (type == 'd');
+    memset(hours, '\0', sizeof(hours) + 1);
+    memset(minutes, '\0', sizeof(minutes) + 1);
 
-  memset(&data, '\0', sizeof(data));
-  if (isTime) {
-    sprintf(data, "%d", value);
-  } else {
-    sprintf(data, "%c%3d", type, value);
-  }
-  Serial.println(data);
-  len = strlen(data);
-
-  alpha4.clear();
-  alpha4.writeDisplay();
-
-  i = 0;
-
-  // 100 i will be 0, 1, then 0 then 0 
-  while (i < 4)
-  {
-    if ( i >= len )
-    {
-      break;
+    if (currentHour < 10) {
+        sprintf(hours, "0%d", currentHour);
+    } else {
+        sprintf(hours, "%d", currentHour);
     }
-    bool writeDot = (isTime & i == 1);
-    alpha4.writeDigitAscii(i, data[i], writeDot);
-    i++;
-  }
-  alpha4.writeDisplay();
-  delay(1000);
-}
 
-long currentHour, 
-   currentMinute;
+    if (currentMinute < 10) {
+        sprintf(minutes, "0%d", currentMinute);
+    } else {
+        sprintf(minutes, "%d", currentMinute);
+    }
+
+    Serial.print("Write Time: ");
+    Serial.print(hours);
+    Serial.print(':');
+    Serial.println(minutes);
+    // separator
+    Serial.println("##################################################");
+    
+    alpha4.clear();
+    alpha4.writeDigitAscii(0, hours[0], false);
+    alpha4.writeDigitAscii(1, hours[1], true);
+    alpha4.writeDigitAscii(2, minutes[0], false);
+    alpha4.writeDigitAscii(3, minutes[1], false);
+    alpha4.writeDisplay();
+    
+    delay(1000);
+}
 
 void loop() {
 
@@ -143,8 +154,7 @@ void loop() {
 
     get_time();
 
-    //writeString(1230, "x");
-    //writeString(230, "d");
+    writeString();
   
     delay(1000);
 
