@@ -39,6 +39,11 @@ SoftwareSerial ss(RXPin, TXPin);
 
 int16_t AcX,AcY,AcZ,Tmp,GyX,GyY,GyZ;
 
+long currentHour, 
+   currentMinute,
+   latitude,
+   longitude;
+
 void setup()
 {
   
@@ -81,23 +86,12 @@ void setup()
   Wire.write(0x6B);  
   Wire.write(0);    
   Wire.endTransmission(true);
-  Serial.begin(9600);*/
+  */
 
   pinMode(LED_BUILTIN, OUTPUT);
   Serial.println("Pin enabled");
   digitalWrite(LED_BUILTIN, LOW);
 }
-
-
-long currentHour, 
-   currentMinute,
-   latitude,
-   longitude;
-
-signed long tzOffset = -7;
-
-bool gotGPSTime = false;
-bool isLatLongValid = false;
 
 void blink_pin(int sleep_time) {
     digitalWrite(LED_BUILTIN, HIGH);
@@ -105,22 +99,13 @@ void blink_pin(int sleep_time) {
     digitalWrite(LED_BUILTIN, LOW);
 }
 
-void loop()
-{
+void get_gps_info() {
 
-  char buff[255];
-
-  blink_pin(1000);  
-  
   long avail = ss.available();
-  /*memset(&buff, '\0', sizeof(buff));
-  sprintf(buff, "Start %d ", avail);
-  Serial.println(buff);
-  writeString(avail, 'A');*/
 
-  isLatLongValid = false;
-  gotGPSTime = false;
-
+  bool isLatLongValid = false;
+  bool gotGPSTime = false;
+  
   while (avail > 0) {
     blink_pin(100);
     Serial.println("Trying to get GPS data obtained");
@@ -166,8 +151,18 @@ void loop()
     }
     avail = ss.available();
   }
-  delay(1000);
+  delay(500);
   long gps = (isLatLongValid ? 100 : 0) + (gotGPSTime ? 5 : 0);
+
+}
+
+void loop() {
+
+  char buff[255];
+
+  blink_pin(1000);  
+  
+  get_gps_info();
   delay(500);
 
   /*Wire.beginTransmission(MPU);
