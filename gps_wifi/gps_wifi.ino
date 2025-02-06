@@ -84,12 +84,11 @@ void setup()
   // Start server
   //server.begin();
 
-  /*Wire.begin();
+  Wire.begin();
   Wire.beginTransmission(MPU);
   Wire.write(0x6B);  
   Wire.write(0);    
   Wire.endTransmission(true);
-  */
 
   pinMode(LED_BUILTIN, OUTPUT);
   Serial.println("Pin enabled");
@@ -111,9 +110,8 @@ void get_gps_info() {
   bool isLatLongValid = false;
   bool gotGPSTime = false;
 
-  
   while (avail > 0) {
-    Serial.println("Trying to get GPS data.");
+    //Serial.println("Trying to get GPS data.");
     if (gps.encode(ss.read())) {
         blink_pin(100);
         Serial.println("GPS data obtained");
@@ -171,10 +169,10 @@ void loop() {
   get_gps_info();
   delay(500);
 
-  /*Wire.beginTransmission(MPU);
+  Wire.beginTransmission(MPU);
   Wire.write(0x3B);  
   Wire.endTransmission(false);
-  /*int bytesRead = Wire.requestFrom(MPU,12,true);  
+  int bytesRead = Wire.requestFrom(MPU,12,true);  
   AcX=Wire.read()<<8|Wire.read();    
   AcY=Wire.read()<<8|Wire.read();  
   AcZ=Wire.read()<<8|Wire.read();  
@@ -191,6 +189,6 @@ void loop() {
   Serial.print("X  = "); Serial.print(GyX);
   Serial.print(" | Y = "); Serial.print(GyY);
   Serial.print(" | Z = "); Serial.println(GyZ);
-  Serial.println(" ");*/
+  Serial.println(" ");
   delay(333);
 }
