@@ -6,10 +6,8 @@
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
 #include <Hash.h>
-//#include <ESPAsyncTCP.h>
-//#include <ESPAsyncWebServer.h>
-//#include <AsyncTCP.h>
-//#include <ESPAsyncWebSrv.h>
+#include <ESP8266WebServer.h>
+#include <ESP8266mDNS.h>
 
 // accelerometer
 #include <Wire.h>
@@ -35,7 +33,7 @@ TinyGPSPlus gps;
 SoftwareSerial ss(RXPin, TXPin);
 
 // Create AsyncWebServer object on port 80
-//AsyncWebServer server(80);
+ESP8266WebServer server(80);
 
 int16_t AcX,AcY,AcZ,Tmp,GyX,GyY,GyZ;
 
@@ -66,20 +64,25 @@ void setup()
   // Print ESP8266 Local IP Address
   Serial.println(WiFi.localIP());
 
+  if (MDNS.begin("esp8266")) {
+    Serial.println("MDNS responder started");
+  }
+
   // Route for root / web page
   //Serial.println(index_html);
-  /*server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send_P(200, "text/html", index_html, processor);
+  server.on("/", []() {
+    Serial.println("Request for home page");
+    server.send(200, "text/html", index_html);
   });
-  server.on("/temperature", HTTP_GET, [](AsyncWebServerRequest *request){
+  /*server.on("/temperature", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send_P(200, "text/plain", String(t).c_str());
   });
   server.on("/humidity", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send_P(200, "text/plain", String(h).c_str());
-  });
+  });*/
 
   // Start server
-  server.begin();*/
+  //server.begin();
 
   /*Wire.begin();
   Wire.beginTransmission(MPU);
@@ -103,13 +106,16 @@ void get_gps_info() {
 
   long avail = ss.available();
 
+  char buff[255];
+
   bool isLatLongValid = false;
   bool gotGPSTime = false;
+
   
   while (avail > 0) {
-    blink_pin(100);
-    Serial.println("Trying to get GPS data obtained");
+    Serial.println("Trying to get GPS data.");
     if (gps.encode(ss.read())) {
+        blink_pin(100);
         Serial.println("GPS data obtained");
         //writeString(100, 'B');
         
