@@ -22,7 +22,7 @@ int16_t AcX,AcY,AcZ,Tmp,GyX,GyY,GyZ;
    It requires the use of SoftwareSerial, and assumes that you have a
    4800-baud serial GPS device hooked up on pins 4(rx) and 3(tx).
 */
-static const int RXPin = 10, TXPin = 11;
+static const int RXPin = 15, TXPin = 16;
 static const int GPSBaud = 9600;
 
 const char* ssid     = "ESP8266-Access-Point";
@@ -48,7 +48,7 @@ void setup()
   Serial.println(TinyGPSPlus::libraryVersion());
 
   ss.begin(GPSBaud);
-
+  
   Serial.print("Setting AP (Access Point)…");
   // Remove the password parameter, if you want the AP (Access Point) to be open
   WiFi.softAP(ssid, password);
@@ -61,7 +61,7 @@ void setup()
   Serial.println(WiFi.localIP());
 
   // Route for root / web page
-  Serial.println(index_html);
+  //Serial.println(index_html);
   /*server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send_P(200, "text/html", index_html, processor);
   });
@@ -75,13 +75,16 @@ void setup()
   // Start server
   server.begin();*/
 
-  Wire.begin();
+  /*Wire.begin();
   Wire.beginTransmission(MPU);
   Wire.write(0x6B);  
   Wire.write(0);    
   Wire.endTransmission(true);
-  Serial.begin(9600);
+  Serial.begin(9600);*/
 
+  pinMode(LED_BUILTIN, OUTPUT);
+  Serial.println("Pin enabled");
+  digitalWrite(LED_BUILTIN, LOW);
 }
 
 
@@ -95,10 +98,18 @@ signed long tzOffset = -7;
 bool gotGPSTime = false;
 bool isLatLongValid = false;
 
+void blink_pin(int sleep_time) {
+    digitalWrite(LED_BUILTIN, HIGH);
+    delay(sleep_time);
+    digitalWrite(LED_BUILTIN, LOW);
+}
+
 void loop()
 {
 
   char buff[255];
+
+  blink_pin(1000);  
   
   long avail = ss.available();
   /*memset(&buff, '\0', sizeof(buff));
@@ -110,6 +121,7 @@ void loop()
   gotGPSTime = false;
 
   while (avail > 0) {
+    blink_pin(100);
     //Serial.println("Trying to get GPS data obtained");
     if (gps.encode(ss.read())) {
         Serial.println("GPS data obtained");
@@ -157,7 +169,7 @@ void loop()
   long gps = (isLatLongValid ? 100 : 0) + (gotGPSTime ? 5 : 0);
   delay(500);
 
-  Wire.beginTransmission(MPU);
+  /*Wire.beginTransmission(MPU);
   Wire.write(0x3B);  
   Wire.endTransmission(false);
   /*int bytesRead = Wire.requestFrom(MPU,12,true);  
