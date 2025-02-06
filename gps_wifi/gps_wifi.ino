@@ -1,4 +1,3 @@
-
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
@@ -9,24 +8,25 @@
 #include <Hash.h>
 //#include <ESPAsyncTCP.h>
 //#include <ESPAsyncWebServer.h>
+//#include <AsyncTCP.h>
+//#include <ESPAsyncWebSrv.h>
 
-#include<Wire.h>
-const int MPU=0x68; 
-int16_t AcX,AcY,AcZ,Tmp,GyX,GyY,GyZ;
+// accelerometer
+#include <Wire.h>
 
+// gps
 #include <TinyGPSPlus.h>
 #include <SoftwareSerial.h>
 
-/*
-   This sample sketch demonstrates the normal use of a TinyGPS++ (TinyGPSPlus) object.
-   It requires the use of SoftwareSerial, and assumes that you have a
-   4800-baud serial GPS device hooked up on pins 4(rx) and 3(tx).
-*/
-static const int RXPin = 3, TXPin = 1;
-static const int GPSBaud = 9600;
+// configuration
+#include "Config.h"
 
-const char* ssid     = "ESP8266-Access-Point";
-const char* password = "123456789";
+// separate file for this lovely HTML 
+#include "static_html.h"
+
+IPAddress local_IP(192,168,25,1);
+IPAddress gateway(192,168,25,1);
+IPAddress subnet(255,255,255,0);
 
 // The TinyGPS object
 TinyGPSPlus gps;
@@ -37,20 +37,21 @@ SoftwareSerial ss(RXPin, TXPin);
 // Create AsyncWebServer object on port 80
 //AsyncWebServer server(80);
 
-// separate file for this lovely HTML 
-#include "static_html.h"
+int16_t AcX,AcY,AcZ,Tmp,GyX,GyY,GyZ;
 
 void setup()
 {
   
-  Serial.begin(GPSBaud);
+  Serial.begin(SERIAL_BAUD);
+  delay(100);
   Serial.println("Application setup!");
-  Serial.println(TinyGPSPlus::libraryVersion());
 
+  Serial.print("GPS library ");
+  Serial.println(TinyGPSPlus::libraryVersion());
   ss.begin(GPSBaud);
   
-  Serial.print("Setting AP (Access Point)…");
-  // Remove the password parameter, if you want the AP (Access Point) to be open
+  Serial.print("Setting up Access Point");
+  WiFi.softAPConfig(local_IP, gateway, subnet); 
   WiFi.softAP(ssid, password);
 
   IPAddress IP = WiFi.softAPIP();
