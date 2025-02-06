@@ -22,7 +22,7 @@ int16_t AcX,AcY,AcZ,Tmp,GyX,GyY,GyZ;
    It requires the use of SoftwareSerial, and assumes that you have a
    4800-baud serial GPS device hooked up on pins 4(rx) and 3(tx).
 */
-static const int RXPin = 15, TXPin = 16;
+static const int RXPin = 3, TXPin = 1;
 static const int GPSBaud = 9600;
 
 const char* ssid     = "ESP8266-Access-Point";
@@ -122,7 +122,7 @@ void loop()
 
   while (avail > 0) {
     blink_pin(100);
-    //Serial.println("Trying to get GPS data obtained");
+    Serial.println("Trying to get GPS data obtained");
     if (gps.encode(ss.read())) {
         Serial.println("GPS data obtained");
         //writeString(100, 'B');
