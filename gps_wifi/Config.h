@@ -15,3 +15,8 @@ static const signed long tzOffset = -7;
 
 // serial baud rate
 static const int SERIAL_BAUD = 9600;
+
+// conversion from C to F
+// 9 / 5 = 1.8
+static const float C2F_MULTIPLIER = 1.8;
+static const float C2F_ADDITION = 32;
