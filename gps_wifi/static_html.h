@@ -23,36 +23,20 @@ const char index_html[] PROGMEM = R"rawliteral(
   <h2>ESP8266 DHT Server</h2>
   <p>
     <span class="dht-labels">Temperature</span> 
-    <span id="temperature">%TEMPERATURE%</span>
+    <span id="temperature">%TEMPERATURE_CELCIUS%</span>
+    <sup class="units">&deg;C</sup>
+    <span id="temperature">%TEMPERATURE_FARENHEIGHT%</span>
+    <sup class="units">&deg;F</sup>
+  </p>
+  <p>
+    <span class="dht-labels">GPS</span> 
+    <span id="temperature">%GPS_DATA%</span>
     <sup class="units">&deg;C</sup>
   </p>
   <p>
-    <span class="dht-labels">Humidity</span>
-    <span id="humidity">%HUMIDITY%</span>
-    <sup class="units">%</sup>
+    <span class="dht-labels">Motion</span> 
+    <span id="temperature">%MOTION_DATA%</span>
+    <sup class="units">&deg;C</sup>
   </p>
 </body>
-<script>
-setInterval(function ( ) {
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-      document.getElementById("temperature").innerHTML = this.responseText;
-    }
-  };
-  xhttp.open("GET", "/temperature", true);
-  xhttp.send();
-}, 10000 ) ;
-
-setInterval(function ( ) {
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-      document.getElementById("humidity").innerHTML = this.responseText;
-    }
-  };
-  xhttp.open("GET", "/humidity", true);
-  xhttp.send();
-}, 10000 ) ;
-</script>
 </html>)rawliteral";

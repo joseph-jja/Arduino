@@ -118,6 +118,15 @@ void setupMPU6050() {
     Serial.println("5 Hz");
     break;
   } 
+
+
+  //setup motion detection
+  mpu.setHighPassFilter(MPU6050_HIGHPASS_0_63_HZ);
+  mpu.setMotionDetectionThreshold(1);
+  mpu.setMotionDetectionDuration(20);
+  mpu.setInterruptPinLatch(true);  // Keep it latched.  Will turn off when reinitialized.
+  mpu.setInterruptPinPolarity(true);
+  mpu.setMotionInterrupt(true);
 }
 
 void setup()
@@ -160,7 +169,7 @@ void setup()
   });*/
 
   // Start server
-  //server.begin();
+  server.begin();
 
   // Try to initialize MPU6050!
   if (!mpu.begin()) {
@@ -248,7 +257,7 @@ void getAccelerometerData() {
 
   AccX = a.acceleration.x;
   AccY = a.acceleration.y;
-  AccZ = a.acceleration.z;
+  AccZ = a.acceleration.z; // earths gravity is default
   GyroX = g.gyro.x;
   GyroY = g.gyro.y;
   GyroZ = g.gyro.z;
@@ -293,5 +302,6 @@ void loop() {
   getAccelerometerData();
   delay(500);
     
-  
+  server.handleClient();
+  MDNS.update();
 }
