@@ -159,6 +159,7 @@ void setup()
   //Serial.println(index_html);
   server.on("/", []() {
     char temp[1248];
+    memset(temp, '\0', sizeof(temp));
     sprintf(temp, index_html, temperatureC, temperatureF,
         latitude, longitude,
         currentHour, currentMinute, 

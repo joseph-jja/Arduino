@@ -20,7 +20,7 @@ const char index_html[] PROGMEM = R"rawliteral(
   </style>
 </head>
 <body>
-  <h2>ESP8266 DHT Server</h2>
+  <h2>Motion Server</h2>
   <p>
     <span class="dht-labels">Temperature</span> 
     <span id="temperature">%.2f</span>
@@ -30,13 +30,13 @@ const char index_html[] PROGMEM = R"rawliteral(
   </p>
   <p>
     <span class="dht-labels">GPS</span> 
-    <span id="temperature">Latitude: %.2f \tLongitude: %.2f</span>
-    <span id="temperature">Time: %.0f:%.0f</span>
+    <span id="temperature">Latitude: %.2f <br>Longitude: %.2f</span>
+    <br><span id="temperature">Time: %.0f:%.0f</span>
   </p>
   <p>
     <span class="dht-labels">Motion</span> 
     <span id="temperature">Acceleration X: %.2f / Y: %.2f / Z: %.2f</span>
-    <span id="temperature">Rotation X: %.2f / Y: %.2f / Z: %.2f</span>
+    <br><span id="temperature">Rotation X: %.2f / Y: %.2f / Z: %.2f</span>
   </p>
 </body>
 </html>)rawliteral";
