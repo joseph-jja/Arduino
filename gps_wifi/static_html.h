@@ -31,7 +31,7 @@ const char index_html[] PROGMEM = R"rawliteral(
   <p>
     <span class="dht-labels">GPS</span> 
     <span id="temperature">Latitude: %.2f \tLongitude: %.2f</span>
-    <span id="temperature">Time: %2d:%2d</span>
+    <span id="temperature">Time: %.0f:%.0f</span>
   </p>
   <p>
     <span class="dht-labels">Motion</span> 
