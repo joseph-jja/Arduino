@@ -158,8 +158,10 @@ void setup()
   // Route for root / web page
   //Serial.println(index_html);
   server.on("/", []() {
+    char temp[1024];
+    sprintf(temp, index_html, temperatureC, temperatureF);
     Serial.println("Request for home page");
-    server.send(200, "text/html", index_html);
+    server.send(200, "text/html", temp);
   });
   /*server.on("/temperature", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send_P(200, "text/plain", String(t).c_str());

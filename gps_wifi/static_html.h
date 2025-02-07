@@ -9,8 +9,8 @@ const char index_html[] PROGMEM = R"rawliteral(
      margin: 0px auto;
      text-align: center;
     }
-    h2 { font-size: 3.0rem; }
-    p { font-size: 3.0rem; }
+    h2 { font-size: 1.5em; }
+    p { font-size: 1.5rem; }
     .units { font-size: 1.2rem; }
     .dht-labels{
       font-size: 1.5rem;
@@ -23,14 +23,14 @@ const char index_html[] PROGMEM = R"rawliteral(
   <h2>ESP8266 DHT Server</h2>
   <p>
     <span class="dht-labels">Temperature</span> 
-    <span id="temperature">%TEMPERATURE_CELCIUS%</span>
+    <span id="temperature">%02f</span>
     <sup class="units">&deg;C</sup>
-    <span id="temperature">%TEMPERATURE_FARENHEIGHT%</span>
+    <span id="temperature">%02f</span>
     <sup class="units">&deg;F</sup>
   </p>
   <p>
     <span class="dht-labels">GPS</span> 
-    <span id="temperature">%GPS_DATA%</span>
+    <span id="temperature">Latitude: %02f \tLongitude: %02f</span>
     <sup class="units">&deg;C</sup>
   </p>
   <p>
