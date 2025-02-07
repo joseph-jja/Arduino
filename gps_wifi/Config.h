@@ -4,7 +4,7 @@ const char* ssid     = "ESP-GPS-AP-25";
 const char* password = "ESP8266-GPS-AP-25";
 
 // accelerometer gyroscope address
-const int MPU=0x68; 
+const int MPU = 0x68; 
 
 // gps
 // GPIO 15 is ping D8

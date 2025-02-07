@@ -87,7 +87,7 @@ void setup()
   Wire.begin();
   Wire.beginTransmission(MPU);
   Wire.write(0x6B);  
-  Wire.write(0);    
+  Wire.write(0x00);    
   Wire.endTransmission(true);
 
   pinMode(LED_BUILTIN, OUTPUT);
