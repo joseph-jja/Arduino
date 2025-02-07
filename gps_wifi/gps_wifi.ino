@@ -35,11 +35,15 @@ SoftwareSerial ss(RXPin, TXPin);
 // Create AsyncWebServer object on port 80
 ESP8266WebServer server(80);
 
+// accel and gyro code from 
+// https://howtomechatronics.com/tutorials/arduino/arduino-and-mpu6050-accelerometer-and-gyroscope-tutorial/
 float AccX, AccY, AccZ;
 float GyroX, GyroY, GyroZ;
 float accAngleX, accAngleY, gyroAngleX, gyroAngleY, gyroAngleZ;
 float roll, pitch, yaw;
 float AccErrorX, AccErrorY, GyroErrorX, GyroErrorY, GyroErrorZ;
+float elapsedTime, currentTime, previousTime;
+
 long currentHour, 
    currentMinute,
    latitude,
@@ -200,6 +204,11 @@ void loop() {
   accAngleX = (atan(AccY / sqrt(pow(AccX, 2) + pow(AccZ, 2))) * 180 / PI) - 0.58; 
   accAngleY = (atan(-1 * AccX / sqrt(pow(AccY, 2) + pow(AccZ, 2))) * 180 / PI) + 1.58; // AccErrorY ~(-1.58)
 
+  // === Read gyroscope data === //
+  previousTime = currentTime;        // Previous time is stored before the actual time read
+  currentTime = millis();            // Current time actual time read
+  elapsedTime = (currentTime - previousTime) / 1000; // Divide by 1000 to get seconds
+  
   Wire.beginTransmission(MPU);
   Wire.write(0x43); // Gyro data first register address 0x43
   Wire.endTransmission(false);
@@ -241,6 +250,9 @@ void loop() {
 }
 
 void calculate_IMU_error() {
+
+  int c = 0;
+  
   // We can call this funtion in the setup section to calculate the accelerometer and gyro data error. From here we will get the error values used in the above equations printed on the Serial Monitor.
   // Note that we should place the IMU flat in order to get the proper values, so that we then can the correct values
   // Read accelerometer values 200 times
