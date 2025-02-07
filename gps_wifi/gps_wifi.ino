@@ -247,6 +247,8 @@ void get_gps_info() {
 
           latitude = gps.location.lat();
           longitude = gps.location.lng();
+          currentHour = gps.time.hour();
+          currentMinute = gps.time.minute();
         }
     }
     avail = ss.available();
