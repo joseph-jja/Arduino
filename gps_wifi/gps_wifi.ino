@@ -158,8 +158,12 @@ void setup()
   // Route for root / web page
   //Serial.println(index_html);
   server.on("/", []() {
-    char temp[1024];
-    sprintf(temp, index_html, temperatureC, temperatureF);
+    char temp[1248];
+    sprintf(temp, index_html, temperatureC, temperatureF,
+        latitude, longitude,
+        currentHour, currentMinute, 
+        AccX, AccY, AccZ,
+        GyroX, GyroY, GyroZ);
     Serial.println("Request for home page");
     server.send(200, "text/html", temp);
   });
