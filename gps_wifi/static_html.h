@@ -3,16 +3,12 @@ const char index_html[] PROGMEM = R"rawliteral(
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
-    html {
-     font-family: Arial;
-     display: inline-block;
+    body {
+     font-family: Helvetica, Times, Arial;
      margin: 0px auto;
-     text-align: center;
     }
-    h2 { font-size: 1.5em; }
     p { font-size: 1.5rem; }
-    .units { font-size: 1.2rem; }
-    .dht-labels{
+    .labels{
       font-size: 1.5rem;
       vertical-align:middle;
       padding-bottom: 15px;
@@ -22,21 +18,23 @@ const char index_html[] PROGMEM = R"rawliteral(
 <body>
   <h2>Motion Server</h2>
   <p>
-    <span class="dht-labels">Temperature</span> 
-    <span id="temperature">%.2f</span>
-    <sup class="units">&deg;C</sup>
-    <span id="temperature">%.2f</span>
-    <sup class="units">&deg;F</sup>
+    <span class="labels">Temperature</span> 
+    <br><span id="temperature-data"></span>
   </p>
   <p>
-    <span class="dht-labels">GPS</span> 
-    <span id="temperature">Latitude: %.2f <br>Longitude: %.2f</span>
-    <br><span id="temperature">Time: %.0f:%.0f</span>
+    <span class="labels">GPS</span> 
+    <br><span id="GPS-data"></span>
   </p>
   <p>
-    <span class="dht-labels">Motion</span> 
-    <span id="temperature">Acceleration X: %.2f / Y: %.2f / Z: %.2f</span>
-    <br><span id="temperature">Rotation X: %.2f / Y: %.2f / Z: %.2f</span>
+    <span class="labels">Motion</span> 
+    <br><span id="motion-data"></span>    
   </p>
+  <script type="text/html">
+  async function fetcher( url, options ) {
+    const response = await fetch( url, options );
+    const buff = await response.text();
+    return buff;
+  }
+  </script>
 </body>
 </html>)rawliteral";
