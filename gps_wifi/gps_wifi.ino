@@ -52,7 +52,7 @@ float GyroX = 0.0,
 float temperatureC = 0.0,
     temperatureF = 0.0;
 
-long currentHour = 0, 
+float currentHour = 0, 
    currentMinute = 0,
    latitude = 0,
    longitude = 0;
@@ -161,17 +161,19 @@ void setup()
     Serial.println("Request for home page");
     server.send(200, "text/html", index_html);
   });
-  server.on("/update", HTTP_GET, [](AsyncWebServerRequest *request){
-    char temp[1248];
-    memset(temp, '\0', sizeof(temp));    
-    /*sprintf(temp, index_html, temperatureC, temperatureF,
+  server.on("/update", []() {
+    char temp[1024];
+    memset(temp, '\0', sizeof(temp));
+    sprintf(temp, "{ \"degC\": %2.2f, \"degF\": %2.2f, \"latitude\": %3.2f, \"longitude\": %3.2f, \"time\": \"%2.0f:%2.0f\", \"Acc\": { \"X\": %3.2f, \"Y\": %3.2f , \"Z\": %3.2f }, \"Gyro\": { \"X\": %3.2f, \"Y\": %3.2f , \"Z\": %3.2f } }", 
+        temperatureC, temperatureF,
         latitude, longitude,
-        currentHour, currentMinute, 
+        currentHour, currentMinute,
         AccX, AccY, AccZ,
-        GyroX, GyroY, GyroZ);*/
-    request->send_P(200, "text/plain", "{}");
+        GyroX, GyroY, GyroZ);
+    Serial.print("Update request ");
+    Serial.println(temp);
+    server.send(200, "text/html", temp);
   });
-  
 
   // Start server
   server.begin();
@@ -202,9 +204,6 @@ void get_gps_info() {
 
   char buff[255];
 
-  bool isLatLongValid = false;
-  bool gotGPSTime = false;
-
   while (avail > 0) {
     //Serial.println("Trying to get GPS data.");
     if (gps.encode(ss.read())) {
@@ -212,48 +211,35 @@ void get_gps_info() {
         Serial.println("GPS data obtained");
         //writeString(100, 'B');
         
-        memset(&buff, '\0', sizeof(buff));
-        sprintf(buff, "Latitude: %6d \t Longitude: %6d ", gps.location.lat(), gps.location.lng()); 
-        Serial.println(buff);
+        //memset(&buff, '\0', sizeof(buff));
+        //sprintf(buff, "Latitude: %6d \t Longitude: %6d ", gps.location.lat(), gps.location.lng()); 
+        //Serial.println(buff);
         if (gps.location.isValid()) {
-          long ll = floor(gps.location.lat() + gps.location.lng());
           //writeString(ll, 'C');
-          Serial.print(gps.location.lat(), 6);
-          Serial.print(gps.location.lng(), 6);
+          // set these
+          latitude = gps.location.lat();
+          longitude = gps.location.lng();
+          Serial.print("Got valid latitude and longitude");
+          Serial.print(latitude, 6);
+          Serial.print(longitude, 6);
           Serial.println(" ");
-          isLatLongValid = true;
           delay(1000);
         }
         if (gps.time.isValid()) {
-          gotGPSTime = true;
-          if (gps.time.hour() < 10) Serial.print(F("0"));
-          Serial.print(gps.time.hour());
-          Serial.print(F(":"));
-          if (gps.time.minute() < 10) Serial.print(F("0"));
-          Serial.print(gps.time.minute());
-          //Serial.print(F(":"));
-          /*if (gps.time.second() < 10) Serial.print(F("0"));
-          Serial.print(gps.time.second());
-          Serial.print(F("."));
-          if (gps.time.centisecond() < 10) Serial.print(F("0"));
-          Serial.print(gps.time.centisecond());*/
-          Serial.println(" ");
-          long hour = gps.time.hour();
-          if (!isLatLongValid) {
-            hour += tzOffset;
-          }
-          long time = (hour * 100) + gps.time.minute();
-
-          latitude = gps.location.lat();
-          longitude = gps.location.lng();
           currentHour = gps.time.hour();
           currentMinute = gps.time.minute();
+          Serial.print("Got valid time ");
+          if (gps.time.hour() < 10) Serial.print(F("0"));
+          Serial.print(currentHour);
+          Serial.print(F(":"));
+          if (gps.time.minute() < 10) Serial.print(F("0"));
+          Serial.print(currentMinute);
+          Serial.println(" ");
         }
     }
     avail = ss.available();
   }
   delay(500);
-  long gps = (isLatLongValid ? 100 : 0) + (gotGPSTime ? 5 : 0);
 
 }
 
