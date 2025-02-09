@@ -162,7 +162,7 @@ void setup()
     server.send(200, "text/html", index_html);
   });
   server.on("/update", []() {
-    char temp[1024];
+    char temp[512];
     memset(temp, '\0', sizeof(temp));
     sprintf(temp, "{ \"degC\": %2.2f, \"degF\": %2.2f, \"latitude\": %3.2f, \"longitude\": %3.2f, \"time\": \"%2.0f:%2.0f\", \"Acc\": { \"X\": %3.2f, \"Y\": %3.2f , \"Z\": %3.2f }, \"Gyro\": { \"X\": %3.2f, \"Y\": %3.2f , \"Z\": %3.2f } }", 
         temperatureC, temperatureF,
