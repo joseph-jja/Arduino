@@ -196,21 +196,15 @@ void get_gps_info() {
 
     long avail = ss.available();
 
-    char buff[255];
-
     while (avail > 0) {
         //Serial.println("Trying to get GPS data.");
         if (gps.encode(ss.read())) {
             blink_pin(100);
-            Serial.println("GPS data obtained");
-            //writeString(100, 'B');
+            Serial.println("GPS data read");
+            Serial.println(gps.satellites.value());
+            Serial.println("");
 
-            //memset(&buff, '\0', sizeof(buff));
-            //sprintf(buff, "Latitude: %6d \t Longitude: %6d ", gps.location.lat(), gps.location.lng()); 
-            //Serial.println(buff);
             if (gps.location.isUpdated()) {
-                //writeString(ll, 'C');
-                // set these
                 latitude = gps.location.lat();
                 longitude = gps.location.lng();
                 Serial.print("Got valid latitude and longitude ");
