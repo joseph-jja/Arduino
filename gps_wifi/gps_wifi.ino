@@ -50,10 +50,12 @@ float GyroX = 0.0,
 float temperatureC = 0.0,
     temperatureF = 0.0;
 
-float currentHour = 0,
+float year = 0, month = , day = 0, 
+    currentHour = 0,
     currentMinute = 0,
     latitude = 0,
-    longitude = 0;
+    longitude = 0,
+    altitude = 0;
 
 void setupMPU6050() {
     Serial.println("MPU6050 Found!");
@@ -206,18 +208,24 @@ void get_gps_info() {
             //memset(&buff, '\0', sizeof(buff));
             //sprintf(buff, "Latitude: %6d \t Longitude: %6d ", gps.location.lat(), gps.location.lng()); 
             //Serial.println(buff);
-            if (gps.location.isValid()) {
+            if (gps.location.isUpdated()) {
                 //writeString(ll, 'C');
                 // set these
                 latitude = gps.location.lat();
                 longitude = gps.location.lng();
-                Serial.print("Got valid latitude and longitude");
+                Serial.print("Got valid latitude and longitude ");
                 Serial.print(latitude, 6);
                 Serial.print(longitude, 6);
                 Serial.println(" ");
                 delay(1000);
             }
-            if (gps.time.isValid()) {
+            if (gps.altitude.isUpdated()) {
+                altitude = gps.altitude.feet();
+                Serial.print("Got valid altitude ");
+                Serial.print(altitude, 6);
+                Serial.println(" ");
+            }
+            if (gps.time.isUpdated()) {
                 currentHour = gps.time.hour();
                 currentMinute = gps.time.minute();
                 Serial.print("Got valid time ");
@@ -228,11 +236,22 @@ void get_gps_info() {
                 Serial.print(currentMinute);
                 Serial.println(" ");
             }
+            if (gps.date.isUpdated()) {
+                year = gps.date.year();
+                month = gps.date.month();
+                day = gps.date.day();
+                Serial.print("Got valid date ");
+                Serial.print(year);
+                Serial.print("/");
+                Serial.print(month);
+                Serial.print("/");
+                Serial.print(day);
+                Serial.println(" ");
+            }
         }
         avail = ss.available();
     }
     delay(500);
-
 }
 
 float axis_correction(float raw_reading, float axis_offset, float grav_accel) {
