@@ -20,3 +20,15 @@ static const int SERIAL_BAUD = 9600;
 // 9 / 5 = 1.8
 static const float C2F_MULTIPLIER = 1.8;
 static const float C2F_ADDITION = 32;
+
+// run calculate_offsets resting to get these
+// Gyro default offsets
+static const float GyroOffsetX = 0.01;
+static const float GyroOffsetY = 0.0;
+static const float GyroOffsetZ = 0.0;
+
+// run calculate_offsets() moving all axis to get these
+// Accelerometer default offsets
+static const float AccelOffsetX = -1.70;
+static const float AccelOffsetY = 0.54;
+static const float AccelOffsetZ = 0.00;

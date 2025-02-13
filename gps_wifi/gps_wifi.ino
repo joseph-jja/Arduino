@@ -24,8 +24,6 @@
 // separate file for this lovely HTML 
 #include "static_html.h"
 
-const static float ACCELERATION_GRAVITY = 9.8;
-
 IPAddress local_IP(192,168,25,1);
 IPAddress gateway(192,168,25,1);
 IPAddress subnet(255,255,255,0);
@@ -42,18 +40,12 @@ ESP8266WebServer server(80);
 // MPU6050 
 Adafruit_MPU6050 mpu;
 
-// accel and gyro code from 
-// https://howtomechatronics.com/tutorials/arduino/arduino-and-mpu6050-accelerometer-and-gyroscope-tutorial/
 float AccX = 0.0,
     AccY = 0.0,
     AccZ = 0.0;
 float GyroX = 0.0,
     GyroY = 0.0,
     GyroZ = 0.0;
-float midx = 0.0, amidx = 0.0;
-float midy = 0.0, amidy = 0.0;
-float midz = 0.0;
-
 
 float temperatureC = 0.0,
     temperatureF = 0.0;
@@ -124,72 +116,6 @@ void setupMPU6050() {
     Serial.println("5 Hz");
     break;
   } 
-
-   Serial.println("Running Accelerometer and Gyro Calbration");
-   float x, y, z, ax, ay, az;
-   float minx = 0.0, maxx = 0.0;
-   float miny = 0.0, maxy = 0.0;
-   float minz = 0.0, maxz = 0.0;
-   float aminx = 0.0, amaxx = 0.0;
-   float aminy = 0.0, amaxy = 0.0;
-   for (int i = 0; i < 1000; i++) {
-      // calibrate gyro
-      sensors_event_t a, g, temp;
-      mpu.getEvent(&a, &g, &temp);
-
-      x = g.gyro.x;
-      y = g.gyro.y;
-      z = g.gyro.z;
-
-     // gyro
-      minx = min(x, minx);
-      maxx = max(x, maxx);
-      midx = (maxx + minx) / 2;
-
-      miny = min(y, miny);
-      maxy = max(y, maxy);
-      midy = (maxy + miny) / 2;
-
-      minz = min(z, minz);
-      maxz = max(z, maxz);
-      midz = (maxz + minz) / 2;
-
-      ax = a.acceleration.x;
-      ay = a.acceleration.y;
-
-      // accel
-      aminx = min(ax, aminx);
-      amaxx = max(ax, amaxx);
-      amidx = (aminx + amaxx) / 2;
-
-      aminy = min(ay, aminy);
-      amaxy = max(ay, amaxy);
-      amidy = (aminy + amaxy) / 2;
-
-      delay(10);
-   }
-   Serial.println("Gyro Calibration Results (Min/Max/Mid)");
-   Serial.print("X : ");
-   Serial.print(minx); Serial.print("/");
-   Serial.print(maxx); Serial.print("/");
-   Serial.print(midx); Serial.println("");
-   Serial.print("Y : ");
-   Serial.print(miny); Serial.print("/");
-   Serial.print(maxy); Serial.print("/");
-   Serial.print(midy); Serial.println("");
-   Serial.print("Z : ");
-   Serial.print(minz); Serial.print("/");
-   Serial.print(maxz); Serial.print("/");
-   Serial.print(midz); Serial.println("");
-   Serial.println("Accelerometer Calibration Results (Min/Max/Mid)");
-   Serial.print("X : ");
-   Serial.print(aminx); Serial.print("/");
-   Serial.print(amaxx); Serial.print("/");
-   Serial.print(amidx); Serial.println("");
-   Serial.print("Y : ");
-   Serial.print(aminy); Serial.print("/");
-   Serial.print(amaxy); Serial.print("/");
-   Serial.print(amidy); Serial.println("");
 }
 
 void setup() {
@@ -248,6 +174,9 @@ void setup() {
     }
   }
   setupMPU6050();
+
+   // uncomment this to calibrate offsets
+  //calculate_offsets();
 
   pinMode(LED_BUILTIN, OUTPUT);
   Serial.println("Pin enabled");
@@ -310,12 +239,12 @@ void getAccelerometerData() {
     sensors_event_t a, g, temp;
     mpu.getEvent(&a, &g, &temp);
 
-  AccX = a.acceleration.x;// - amidx;
-  AccY = a.acceleration.y;// - amidy;
-  AccZ = a.acceleration.z;// - amidz; // earths gravity is default
-  GyroX = g.gyro.x - midx;
-  GyroY = g.gyro.y - midy;
-  GyroZ = g.gyro.z - midz;
+  AccX = a.acceleration.x;
+  AccY = a.acceleration.y;
+  AccZ = a.acceleration.z;
+  GyroX = g.gyro.x - GyroOffsetX;
+  GyroY = g.gyro.y - GyroOffsetY;
+  GyroZ = g.gyro.z - GyroOffsetZ;
   temperatureC = temp.temperature;
   temperatureF = (C2F_MULTIPLIER * temperatureC) + C2F_ADDITION;
 
@@ -323,17 +252,17 @@ void getAccelerometerData() {
   Serial.print("Acceleration X: ");
   Serial.print(AccX);
   Serial.print(" ");
-  Serial.print(AccX - amidx);
+  Serial.print(AccX - AccelOffsetX);
   Serial.print(" ");
   Serial.print(mpu.getAccelerometerRange());
   Serial.print(", Y: ");
   Serial.print(AccY);
   Serial.print(" ");
-  Serial.print(AccY - amidy);
+  Serial.print(AccY - AccelOffsetY);
   Serial.print(", Z: ");
   Serial.print(AccZ);  
   Serial.print(" ");
-  Serial.print(AccZ - ACCELERATION_GRAVITY);
+  Serial.print(AccZ - AccelOffsetZ);
   Serial.println(" m/s^2");
 
   Serial.print("Rotation X: ");
