@@ -165,7 +165,7 @@ void get_gps_info() {
 }
 
 float axis_correction(float raw_reading, float axis_min, float axis_max, float grav_accel) {
-    return (float)(2.0 * grav_accel * (raw_reading - (axis_min + axis_max) / 2.0) / (axis_max - axis_min);
+    return (float)(2.0 * grav_accel * (raw_reading - (axis_min + axis_max) / 2.0) / (axis_max - axis_min));
 }
 
 void getAccelerometerData() {
