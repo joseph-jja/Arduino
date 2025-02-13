@@ -106,7 +106,7 @@ void setup() {
             delay(10);
         }
     }
-    mpu = setupMPU6050();
+    setupMPU6050();
 
     pinMode(LED_BUILTIN, OUTPUT);
     Serial.println("Pin enabled");
@@ -186,7 +186,7 @@ void getAccelerometerData() {
 
     AccX = a.acceleration.x;
     AccY = a.acceleration.y;
-    AccZ = a.acceleration.z - AccelOffsetZ;
+    AccZ = a.acceleration.z;
     GyroX = g.gyro.x - GyroOffsetX;
     GyroY = g.gyro.y - GyroOffsetY;
     GyroZ = g.gyro.z - GyroOffsetZ;
@@ -197,12 +197,12 @@ void getAccelerometerData() {
     Serial.print("Acceleration X: ");
     Serial.print(AccX);
     Serial.print(" ");
-    Serial.print(axis_correction(AccX, AccelOffsetX, AccZ));
+    //Serial.print(axis_correction(AccX, AccelOffsetX, AccZ));
     Serial.print(" ");
     Serial.print(", Y: ");
     Serial.print(AccY);
     Serial.print(" ");
-    Serial.print(axis_correction(AccY, AccelOffsetY, AccZ));
+    //Serial.print(axis_correction(AccY, AccelOffsetY, AccZ));
     Serial.print(", Z: ");
     Serial.print(AccZ);
     Serial.println(" m/s^2");

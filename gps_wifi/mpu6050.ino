@@ -1,10 +1,8 @@
 // configuration
 #include "Globals.h"
 
-Adafruit_MPU6050 setupMPU6050() {
-
-    Adafruit_MPU6050 mpu;
-    
+void setupMPU6050() {
+   
     Serial.println("MPU6050 Found!");
 
     // we want to detect smaller movements so we use 2G
@@ -67,5 +65,4 @@ Adafruit_MPU6050 setupMPU6050() {
             Serial.println("5 Hz");
             break;
     }
-    return mpu;
 }
