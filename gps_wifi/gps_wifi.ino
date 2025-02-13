@@ -241,7 +241,7 @@ void getAccelerometerData() {
 
   AccX = a.acceleration.x;
   AccY = a.acceleration.y;
-  AccZ = a.acceleration.z;
+  AccZ = a.acceleration.z - AccelOffsetZ;
   GyroX = g.gyro.x - GyroOffsetX;
   GyroY = g.gyro.y - GyroOffsetY;
   GyroZ = g.gyro.z - GyroOffsetZ;
@@ -254,15 +254,12 @@ void getAccelerometerData() {
   Serial.print(" ");
   Serial.print(AccX - AccelOffsetX);
   Serial.print(" ");
-  Serial.print(mpu.getAccelerometerRange());
   Serial.print(", Y: ");
   Serial.print(AccY);
   Serial.print(" ");
   Serial.print(AccY - AccelOffsetY);
   Serial.print(", Z: ");
-  Serial.print(AccZ);  
-  Serial.print(" ");
-  Serial.print(AccZ - AccelOffsetZ);
+  Serial.print(AccZ);
   Serial.println(" m/s^2");
 
   Serial.print("Rotation X: ");
