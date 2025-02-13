@@ -1,7 +1,3 @@
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
-
 // Import required libraries for esp8266
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
@@ -9,14 +5,12 @@
 #include <ESP8266WebServer.h>
 #include <ESP8266mDNS.h>
 
-// accelerometer
-#include <Adafruit_MPU6050.h>
-#include <Adafruit_Sensor.h>
-#include <Wire.h>
-
 // gps
 #include <TinyGPSPlus.h>
 #include <SoftwareSerial.h>
+
+// globals
+#include "Globals.h"
 
 // configuration
 #include "Config.h"
@@ -37,7 +31,7 @@ SoftwareSerial ss(RXPin, TXPin);
 // Create AsyncWebServer object on port 80
 ESP8266WebServer server(80);
 
-// MPU6050 
+// mpu6050
 Adafruit_MPU6050 mpu;
 
 float AccX = 0.0,
@@ -50,76 +44,12 @@ float GyroX = 0.0,
 float temperatureC = 0.0,
     temperatureF = 0.0;
 
-float year = 0, month = , day = 0, 
+long year = 0, month = 0, day = 0,
     currentHour = 0,
-    currentMinute = 0,
-    latitude = 0,
+    currentMinute = 0;
+float latitude = 0,
     longitude = 0,
     altitude = 0;
-
-void setupMPU6050() {
-    Serial.println("MPU6050 Found!");
-
-    mpu.setAccelerometerRange(MPU6050_RANGE_2_G);
-    Serial.print("Accelerometer range set to: ");
-    switch (mpu.getAccelerometerRange()) {
-        case MPU6050_RANGE_2_G:
-            Serial.println("+-2G");
-            break;
-        case MPU6050_RANGE_4_G:
-            Serial.println("+-4G");
-            break;
-        case MPU6050_RANGE_8_G:
-            Serial.println("+-8G");
-            break;
-        case MPU6050_RANGE_16_G:
-            Serial.println("+-16G");
-            break;
-    }
-    
-    mpu.setGyroRange(MPU6050_RANGE_500_DEG);
-    Serial.print("Gyro range set to: ");
-    switch (mpu.getGyroRange()) {
-        case MPU6050_RANGE_250_DEG:
-            Serial.println("+- 250 deg/s");
-            break;
-        case MPU6050_RANGE_500_DEG:
-            Serial.println("+- 500 deg/s");
-            break;
-        case MPU6050_RANGE_1000_DEG:
-            Serial.println("+- 1000 deg/s");
-            break;
-        case MPU6050_RANGE_2000_DEG:
-            Serial.println("+- 2000 deg/s");
-            break;
-    }
-
-    mpu.setFilterBandwidth(MPU6050_BAND_44_HZ);
-    Serial.print("Filter bandwidth set to: ");
-    switch (mpu.getFilterBandwidth()) {
-        case MPU6050_BAND_260_HZ:
-            Serial.println("260 Hz");
-            break;
-        case MPU6050_BAND_184_HZ:
-            Serial.println("184 Hz");
-            break;
-        case MPU6050_BAND_94_HZ:
-            Serial.println("94 Hz");
-            break;
-        case MPU6050_BAND_44_HZ:
-            Serial.println("44 Hz");
-            break;
-        case MPU6050_BAND_21_HZ:
-            Serial.println("21 Hz");
-            break;
-        case MPU6050_BAND_10_HZ:
-            Serial.println("10 Hz");
-            break;
-        case MPU6050_BAND_5_HZ:
-            Serial.println("5 Hz");
-            break;
-    }
-}
 
 void setup() {
 
@@ -176,10 +106,7 @@ void setup() {
             delay(10);
         }
     }
-    setupMPU6050();
-
-    // uncomment this to calibrate offsets
-    //calculate_offsets();
+    mpu = setupMPU6050();
 
     pinMode(LED_BUILTIN, OUTPUT);
     Serial.println("Pin enabled");
@@ -200,9 +127,9 @@ void get_gps_info() {
         //Serial.println("Trying to get GPS data.");
         if (gps.encode(ss.read())) {
             blink_pin(100);
-            Serial.println("GPS data read");
-            Serial.println(gps.satellites.value());
-            Serial.println("");
+            Serial.print("GPS data read using ");
+            Serial.print(gps.satellites.value());
+            Serial.println(" satellites.");
 
             if (gps.location.isUpdated()) {
                 latitude = gps.location.lat();
@@ -210,14 +137,14 @@ void get_gps_info() {
                 Serial.print("Got valid latitude and longitude ");
                 Serial.print(latitude, 6);
                 Serial.print(longitude, 6);
-                Serial.println(" ");
+                Serial.println("");
                 delay(1000);
             }
             if (gps.altitude.isUpdated()) {
                 altitude = gps.altitude.feet();
                 Serial.print("Got valid altitude ");
                 Serial.print(altitude, 6);
-                Serial.println(" ");
+                Serial.println("");
             }
             if (gps.time.isUpdated()) {
                 currentHour = gps.time.hour();
@@ -228,7 +155,7 @@ void get_gps_info() {
                 Serial.print(F(":"));
                 if (gps.time.minute() < 10) Serial.print(F("0"));
                 Serial.print(currentMinute);
-                Serial.println(" ");
+                Serial.println("");
             }
             if (gps.date.isUpdated()) {
                 year = gps.date.year();
@@ -240,7 +167,7 @@ void get_gps_info() {
                 Serial.print(month);
                 Serial.print("/");
                 Serial.print(day);
-                Serial.println(" ");
+                Serial.println("");
             }
         }
         avail = ss.available();
@@ -249,7 +176,7 @@ void get_gps_info() {
 }
 
 float axis_correction(float raw_reading, float axis_offset, float grav_accel) {
-    return (float)(2. f * grav_accel * (raw_reading - axis_offset)) / (axis_offset * 2);
+    return raw_reading; //(float)(2.0 * grav_accel * (raw_reading - axis_offset)) / (axis_offset * 2);
 }
 
 void getAccelerometerData() {
@@ -290,7 +217,7 @@ void getAccelerometerData() {
 
     Serial.print("Chip Temperature: ");
     Serial.print(temperatureC);
-    Serial.println(" degC  ");
+    Serial.print(" degC and ");
     Serial.print(temperatureF);
     Serial.println(" degF");
 
@@ -299,7 +226,8 @@ void getAccelerometerData() {
 
 void loop() {
 
-    char buff[255];
+    // uncomment this to calibrate offsets
+    // calculate_offsets();
 
     blink_pin(1000);
 
@@ -307,7 +235,7 @@ void loop() {
     delay(100);
 
     getAccelerometerData();
-    delay(500);
+    delay(100);
 
     server.handleClient();
     MDNS.update();

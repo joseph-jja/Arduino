@@ -20,17 +20,30 @@ float midz = 0.0, amidz = 0.0;
 16:13:20.726 -> Y : -11.67/12.75/0.54
 16:13:20.759 -> Z : 0.00/0.00/0.00
 */
+
+/* 
+14:02:23.215 -> Running Accelerometer and Gyro Calbration
+14:02:33.220 -> Gyro Calibration Results (Min/Max/Mid)
+14:02:33.253 -> X : -34.86/34.87/0.01
+14:02:33.253 -> Y : -34.87/34.60/-0.14
+14:02:33.286 -> Z : -33.91/0.00/-16.96
+14:02:33.319 -> Accelerometer Calibration Results (Min/Max/Mid)
+14:02:33.385 -> X : -154.97/154.96/-0.00
+14:02:33.385 -> Y : -155.58/155.58/-0.00
+14:02:33.418 -> Z : 0.00/0.00/0.00
+ */
+
+float x, y, z, ax, ay, az;
+float minx = 0.0, maxx = 0.0;
+float miny = 0.0, maxy = 0.0;
+float minz = 0.0, maxz = 0.0;
+float aminx = 0.0, amaxx = 0.0;
+float aminy = 0.0, amaxy = 0.0;
+float aminz = 0.0, amaxz = 0.0;
+
 void calculate_offsets() {
 
     Serial.println("Running Accelerometer and Gyro Calbration");
-
-    float x, y, z, ax, ay, az;
-    float minx = 0.0, maxx = 0.0;
-    float miny = 0.0, maxy = 0.0;
-    float minz = 0.0, maxz = 0.0;
-    float aminx = 0.0, amaxx = 0.0;
-    float aminy = 0.0, amaxy = 0.0;
-    float aminz = 0.0, amaxz = 0.0;
 
     for (int i = 0; i < 1000; i++) {
         // calibrate gyro
@@ -56,6 +69,7 @@ void calculate_offsets() {
 
         ax = a.acceleration.x;
         ay = a.acceleration.y;
+        az = a.acceleration.z;
 
         // accel
         aminx = min(ax, aminx);
