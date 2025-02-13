@@ -1,5 +1,3 @@
-
-
 // accel and gyro code from 
 // https://howtomechatronics.com/tutorials/arduino/arduino-and-mpu6050-accelerometer-and-gyroscope-tutorial/
 float midx = 0.0, amidx = 0.0;
@@ -26,79 +24,97 @@ void calculate_offsets() {
 
     Serial.println("Running Accelerometer and Gyro Calbration");
 
-   float x, y, z, ax, ay, az;
-   float minx = 0.0, maxx = 0.0;
-   float miny = 0.0, maxy = 0.0;
-   float minz = 0.0, maxz = 0.0;
-   float aminx = 0.0, amaxx = 0.0;
-   float aminy = 0.0, amaxy = 0.0;
-   float aminz = 0.0, amaxz = 0.0;
-   
-   for (int i = 0; i < 1000; i++) {
-      // calibrate gyro
-      sensors_event_t a, g, temp;
-      mpu.getEvent(&a, &g, &temp);
+    float x, y, z, ax, ay, az;
+    float minx = 0.0, maxx = 0.0;
+    float miny = 0.0, maxy = 0.0;
+    float minz = 0.0, maxz = 0.0;
+    float aminx = 0.0, amaxx = 0.0;
+    float aminy = 0.0, amaxy = 0.0;
+    float aminz = 0.0, amaxz = 0.0;
 
-      x = g.gyro.x;
-      y = g.gyro.y;
-      z = g.gyro.z;
+    for (int i = 0; i < 1000; i++) {
+        // calibrate gyro
+        sensors_event_t a, g, temp;
+        mpu.getEvent( & a, & g, & temp);
 
-     // gyro
-      minx = min(x, minx);
-      maxx = max(x, maxx);
-      midx = (maxx + minx) / 2;
+        x = g.gyro.x;
+        y = g.gyro.y;
+        z = g.gyro.z;
 
-      miny = min(y, miny);
-      maxy = max(y, maxy);
-      midy = (maxy + miny) / 2;
+        // gyro
+        minx = min(x, minx);
+        maxx = max(x, maxx);
+        midx = (maxx + minx) / 2;
 
-      minz = min(z, minz);
-      maxz = max(z, maxz);
-      midz = (maxz + minz) / 2;
+        miny = min(y, miny);
+        maxy = max(y, maxy);
+        midy = (maxy + miny) / 2;
 
-      ax = a.acceleration.x;
-      ay = a.acceleration.y;
+        minz = min(z, minz);
+        maxz = max(z, maxz);
+        midz = (maxz + minz) / 2;
 
-      // accel
-      aminx = min(ax, aminx);
-      amaxx = max(ax, amaxx);
-      amidx = (aminx + amaxx) / 2;
+        ax = a.acceleration.x;
+        ay = a.acceleration.y;
 
-      aminy = min(ay, aminy);
-      amaxy = max(ay, amaxy);
-      amidy = (aminy + amaxy) / 2;
+        // accel
+        aminx = min(ax, aminx);
+        amaxx = max(ax, amaxx);
+        amidx = (aminx + amaxx) / 2;
 
-      aminz = min(az, aminz);
-      amaxz = max(az, amaxz);
-      amidz = (aminz + amaxz) / 2;
+        aminy = min(ay, aminy);
+        amaxy = max(ay, amaxy);
+        amidy = (aminy + amaxy) / 2;
 
-      delay(10);
-   }
+        aminz = min(az, aminz);
+        amaxz = max(az, amaxz);
+        amidz = (aminz + amaxz) / 2;
 
-   Serial.println("Gyro Calibration Results (Min/Max/Mid)");
-   Serial.print("X : ");
-   Serial.print(minx); Serial.print("/");
-   Serial.print(maxx); Serial.print("/");
-   Serial.print(midx); Serial.println("");
-   Serial.print("Y : ");
-   Serial.print(miny); Serial.print("/");
-   Serial.print(maxy); Serial.print("/");
-   Serial.print(midy); Serial.println("");
-   Serial.print("Z : ");
-   Serial.print(minz); Serial.print("/");
-   Serial.print(maxz); Serial.print("/");
-   Serial.print(midz); Serial.println("");
-   Serial.println("Accelerometer Calibration Results (Min/Max/Mid)");
-   Serial.print("X : ");
-   Serial.print(aminx); Serial.print("/");
-   Serial.print(amaxx); Serial.print("/");
-   Serial.print(amidx); Serial.println("");
-   Serial.print("Y : ");
-   Serial.print(aminy); Serial.print("/");
-   Serial.print(amaxy); Serial.print("/");
-   Serial.print(amidy); Serial.println("");
-   Serial.print("Z : ");
-   Serial.print(aminz); Serial.print("/");
-   Serial.print(amaxz); Serial.print("/");
-   Serial.print(amidz); Serial.println("");
+        delay(10);
+    }
+
+    Serial.println("Gyro Calibration Results (Min/Max/Mid)");
+    Serial.print("X : ");
+    Serial.print(minx);
+    Serial.print("/");
+    Serial.print(maxx);
+    Serial.print("/");
+    Serial.print(midx);
+    Serial.println("");
+    Serial.print("Y : ");
+    Serial.print(miny);
+    Serial.print("/");
+    Serial.print(maxy);
+    Serial.print("/");
+    Serial.print(midy);
+    Serial.println("");
+    Serial.print("Z : ");
+    Serial.print(minz);
+    Serial.print("/");
+    Serial.print(maxz);
+    Serial.print("/");
+    Serial.print(midz);
+    Serial.println("");
+    Serial.println("Accelerometer Calibration Results (Min/Max/Mid)");
+    Serial.print("X : ");
+    Serial.print(aminx);
+    Serial.print("/");
+    Serial.print(amaxx);
+    Serial.print("/");
+    Serial.print(amidx);
+    Serial.println("");
+    Serial.print("Y : ");
+    Serial.print(aminy);
+    Serial.print("/");
+    Serial.print(amaxy);
+    Serial.print("/");
+    Serial.print(amidy);
+    Serial.println("");
+    Serial.print("Z : ");
+    Serial.print(aminz);
+    Serial.print("/");
+    Serial.print(amaxz);
+    Serial.print("/");
+    Serial.print(amidz);
+    Serial.println("");
 }
