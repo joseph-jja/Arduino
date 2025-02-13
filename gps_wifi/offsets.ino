@@ -4,34 +4,22 @@ float midx = 0.0, amidx = 0.0;
 float midy = 0.0, amidy = 0.0;
 float midz = 0.0, amidz = 0.0;
 
-// this seems to work by getting run twice
-// the first time is resting on a table for the gyro calibration
-// the second is moving each acccess for the accelerometer calibration
+// this seems to work
+// moving each acccess for the gyro and accelerometer calibration
 // output looks like this
 // using the last value seems to work
 // update config.h values
 /*
-16:09:09.692 -> Gyro Calibration Results (Min/Max/Mid)
-16:09:09.726 -> X : -0.02/0.00/-0.01
-16:09:09.726 -> Y : -0.01/0.01/-0.00
-16:09:09.759 -> Z : -0.00/0.00/0.00
-16:13:20.660 -> Accelerometer Calibration Results (Min/Max/Mid)
-16:13:20.693 -> X : -17.65/14.24/-1.70
-16:13:20.726 -> Y : -11.67/12.75/0.54
-16:13:20.759 -> Z : 0.00/0.00/0.00
-*/
+14:38:37.980 -> Gyro Calibration Results (Min/Max/Mid)
+14:38:38.013 -> X : -8.73/8.73/-0.00
+14:38:38.013 -> Y : -8.73/8.73/-0.00
+14:38:38.047 -> Z : -8.73/8.73/-0.00
+14:38:38.080 -> Accelerometer Calibration Results (Min/Max/Mid)
+14:38:38.113 -> X : -19.61/15.22/-2.20
+14:38:38.146 -> Y : -19.61/14.81/-2.40
+14:38:38.179 -> Z : -8.62/19.61/5.50
 
-/* 
-14:02:23.215 -> Running Accelerometer and Gyro Calbration
-14:02:33.220 -> Gyro Calibration Results (Min/Max/Mid)
-14:02:33.253 -> X : -34.86/34.87/0.01
-14:02:33.253 -> Y : -34.87/34.60/-0.14
-14:02:33.286 -> Z : -33.91/0.00/-16.96
-14:02:33.319 -> Accelerometer Calibration Results (Min/Max/Mid)
-14:02:33.385 -> X : -154.97/154.96/-0.00
-14:02:33.385 -> Y : -155.58/155.58/-0.00
-14:02:33.418 -> Z : 0.00/0.00/0.00
- */
+*/
 
 float x, y, z, ax, ay, az;
 float minx = 0.0, maxx = 0.0;
