@@ -164,8 +164,8 @@ void get_gps_info() {
     delay(500);
 }
 
-float axis_correction(float raw_reading, float axis_offset, float grav_accel) {
-    return raw_reading; //(float)(2.0 * grav_accel * (raw_reading - axis_offset)) / (axis_offset * 2);
+float axis_correction(float raw_reading, float axis_min, float axis_max, float grav_accel) {
+    return (float)(2.0 * grav_accel * (raw_reading - (axis_min + axis_max) / 2.0) / (axis_max - axis_min);
 }
 
 void getAccelerometerData() {
@@ -186,14 +186,16 @@ void getAccelerometerData() {
     Serial.print("Acceleration X: ");
     Serial.print(AccX);
     Serial.print(" ");
-    //Serial.print(axis_correction(AccX, AccelOffsetX, AccZ));
+    Serial.print(axis_correction(AccX, -19.61, 15.22, AccZ));
     Serial.print(" ");
     Serial.print(", Y: ");
     Serial.print(AccY);
     Serial.print(" ");
-    //Serial.print(axis_correction(AccY, AccelOffsetY, AccZ));
+    Serial.print(axis_correction(AccY, -19.61, 14.81, AccZ));
     Serial.print(", Z: ");
     Serial.print(AccZ);
+    Serial.print(" ");
+    Serial.print(axis_correction(AccY, -8.62, 19.61, AccZ));
     Serial.println(" m/s^2");
 
     Serial.print("Rotation X: ");

@@ -23,7 +23,7 @@ void setupMPU6050() {
             break;
     }
     
-    mpu.setGyroRange(MPU6050_RANGE_500_DEG);
+    mpu.setGyroRange(MPU6050_RANGE_250_DEG);
     Serial.print("Gyro range set to: ");
     switch (mpu.getGyroRange()) {
         case MPU6050_RANGE_250_DEG:

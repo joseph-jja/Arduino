@@ -23,7 +23,7 @@ static const float C2F_ADDITION = 32;
 
 // run calculate_offsets resting to get these
 // Gyro default offsets
-static const float GyroOffsetX = 0.0;
+static const float GyroOffsetX = -0.01;
 static const float GyroOffsetY = 0.0;
 static const float GyroOffsetZ = 0.0;
 
