@@ -176,7 +176,7 @@ void setup() {
   setupMPU6050();
 
    // uncomment this to calibrate offsets
-  calculate_offsets();
+  //calculate_offsets();
 
   pinMode(LED_BUILTIN, OUTPUT);
   Serial.println("Pin enabled");
