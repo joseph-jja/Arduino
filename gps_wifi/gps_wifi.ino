@@ -176,7 +176,7 @@ void setup() {
   setupMPU6050();
 
    // uncomment this to calibrate offsets
-  //calculate_offsets();
+  calculate_offsets();
 
   pinMode(LED_BUILTIN, OUTPUT);
   Serial.println("Pin enabled");
@@ -234,6 +234,10 @@ void get_gps_info() {
 
 }
 
+float axis_correction(float raw_reading, float axis_offset, float grav_accel) {
+    return (float)(2.f * grav_accel * (raw_reading - axis_offset)) / (axis_offset * 2);
+}
+
 void getAccelerometerData() {
 
     sensors_event_t a, g, temp;
@@ -252,12 +256,12 @@ void getAccelerometerData() {
   Serial.print("Acceleration X: ");
   Serial.print(AccX);
   Serial.print(" ");
-  Serial.print(AccX - AccelOffsetX);
+  Serial.print(axis_correction(AccX, AccelOffsetX, AccZ));
   Serial.print(" ");
   Serial.print(", Y: ");
   Serial.print(AccY);
   Serial.print(" ");
-  Serial.print(AccY - AccelOffsetY);
+  Serial.print(axis_correction(AccY, AccelOffsetY, AccZ));
   Serial.print(", Z: ");
   Serial.print(AccZ);
   Serial.println(" m/s^2");
