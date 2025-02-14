@@ -164,8 +164,17 @@ void get_gps_info() {
     delay(500);
 }
 
-float axis_correction(float raw_reading, float axis_min, float axis_max, float grav_accel) {
-    return (float)(2.0 * grav_accel * (raw_reading - (axis_min + axis_max) / 2.0) / (axis_max - axis_min));
+float axis_correction(float raw_reading, float axis_max, float axis_min, float grav_accel) {
+    float max_plus_min = axis_max + axis_min;
+    float max_minus_min = axis_max - axis_min;
+    float middle = max_plus_min / 2.0;
+    float raw_middle = raw_reading - middle;
+    //Serial.print("Correction calculations: middle:");
+    //Serial.print(middle);
+    //Serial.print(" middle offset ");
+    //Serial.print(raw_middle);
+    //Serial.println("");
+    return (float)(2.0 * grav_accel * raw_middle) / max_minus_min;
 }
 
 void getAccelerometerData() {
@@ -186,23 +195,26 @@ void getAccelerometerData() {
     Serial.print("Acceleration X: ");
     Serial.print(AccX);
     Serial.print(" ");
-    Serial.print(axis_correction(AccX, -19.61, 15.22, AccZ));
-    Serial.print(" ");
     Serial.print(", Y: ");
     Serial.print(AccY);
-    Serial.print(" ");
-    Serial.print(axis_correction(AccY, -19.61, 14.81, AccZ));
     Serial.print(", Z: ");
     Serial.print(AccZ);
-    Serial.print(" ");
-    Serial.print(axis_correction(AccY, -8.62, 19.61, AccZ));
     Serial.println(" m/s^2");
+
+    /*Serial.print("Acceleration Corrected X: ");
+    Serial.print(axis_correction(AccX, AccelOffsetMaxX, AccelOffsetMinX, AccZ));
+    Serial.print(" ");
+    Serial.print(", Y: ");
+    Serial.print(axis_correction(AccY, AccelOffsetMaxY, AccelOffsetMinY, AccZ));
+    Serial.print(", Z: ");
+    Serial.print(axis_correction(AccY, AccelOffsetMaxZ, AccelOffsetMinZ, AccZ));
+    Serial.println(" m/s^2");*/
 
     Serial.print("Rotation X: ");
     Serial.print(GyroX);
-    Serial.print(", Y: ");
+    Serial.print(", Y (N/S): ");
     Serial.print(GyroY);
-    Serial.print(", Z: ");
+    Serial.print(", Z (E/W): ");
     Serial.print(GyroZ);
     Serial.println(" rad/s");
 

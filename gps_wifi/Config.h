@@ -29,6 +29,9 @@ static const float GyroOffsetZ = 0.0;
 
 // run calculate_offsets() moving all axis to get these
 // Accelerometer default offsets
-static const float AccelOffsetX = 0.01;
-static const float AccelOffsetY = 0.01;
-static const float AccelOffsetZ = 0.00;
+static const float AccelOffsetMinX = -10.11;
+static const float AccelOffsetMaxX = 10.05;
+static const float AccelOffsetMinY = -10.30;
+static const float AccelOffsetMaxY = 10.49;
+static const float AccelOffsetMinZ = -12.46;
+static const float AccelOffsetMaxZ = 10.18;
