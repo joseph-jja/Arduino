@@ -7,7 +7,8 @@ float midz = 0.0, amidz = 0.0;
 // Gyroscope calibration needs to be sitting still
 // Accelerometer calibrate under graviation for each axis
 // look on chip for dot in the corner as that identifies x
-// on my board long way is x, short way is y and up and down is z
+// on my board long way is y, short way is x and up and down is z
+// https://github.com/Blokkendoos/mpu-calibration
 // update these after calibration
 // update Config.h with calibration values
 /*
