@@ -4,11 +4,10 @@ float midx = 0.0, amidx = 0.0;
 float midy = 0.0, amidy = 0.0;
 float midz = 0.0, amidz = 0.0;
 
-// this seems to work
-// moving each acccess for the gyro and accelerometer calibration
-// output looks like this
-// using the last value seems to work
-// update config.h values
+// Gyroscope calibration needs to be sitting still
+// Accelerometer calibrate under graviation for each axis
+// update these after calibration
+// update Config.h with calibration values
 /*
 14:38:37.980 -> Gyro Calibration Results (Min/Max/Mid)
 14:38:38.013 -> X : -8.73/8.73/-0.00
