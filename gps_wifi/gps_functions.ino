@@ -16,7 +16,7 @@ void get_gps_info() {
             Serial.print(gps.satellites.value());
             Serial.println(" satellites.");
 
-            if (gps.location.isUpdated()) {
+            if (gps.location.isValid() || gps.location.isUpdated()) {
                 latitude = gps.location.lat();
                 longitude = gps.location.lng();
                 Serial.print("Got valid latitude and longitude ");
@@ -25,13 +25,13 @@ void get_gps_info() {
                 Serial.println("");
                 delay(1000);
             }
-            if (gps.altitude.isUpdated()) {
+            if (gps.altitude.isValid() || gps.altitude.isUpdated()) {
                 altitude = gps.altitude.feet();
                 Serial.print("Got valid altitude ");
                 Serial.print(altitude, 6);
                 Serial.println("");
             }
-            if (gps.time.isUpdated()) {
+            if (gps.time.isValid() || gps.time.isUpdated()) {
                 currentHour = gps.time.hour();
                 currentMinute = gps.time.minute();
                 memset(gps_time, '\0\, sizeof(gps_date);
@@ -39,7 +39,7 @@ void get_gps_info() {
                 Serial.print("Got valid time ");
                 Serial.println(gps_time);
             }
-            if (gps.date.isUpdated()) {
+            if (gps.date.isValid() || gps.date.isUpdated()) {
                 memset(gps_date, '\0\, sizeof(gps_date);
                 year = gps.date.year();
                 month = gps.date.month();
