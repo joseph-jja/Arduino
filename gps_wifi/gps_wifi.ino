@@ -74,9 +74,9 @@ void setup() {
     server.on("/update", []() {
         char temp[512];
         memset(temp, '\0', sizeof(temp));
-        sprintf(temp, "{ \"degC\": %2.2f, \"degF\": %2.2f, \"latitude\": %3.2f, \"longitude\": %3.2f, \"time\": \"%2.0f:%2.0f\", \"Acc\": { \"X\": %3.2f, \"Y\": %3.2f , \"Z\": %3.2f }, \"Gyro\": { \"X\": %3.2f, \"Y\": %3.2f , \"Z\": %3.2f } }",
+        sprintf(temp, "{ \"degC\": %2.2f, \"degF\": %2.2f, \"latitude\": %3.2f, \"longitude\": %3.2f, \"altitude\": %3.2f, \"time\": \"%2.0f:%2.0f\", \"Acc\": { \"X\": %3.2f, \"Y\": %3.2f , \"Z\": %3.2f }, \"Gyro\": { \"X\": %3.2f, \"Y\": %3.2f , \"Z\": %3.2f } }",
             temperatureC, temperatureF,
-            latitude, longitude,
+            latitude, longitude, altitude,
             currentHour, currentMinute,
             AccX, AccY, AccZ,
             GyroX, GyroY, GyroZ);
@@ -97,15 +97,7 @@ void setup() {
     }
     setupMPU6050();
 
-    pinMode(LED_BUILTIN, OUTPUT);
-    Serial.println("Pin enabled");
-    digitalWrite(LED_BUILTIN, LOW);
-}
-
-void blink_pin(int sleep_time) {
-    digitalWrite(LED_BUILTIN, HIGH);
-    delay(sleep_time);
-    digitalWrite(LED_BUILTIN, LOW);
+    setup_builtin_pin();
 }
 
 void get_gps_info() {
