@@ -33,9 +33,9 @@ float GyroX = 0.0,
 float temperatureC = 0.0,
     temperatureF = 0.0;
 
-long year = 0, month = 0, day = 0,
-    currentHour = 0,
-    currentMinute = 0;
+char gps_date[12];
+char gps_time[6];
+
 float latitude = 0,
     longitude = 0,
     altitude = 0;
@@ -74,10 +74,10 @@ void setup() {
     server.on("/update", []() {
         char temp[512];
         memset(temp, '\0', sizeof(temp));
-        sprintf(temp, "{ \"degC\": %2.2f, \"degF\": %2.2f, \"latitude\": %3.2f, \"longitude\": %3.2f, \"altitude\": %3.2f, \"time\": \"%2.0f:%2.0f\", \"Acc\": { \"X\": %3.2f, \"Y\": %3.2f , \"Z\": %3.2f }, \"Gyro\": { \"X\": %3.2f, \"Y\": %3.2f , \"Z\": %3.2f } }",
+        sprintf(temp, "{ \"degC\": %2.2f, \"degF\": %2.2f, \"latitude\": %3.2f, \"longitude\": %3.2f, \"altitude\": %3.2f, \"date\": %s, \"time\": \"%s\", \"Acc\": { \"X\": %3.2f, \"Y\": %3.2f , \"Z\": %3.2f }, \"Gyro\": { \"X\": %3.2f, \"Y\": %3.2f , \"Z\": %3.2f } }",
             temperatureC, temperatureF,
             latitude, longitude, altitude,
-            currentHour, currentMinute,
+            gps_date, gps_time,
             AccX, AccY, AccZ,
             GyroX, GyroY, GyroZ);
         Serial.print("Update request ");
@@ -98,62 +98,6 @@ void setup() {
     setupMPU6050();
 
     setup_builtin_pin();
-}
-
-void get_gps_info() {
-
-    long avail = ss.available();
-
-    while (avail > 0) {
-        //Serial.println("Trying to get GPS data.");
-        if (gps.encode(ss.read())) {
-            blink_pin(100);
-            Serial.print("GPS data read using ");
-            Serial.print(gps.satellites.value());
-            Serial.println(" satellites.");
-
-            if (gps.location.isUpdated()) {
-                latitude = gps.location.lat();
-                longitude = gps.location.lng();
-                Serial.print("Got valid latitude and longitude ");
-                Serial.print(latitude, 6);
-                Serial.print(longitude, 6);
-                Serial.println("");
-                delay(1000);
-            }
-            if (gps.altitude.isUpdated()) {
-                altitude = gps.altitude.feet();
-                Serial.print("Got valid altitude ");
-                Serial.print(altitude, 6);
-                Serial.println("");
-            }
-            if (gps.time.isUpdated()) {
-                currentHour = gps.time.hour();
-                currentMinute = gps.time.minute();
-                Serial.print("Got valid time ");
-                if (gps.time.hour() < 10) Serial.print(F("0"));
-                Serial.print(currentHour);
-                Serial.print(F(":"));
-                if (gps.time.minute() < 10) Serial.print(F("0"));
-                Serial.print(currentMinute);
-                Serial.println("");
-            }
-            if (gps.date.isUpdated()) {
-                year = gps.date.year();
-                month = gps.date.month();
-                day = gps.date.day();
-                Serial.print("Got valid date ");
-                Serial.print(year);
-                Serial.print("/");
-                Serial.print(month);
-                Serial.print("/");
-                Serial.print(day);
-                Serial.println("");
-            }
-        }
-        avail = ss.available();
-    }
-    delay(500);
 }
 
 float axis_correction(float raw_reading, float axis_max, float axis_min, float grav_accel) {
