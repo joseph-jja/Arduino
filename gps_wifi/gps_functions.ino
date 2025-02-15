@@ -1,4 +1,5 @@
-
+// configuration
+#include "Globals.h"
 
 void get_gps_info() {
 
