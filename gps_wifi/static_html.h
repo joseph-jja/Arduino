@@ -30,11 +30,17 @@ const char index_html[] PROGMEM = R"rawliteral(
     <br><span id="motion-data"></span>    
   </p>
   <script type="text/html">
-  async function fetcher( url, options ) {
-    const response = await fetch( url, options );
-    const buff = await response.text();
-    return buff;
-  }
+  window.addEventListener('DOMContentLoaded', async () => {
+     const response = await fetch('/update');
+     const buff = await response.text();
+     const data = JSON.parse(buff);
+     const gps = document.getElementById('GPS-data');
+     gps.innerHTML = JSON.stringify(data.gps);
+     const gps = document.getElementById('motion-data');
+     gps.innerHTML = JSON.stringify(data.Acc) + " " + JSON.stringify(data.Gyro);
+     const gps = document.getElementById('temperature-data');
+     gps.innerHTML = JSON.stringify(data.degC) + " " + JSON.stringify(degF);
+  });
   </script>
 </body>
 </html>)rawliteral";

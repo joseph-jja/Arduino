@@ -37,8 +37,7 @@ char gps_date[12];
 char gps_time[6];
 
 float latitude = 0,
-    longitude = 0,
-    altitude = 0;
+    longitude = 0;
 
 void setup() {
 
@@ -74,9 +73,9 @@ void setup() {
     server.on("/update", []() {
         char temp[512];
         memset(temp, '\0', sizeof(temp));
-        sprintf(temp, "{ \"degC\": %2.2f, \"degF\": %2.2f, \"latitude\": %3.2f, \"longitude\": %3.2f, \"altitude\": %3.2f, \"date\": %s, \"time\": \"%s\", \"Acc\": { \"X\": %3.2f, \"Y\": %3.2f , \"Z\": %3.2f }, \"Gyro\": { \"X\": %3.2f, \"Y\": %3.2f , \"Z\": %3.2f } }",
+        sprintf(temp, "{ \"degC\": %2.2f, \"degF\": %2.2f, \"gps\": {\"latitude\": %3.2f, \"longitude\": %3.2f, \"date\": %s, \"time\": \"%s\"}, \"Acc\": { \"X\": %3.2f, \"Y\": %3.2f , \"Z\": %3.2f }, \"Gyro\": { \"X\": %3.2f, \"Y\": %3.2f , \"Z\": %3.2f } }",
             temperatureC, temperatureF,
-            latitude, longitude, altitude,
+            latitude, longitude,
             gps_date, gps_time,
             AccX, AccY, AccZ,
             GyroX, GyroY, GyroZ);
