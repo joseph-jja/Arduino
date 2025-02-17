@@ -16,19 +16,23 @@ float* altAzToHADec(float lat, float alt, float az) {
     return results;
 }
 /*
-float earthRotationAngle(jd) {
+float earthRotationAngle(int jd) {
     //IERS Technical Note No. 32
 
-    const t = jd - 2451545.0;
-    const f = jd % 1.0;
+    int t = jd - 2451545.0;
+    int f = jd % 1.0;
 
-    let theta = 2 * Math.PI * (f + 0.7790572732640 + 0.00273781191135448 * t); //eq 14
-    theta %= 2 * Math.PI;
-    if (theta < 0) theta += 2 * Math.PI;
+    float theta = 2 * M_PI * (f + 0.7790572732640 + 0.00273781191135448 * t); //eq 14
+    //theta = 2 * M_PI % theta;
+    if (theta < 0) {
+        theta += 2 * M_PI;
+    }
 
     return theta;
 
 }
+*/
+/*
 
 function greenwichMeanSiderealTime(jd) {
     //"Expressions for IAU 2000 precession quantities" N. Capitaine1,P.T.Wallace2, and J. Chapront
