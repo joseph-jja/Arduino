@@ -1,7 +1,7 @@
 // configuration
 #include "Globals.h"
 
-double* altAzToHADec(double lat, flodoubleat alt, double az) {
+double* altAzToHADec(double lat, double alt, double az) {
     
     double H = atan2(-sin(az), tan(alt) * cos(lat) - cos(az) * sin(lat));
     if (H < 0) {
@@ -15,7 +15,7 @@ double* altAzToHADec(double lat, flodoubleat alt, double az) {
     
     return results;
 }
-/*
+
 double earthRotationAngle(double jd) {
     //IERS Technical Note No. 32
 
@@ -23,15 +23,14 @@ double earthRotationAngle(double jd) {
     double f = remainder(jd, 1.0);
 
     double theta = 2 * M_PI * (f + 0.7790572732640 + 0.00273781191135448 * t); //eq 14
-    theta = remainder(2 * M_PI), theta);
+    theta = remainder((2 * M_PI), theta);
     if (theta < 0) {
         theta += 2 * M_PI;
     }
 
     return theta;
-
 }
-*/
+
 /*
 
 double greenwichMeanSiderealTime(double jd) {

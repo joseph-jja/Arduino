@@ -99,12 +99,12 @@ void setup() {
     setup_builtin_pin();
 }
 
-float get_angle(float raw_reading, float axis_max, float axis_min, axis_resting) {
+float get_angle(float raw_reading, float axis_max, float axis_min, float axis_resting) {
      
      if (raw_reading >= 0) {
         return (raw_reading / (axis_max - axis_resting)) * 100;
      } else {
-        return (abs(raw_reading) / (abs(axis_min) - axis_resting)) * -100;
+        return (abs(raw_reading) / (abs(axis_min) - abs(axis_resting))) * -100;
      }
 }
 
@@ -122,23 +122,24 @@ void getAccelerometerData() {
     temperatureC = temp.temperature;
     temperatureF = (C2F_MULTIPLIER * temperatureC) + C2F_ADDITION;
 
+    // our case the movements are slow
+    // and more interested in positional angle
+    // which we can use gravity for
+    AccX = get_angle(AccX, AccelOffsetMaxX, AccelOffsetMinX, AccelOffsetX);
+    AccY = get_angle(AccY, AccelOffsetMaxY, AccelOffsetMinY, AccelOffsetY);
+    AccZ = get_angle(AccY, AccelOffsetMaxZ, AccelOffsetMinZ, AccelOffsetZ);
+    
     /* Print out the values */
-    Serial.print("Acceleration X: ");
+    Serial.print("Angle ");
+    Serial.print("X: ");
     Serial.print(AccX);
-    Serial.print(" ");
     Serial.print(", Y: ");
     Serial.print(AccY);
     Serial.print(", Z: ");
     Serial.print(AccZ);
     Serial.println(" m/s^2");
 
-    /*Serial.print("Acceleration Angles X: ");
-    Serial.print(get_angle(AccX, AccelOffsetMaxX, AccelOffsetMinX, AccelOffsetX));
-    Serial.print(", Y: ");
-    Serial.print(get_angle(AccY, AccelOffsetMaxY, AccelOffsetMinY, AccelOffsetY));
-    Serial.print(", Z: ");
-    Serial.print(get_angle(AccY, AccelOffsetMaxZ, AccelOffsetMinZ, AccelOffsetZ));
-    Serial.println(" m/s^2");*/
+    
 
     Serial.print("Rotation X: ");
     Serial.print(GyroX);
