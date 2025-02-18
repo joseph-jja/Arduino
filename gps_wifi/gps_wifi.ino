@@ -53,8 +53,22 @@ void setup() {
     WiFi.softAPConfig(local_IP, gateway, subnet);
     WiFi.softAP(ssid, password);
 
+    /*WiFi.enableInsecureWEP(false);
+    WiFi.mode(WIFI_STA);
+  
+    WiFi.disconnect();
+    WiFi.mode(WIFI_STA);
+    WiFi.begin(ssid, password);
+    while (WiFi.status() != WL_CONNECTED) {
+        delay(500);
+        //Serial.print(".");
+        Serial.println(WiFi.status());
+        WiFi.printDiag(Serial);
+    }
+    Serial.println("");*/
+
     IPAddress IP = WiFi.softAPIP();
-    Serial.print("AP IP address: ");
+    Serial.print("WiFi with IP address: ");
     Serial.println(IP);
 
     // Print ESP8266 Local IP Address
