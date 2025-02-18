@@ -1,29 +1,29 @@
 // configuration
 #include "Globals.h"
 
-float* altAzToHADec(float lat, float alt, float az) {
+double* altAzToHADec(double lat, flodoubleat alt, double az) {
     
-    float H = atan2(-sin(az), tan(alt) * cos(lat) - cos(az) * sin(lat));
+    double H = atan2(-sin(az), tan(alt) * cos(lat) - cos(az) * sin(lat));
     if (H < 0) {
         H += M_PI * 2;
     }
-    float dec = asin(sin(lat) * sin(alt) + cos(lat) * cos(alt) * cos(az));
+    double dec = asin(sin(lat) * sin(alt) + cos(lat) * cos(alt) * cos(az));
 
-    float results[2];
+    double results[2];
     results[0] = H;
     results[1] = dec;
     
     return results;
 }
 /*
-float earthRotationAngle(int jd) {
+double earthRotationAngle(double jd) {
     //IERS Technical Note No. 32
 
-    int t = jd - 2451545.0;
-    int f = jd % 1.0;
+    double t = jd - 2451545.0;
+    double f = remainder(jd, 1.0);
 
-    float theta = 2 * M_PI * (f + 0.7790572732640 + 0.00273781191135448 * t); //eq 14
-    //theta = 2 * M_PI % theta;
+    double theta = 2 * M_PI * (f + 0.7790572732640 + 0.00273781191135448 * t); //eq 14
+    theta = remainder(2 * M_PI), theta);
     if (theta < 0) {
         theta += 2 * M_PI;
     }
