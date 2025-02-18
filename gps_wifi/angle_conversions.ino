@@ -34,11 +34,11 @@ double earthRotationAngle(double jd) {
 */
 /*
 
-function greenwichMeanSiderealTime(jd) {
+double greenwichMeanSiderealTime(double jd) {
     //"Expressions for IAU 2000 precession quantities" N. Capitaine1,P.T.Wallace2, and J. Chapront
-    const t = ((jd - 2451545.0)) / 36525.0;
+    double t = ((jd - 2451545.0)) / 36525.0;
 
-    let gmst = this.earthRotationAngle(jd) + (0.014506 + 4612.156534 * t + 1.3915817 * t * t - 0.00000044 * t * t * t - 0.000029956 * t * t * t * t - 0.0000000368 * t * t * t * t * t) / 60.0 / 60.0 * Math.PI / 180.0; //eq 42
+    double gmst = this.earthRotationAngle(jd) + (0.014506 + 4612.156534 * t + 1.3915817 * t * t - 0.00000044 * t * t * t - 0.000029956 * t * t * t * t - 0.0000000368 * t * t * t * t * t) / 60.0 / 60.0 * Math.PI / 180.0; //eq 42
     gmst %= 2 * Math.PI;
     if (gmst < 0) gmst += 2 * Math.PI;
 
