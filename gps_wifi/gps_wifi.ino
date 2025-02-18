@@ -99,17 +99,13 @@ void setup() {
     setup_builtin_pin();
 }
 
-float axis_correction(float raw_reading, float axis_max, float axis_min, float grav_accel) {
-    float max_plus_min = axis_max + axis_min;
-    float max_minus_min = axis_max - axis_min;
-    float middle = max_plus_min / 2.0;
-    float raw_middle = raw_reading - middle;
-    //Serial.print("Correction calculations: middle:");
-    //Serial.print(middle);
-    //Serial.print(" middle offset ");
-    //Serial.print(raw_middle);
-    //Serial.println("");
-    return (float)(2.0 * grav_accel * raw_middle) / max_minus_min;
+float get_angle(float raw_reading, float axis_max, float axis_min, axis_resting) {
+     
+     if (raw_reading >= 0) {
+        return (raw_reading / (axis_max - axis_resting)) * 100;
+     } else {
+        return (abs(raw_reading) / (abs(axis_min) - axis_resting)) * -100;
+     }
 }
 
 void getAccelerometerData() {
@@ -136,13 +132,12 @@ void getAccelerometerData() {
     Serial.print(AccZ);
     Serial.println(" m/s^2");
 
-    /*Serial.print("Acceleration Corrected X: ");
-    Serial.print(axis_correction(AccX, AccelOffsetMaxX, AccelOffsetMinX, AccZ));
-    Serial.print(" ");
+    /*Serial.print("Acceleration Angles X: ");
+    Serial.print(get_angle(AccX, AccelOffsetMaxX, AccelOffsetMinX, AccelOffsetX));
     Serial.print(", Y: ");
-    Serial.print(axis_correction(AccY, AccelOffsetMaxY, AccelOffsetMinY, AccZ));
+    Serial.print(get_angle(AccY, AccelOffsetMaxY, AccelOffsetMinY, AccelOffsetY));
     Serial.print(", Z: ");
-    Serial.print(axis_correction(AccY, AccelOffsetMaxZ, AccelOffsetMinZ, AccZ));
+    Serial.print(get_angle(AccY, AccelOffsetMaxZ, AccelOffsetMinZ, AccelOffsetZ));
     Serial.println(" m/s^2");*/
 
     Serial.print("Rotation X: ");
