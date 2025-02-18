@@ -35,11 +35,11 @@ const char index_html[] PROGMEM = R"rawliteral(
      const buff = await response.text();
      const data = JSON.parse(buff);
      const gps = document.getElementById('GPS-data');
-     gps.innerHTML = JSON.stringify(data.gps);
-     const gps = document.getElementById('motion-data');
-     gps.innerHTML = JSON.stringify(data.Acc) + " " + JSON.stringify(data.Gyro);
-     const gps = document.getElementById('temperature-data');
-     gps.innerHTML = JSON.stringify(data.degC) + " " + JSON.stringify(degF);
+     if (gps) { gps.innerHTML = JSON.stringify(data.gps); }
+     const motion = document.getElementById('motion-data');
+     if (motion) { motion.innerHTML = JSON.stringify(data.Acc) + " " + JSON.stringify(data.Gyro); }
+     const temperature = document.getElementById('temperature-data');
+     if (temperature) { temperature.innerHTML = JSON.stringify(data.degC) + " " + JSON.stringify(degF); }
   });
   </script>
 </body>
