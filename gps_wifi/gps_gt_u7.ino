@@ -22,6 +22,7 @@ void get_gps_info() {
                 longitude = gps.location.lng();
                 Serial.print("Got valid latitude and longitude ");
                 Serial.print(latitude, 6);
+                Serial.print(", ");
                 Serial.print(longitude, 6);
                 Serial.println("");
                 delay(1000);
@@ -31,7 +32,11 @@ void get_gps_info() {
                 currentMinute = gps.time.minute();
                 memset(gps_time, '\0', sizeof(gps_date));
                 sprintf(gps_time, "%02d:%02d", currentHour, currentMinute);
-                Serial.print("Got valid time ");
+                Serial.print("Got raw time: ");
+                Serial.print(currentHour);
+                Serial.print(":");
+                Serial.println(currentMinute);
+                Serial.print("Got cookied time: ");
                 Serial.println(gps_time);
             }
             if (gps.date.isValid() || gps.date.isUpdated()) {
