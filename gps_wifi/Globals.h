@@ -17,3 +17,5 @@
 #include <Adafruit_MPU6050.h>
 #include <Adafruit_Sensor.h>
 #include <Wire.h>
+
+#include <SparkFun_MMC5983MA_Arduino_Library.h>
