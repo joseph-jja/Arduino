@@ -4,13 +4,6 @@
 int interruptPin = 2;
 
 volatile bool newDataAvailable = true;
-uint32_t rawValueX = 0;
-uint32_t rawValueY = 0;
-uint32_t rawValueZ = 0;
-double scaledX = 0;
-double scaledY = 0;
-double scaledZ = 0;
-double heading = 0;
 
 void setup_mmc5983ma() {
 
@@ -60,6 +53,11 @@ void setup_mmc5983ma() {
 void get_compass_data() {
     
     if (newDataAvailable == true) {
+
+        uint32_t rawValueX = 0;
+        uint32_t rawValueY = 0;
+        uint32_t rawValueZ = 0;
+
         newDataAvailable = false; // Clear our interrupt flag
         myMag.clearMeasDoneInterrupt(); // Clear the MMC5983 interrupt
 
@@ -74,27 +72,27 @@ void get_compass_data() {
         // Please note: to properly correct and calibrate the X, Y and Z channels, you need to determine true
         // offsets (zero points) and scale factors (gains) for all three channels. Futher details can be found at:
         // https://thecavepearlproject.org/2015/05/22/calibrating-any-compass-or-accelerometer-for-arduino/
-        scaledX = (double)rawValueX - 131072.0;
-        scaledX /= 131072.0;
+        compassX = (double)rawValueX - 131072.0;
+        compassX /= 131072.0;
     
-        scaledY = (double)rawValueY - 131072.0;
-        scaledY /= 131072.0;
+        compassY = (double)rawValueY - 131072.0;
+        compassY /= 131072.0;
     
-        scaledZ = (double)rawValueZ - 131072.0;
-        scaledZ /= 131072.0;
+        compassZ = (double)rawValueZ - 131072.0;
+        compassZ /= 131072.0;
     
         // Magnetic north is oriented with the Y axis
         // Convert the X and Y fields into heading using atan2 (Arc Tangent 2)
-        heading = atan2(scaledX, 0 - scaledY);
+        compassHeading = atan2(compassX, 0 - compassY);
     
         // atan2 returns a value between +PI and -PI
         // Convert to degrees
-        heading /= PI;
-        heading *= 180;
-        heading += 180;
+        compassHeading /= PI;
+        compassHeading *= 180;
+        compassHeading += 180;
     
         Serial.print("Heading: ");
-        Serial.println(heading, 1);
+        Serial.println(compassHeading, 1);
     }
 }
 

@@ -38,3 +38,9 @@ static const float AccelOffsetY = 0.08;
 static const float AccelOffsetMinZ = -9.80;
 static const float AccelOffsetMaxZ = 9.89;
 static const float AccelOffsetZ = 0.10;
+
+// magnetomemeter data
+double compassX = 0;
+double compassY = 0;
+double compassZ = 0;
+double compassHeading = 0;
