@@ -7,11 +7,17 @@ const char* password = "ESP8266-GPS-AP-25";
 const int MPU = 0x68; 
 
 // gps
-// GPIO 15 is ping D8
-// GPIO 13 is ping D7
-static const int RXPin = 13, TXPin = 15;
+// GPIO 2 is ping D4
+// GPIO 0 is ping D3
+static const int RXPin = 0, TXPin = 2;
 static const int GPSBaud = 9600;
 static const signed long tzOffset = -7;
+
+// SPI for compass
+static const int CLOCKPin = 14,
+    MISOPin = 12,
+    MOSIPin = 13,
+    CSPin = 15;
 
 // serial baud rate
 static const int SERIAL_BAUD = 9600;
