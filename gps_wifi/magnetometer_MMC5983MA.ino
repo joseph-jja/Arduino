@@ -1,26 +1,28 @@
 // configuration
 #include "Globals.h"
 
-int interruptPin = 2;
+// D0
+int interruptPin = 16;
 
 volatile bool newDataAvailable = true;
 
 void setup_mmc5983ma() {
 
-    Wire.begin();
+    //Wire.begin();
 
-    pinMode(interruptPin, INPUT);
-    attachInterrupt(digitalPinToInterrupt(interruptPin), interruptRoutine, RISING);
+    //pinMode(interruptPin, INPUT);
+    //attachInterrupt(digitalPinToInterrupt(interruptPin), interruptRoutine, RISING);
 
-    if (myMag.begin() == false) {
+    /*if (myMag.begin() == false) {
         Serial.println("MMC5983MA did not respond - check your wiring. Freezing.");
-        while (true);
-    }
+        //while (true);
+        return;
+    }*/
 
-    myMag.softReset();
+    //myMag.softReset();
 
     Serial.println("MMC5983MA connected");
-
+    /*
     Serial.println("Setting filter bandwith to 100 Hz for continuous operation...");
     myMag.setFilterBandwidth(100);
     Serial.print("Reading back filter bandwith: ");
@@ -42,14 +44,14 @@ void setup_mmc5983ma() {
     Serial.println(myMag.isContinuousModeEnabled() ? "enabled" : "disabled");
 
     Serial.println("Enabling interrupt...");
-    myMag.enableInterrupt();
+    //myMag.enableInterrupt();
     Serial.print("Reading back interrupt status: ");
     Serial.println(myMag.isInterruptEnabled() ? "enabled" : "disabled");
 
     // Set our interrupt flag, just in case we missed the rising edge
-    newDataAvailable = true;
+    newDataAvailable = true;*/
 }
-
+/*
 void get_compass_data() {
     
     if (newDataAvailable == true) {
@@ -95,7 +97,7 @@ void get_compass_data() {
         Serial.println(compassHeading, 1);
     }
 }
-
+*/
 void interruptRoutine() {
     newDataAvailable = true;
 }

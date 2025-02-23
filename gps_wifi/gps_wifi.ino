@@ -23,8 +23,6 @@ ESP8266WebServer server(80);
 // mpu6050
 Adafruit_MPU6050 mpu;
 
-SFE_MMC5983MA myMag;
-
 float AccX = 0.0,
     AccY = 0.0,
     AccZ = 0.0;
