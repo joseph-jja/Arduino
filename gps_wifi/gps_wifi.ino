@@ -20,6 +20,9 @@ SoftwareSerial ss(RXPin, TXPin);
 // Create AsyncWebServer object on port 80
 ESP8266WebServer server(80);
 
+// compass
+Adafruit_LIS3MDL lis3mdl;
+
 // mpu6050
 Adafruit_MPU6050 mpu;
 

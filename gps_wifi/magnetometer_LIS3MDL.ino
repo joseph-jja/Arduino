@@ -1,103 +1,94 @@
 // configuration
 #include "Globals.h"
 
-// D0
-int interruptPin = 16;
-
-volatile bool newDataAvailable = true;
-
 void setup_mmc5983ma() {
 
-    //Wire.begin();
-
-    //pinMode(interruptPin, INPUT);
-    //attachInterrupt(digitalPinToInterrupt(interruptPin), interruptRoutine, RISING);
-
-    /*if (myMag.begin() == false) {
-        Serial.println("MMC5983MA did not respond - check your wiring. Freezing.");
-        //while (true);
+    // Try to initialize!
+    int i = 0;
+    boolean found = lis3mdl.begin_I2C();
+    while (!found && i < 500) {          // hardware I2C mode, can pass in address & alt Wire
+        Serial.println("Failed to find LIS3MDL chip, will try again in 10");
+        delay(10);
+        found = lis3mdl.begin_I2C();
+    }
+    if (!found) { 
+        Serial.println("LIS3MDL NOT Found, stopping!");
         return;
-    }*/
+    }
 
-    //myMag.softReset();
+    Serial.println("LIS3MDL Found!");
+  
+lis3mdl.setPerformanceMode(LIS3MDL_MEDIUMMODE);
+  Serial.print("Performance mode set to: ");
+  switch (lis3mdl.getPerformanceMode()) {
+    case LIS3MDL_LOWPOWERMODE: Serial.println("Low"); break;
+    case LIS3MDL_MEDIUMMODE: Serial.println("Medium"); break;
+    case LIS3MDL_HIGHMODE: Serial.println("High"); break;
+    case LIS3MDL_ULTRAHIGHMODE: Serial.println("Ultra-High"); break;
+  }
 
-    Serial.println("MMC5983MA connected");
-    /*
-    Serial.println("Setting filter bandwith to 100 Hz for continuous operation...");
-    myMag.setFilterBandwidth(100);
-    Serial.print("Reading back filter bandwith: ");
-    Serial.println(myMag.getFilterBandwith());
+  lis3mdl.setOperationMode(LIS3MDL_CONTINUOUSMODE);
+  Serial.print("Operation mode set to: ");
+  // Single shot mode will complete conversion and go into power down
+  switch (lis3mdl.getOperationMode()) {
+    case LIS3MDL_CONTINUOUSMODE: Serial.println("Continuous"); break;
+    case LIS3MDL_SINGLEMODE: Serial.println("Single mode"); break;
+    case LIS3MDL_POWERDOWNMODE: Serial.println("Power-down"); break;
+  }
 
-    Serial.println("Setting continuous measurement frequency to 10 Hz...");
-    myMag.setContinuousModeFrequency(10);
-    Serial.print("Reading back continuous measurement frequency: ");
-    Serial.println(myMag.getContinuousModeFrequency());
+  lis3mdl.setDataRate(LIS3MDL_DATARATE_155_HZ);
+  // You can check the datarate by looking at the frequency of the DRDY pin
+  Serial.print("Data rate set to: ");
+  switch (lis3mdl.getDataRate()) {
+    case LIS3MDL_DATARATE_0_625_HZ: Serial.println("0.625 Hz"); break;
+    case LIS3MDL_DATARATE_1_25_HZ: Serial.println("1.25 Hz"); break;
+    case LIS3MDL_DATARATE_2_5_HZ: Serial.println("2.5 Hz"); break;
+    case LIS3MDL_DATARATE_5_HZ: Serial.println("5 Hz"); break;
+    case LIS3MDL_DATARATE_10_HZ: Serial.println("10 Hz"); break;
+    case LIS3MDL_DATARATE_20_HZ: Serial.println("20 Hz"); break;
+    case LIS3MDL_DATARATE_40_HZ: Serial.println("40 Hz"); break;
+    case LIS3MDL_DATARATE_80_HZ: Serial.println("80 Hz"); break;
+    case LIS3MDL_DATARATE_155_HZ: Serial.println("155 Hz"); break;
+    case LIS3MDL_DATARATE_300_HZ: Serial.println("300 Hz"); break;
+    case LIS3MDL_DATARATE_560_HZ: Serial.println("560 Hz"); break;
+    case LIS3MDL_DATARATE_1000_HZ: Serial.println("1000 Hz"); break;
+  }
+  
+  lis3mdl.setRange(LIS3MDL_RANGE_4_GAUSS);
+  Serial.print("Range set to: ");
+  switch (lis3mdl.getRange()) {
+    case LIS3MDL_RANGE_4_GAUSS: Serial.println("+-4 gauss"); break;
+    case LIS3MDL_RANGE_8_GAUSS: Serial.println("+-8 gauss"); break;
+    case LIS3MDL_RANGE_12_GAUSS: Serial.println("+-12 gauss"); break;
+    case LIS3MDL_RANGE_16_GAUSS: Serial.println("+-16 gauss"); break;
+  }
 
-    Serial.println("Enabling auto set/reset...");
-    myMag.enableAutomaticSetReset();
-    Serial.print("Reading back automatic set/reset: ");
-    Serial.println(myMag.isAutomaticSetResetEnabled() ? "enabled" : "disabled");
-
-    Serial.println("Enabling continuous mode...");
-    myMag.enableContinuousMode();
-    Serial.print("Reading back continuous mode: ");
-    Serial.println(myMag.isContinuousModeEnabled() ? "enabled" : "disabled");
-
-    Serial.println("Enabling interrupt...");
-    //myMag.enableInterrupt();
-    Serial.print("Reading back interrupt status: ");
-    Serial.println(myMag.isInterruptEnabled() ? "enabled" : "disabled");
-
-    // Set our interrupt flag, just in case we missed the rising edge
-    newDataAvailable = true;*/
+  lis3mdl.setIntThreshold(500);
+  lis3mdl.configInterrupt(false, false, true, // enable z axis
+                          true, // polarity
+                          false, // don't latch
+                          true); // enabled!
 }
-/*
+
 void get_compass_data() {
     
-    if (newDataAvailable == true) {
+    lis3mdl.read();      // get X Y and Z data at once
+  // Then print out the raw data
+  Serial.print("\nX:  "); Serial.print(lis3mdl.x); 
+  Serial.print("  \tY:  "); Serial.print(lis3mdl.y); 
+  Serial.print("  \tZ:  "); Serial.println(lis3mdl.z); 
 
-        uint32_t rawValueX = 0;
-        uint32_t rawValueY = 0;
-        uint32_t rawValueZ = 0;
+  /* Or....get a new sensor event, normalized to uTesla */
+  sensors_event_t event; 
+  lis3mdl.getEvent(&event);
+  /* Display the results (magnetic field is measured in uTesla) */
+  Serial.print("\tX: "); Serial.print(event.magnetic.x);
+  Serial.print(" \tY: "); Serial.print(event.magnetic.y); 
+  Serial.print(" \tZ: "); Serial.print(event.magnetic.z); 
+  Serial.println(" uTesla ");
 
-        newDataAvailable = false; // Clear our interrupt flag
-        myMag.clearMeasDoneInterrupt(); // Clear the MMC5983 interrupt
-
-        // Read all three channels simultaneously
-        // Note: we are calling readFieldsXYZ to read the fields, not getMeasurementXYZ
-        // The measurement is already complete, we do not need to start a new one
-        myMag.readFieldsXYZ(&rawValueX, &rawValueY, &rawValueZ);
-    
-        // The magnetic field values are 18-bit unsigned. The _approximate_ zero (mid) point is 2^17 (131072).
-        // Here we scale each field to +/- 1.0 to make it easier to calculate an approximate heading.
-        //
-        // Please note: to properly correct and calibrate the X, Y and Z channels, you need to determine true
-        // offsets (zero points) and scale factors (gains) for all three channels. Futher details can be found at:
-        // https://thecavepearlproject.org/2015/05/22/calibrating-any-compass-or-accelerometer-for-arduino/
-        compassX = (double)rawValueX - 131072.0;
-        compassX /= 131072.0;
-    
-        compassY = (double)rawValueY - 131072.0;
-        compassY /= 131072.0;
-    
-        compassZ = (double)rawValueZ - 131072.0;
-        compassZ /= 131072.0;
-    
-        // Magnetic north is oriented with the Y axis
-        // Convert the X and Y fields into heading using atan2 (Arc Tangent 2)
-        compassHeading = atan2(compassX, 0 - compassY);
-    
-        // atan2 returns a value between +PI and -PI
-        // Convert to degrees
-        compassHeading /= PI;
-        compassHeading *= 180;
-        compassHeading += 180;
-    
-        Serial.print("Heading: ");
-        Serial.println(compassHeading, 1);
-    }
-}
-*/
-void interruptRoutine() {
-    newDataAvailable = true;
+  // compassX
+  // compassY
+  // compassZ
+  // compassHeading
 }
