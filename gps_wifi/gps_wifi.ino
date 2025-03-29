@@ -113,6 +113,8 @@ void setup() {
     }
     setupMPU6050();
 
+    setup_mmc5983ma();
+
     setup_builtin_pin();
 }
 
@@ -187,6 +189,9 @@ void loop() {
 
     getAccelerometerData();
     delay(100);
+
+    get_compass_data();
+    delay(50);
 
     server.handleClient();
     MDNS.update();

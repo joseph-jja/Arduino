@@ -3,6 +3,7 @@
 
 void setup_mmc5983ma() {
 
+
     // Try to initialize!
     int i = 0;
     boolean found = lis3mdl.begin_I2C();
@@ -18,7 +19,7 @@ void setup_mmc5983ma() {
 
     Serial.println("LIS3MDL Found!");
   
-lis3mdl.setPerformanceMode(LIS3MDL_MEDIUMMODE);
+    lis3mdl.setPerformanceMode(LIS3MDL_MEDIUMMODE);
   Serial.print("Performance mode set to: ");
   switch (lis3mdl.getPerformanceMode()) {
     case LIS3MDL_LOWPOWERMODE: Serial.println("Low"); break;
@@ -74,7 +75,8 @@ void get_compass_data() {
     
     lis3mdl.read();      // get X Y and Z data at once
   // Then print out the raw data
-  Serial.print("\nX:  "); Serial.print(lis3mdl.x); 
+  Serial.print("Compass readings: "); 
+  Serial.print("X:  "); Serial.print(lis3mdl.x); 
   Serial.print("  \tY:  "); Serial.print(lis3mdl.y); 
   Serial.print("  \tZ:  "); Serial.println(lis3mdl.z); 
 
