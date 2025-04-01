@@ -1,4 +1,3 @@
-
 // wifi config
 const char* ssid     = "ESP-GPS-AP-25";
 const char* password = "ESP8266-GPS-AP-25";
@@ -46,7 +45,7 @@ static const float AccelOffsetMaxZ = 9.89;
 static const float AccelOffsetZ = 0.10;
 
 // magnetomemeter data
-double compassX = 0;
-double compassY = 0;
-double compassZ = 0;
+double compassOffsetvX = 0;
+double compassOffsetY = 0;
+double compassOffsetZ = 0;
 double compassHeading = 0;

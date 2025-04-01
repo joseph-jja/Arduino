@@ -75,18 +75,24 @@ void get_compass_data() {
     
     lis3mdl.read();      // get X Y and Z data at once
   // Then print out the raw data
-  Serial.print("Compass readings: "); 
-  Serial.print("X:  "); Serial.print(lis3mdl.x); 
-  Serial.print("  \tY:  "); Serial.print(lis3mdl.y); 
-  Serial.print("  \tZ:  "); Serial.println(lis3mdl.z); 
+  Serial.print("Compass readings: ");
+  compassX = lis3mdl.x;
+  compassY = lis3mdl.y;
+  compassZ = lis3mdl.z;
+  Serial.print("X:  "); Serial.print(compassX); 
+  Serial.print("  \tY:  "); Serial.print(compassY); 
+  Serial.print("  \tZ:  "); Serial.println(compassZ); 
 
   /* Or....get a new sensor event, normalized to uTesla */
   sensors_event_t event; 
   lis3mdl.getEvent(&event);
+  magneticX = event.magnetic.x;
+  magneticY = event.magnetic.y;
+  magneticZ = event.magnetic.z;
   /* Display the results (magnetic field is measured in uTesla) */
-  Serial.print("\tX: "); Serial.print(event.magnetic.x);
-  Serial.print(" \tY: "); Serial.print(event.magnetic.y); 
-  Serial.print(" \tZ: "); Serial.print(event.magnetic.z); 
+  Serial.print("\tX: "); Serial.print(magneticX);
+  Serial.print(" \tY: "); Serial.print(magneticY); 
+  Serial.print(" \tZ: "); Serial.print(magneticZ); 
   Serial.println(" uTesla ");
 
   // compassX

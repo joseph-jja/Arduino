@@ -26,6 +26,7 @@ Adafruit_LIS3MDL lis3mdl;
 // mpu6050
 Adafruit_MPU6050 mpu;
 
+// accelerometer and gyroscope
 float AccX = 0.0,
     AccY = 0.0,
     AccZ = 0.0;
@@ -33,14 +34,40 @@ float GyroX = 0.0,
     GyroY = 0.0,
     GyroZ = 0.0;
 
+// temperature
 float temperatureC = 0.0,
     temperatureF = 0.0;
 
+// gps date time
 char gps_date[12];
 char gps_time[6];
 
+// gps location
 float latitude = 0,
     longitude = 0;
+
+// magnetomometer data
+float compassX = 0.0,
+    compassY = 0.0,
+    compassZ = 0.0;
+float magneticX = 0.0,
+    magneticY = 0.0,
+    magneticZ = 0.0;
+
+char jsonData[512];
+void updateData() {
+
+
+    memset(jsonData, '\0', sizeof(jsonData));
+    sprintf(jsonData, "{ \"degC\": %2.2f, \"degF\": %2.2f, \"gps\": {\"latitude\": %3.2f, \"longitude\": %3.2f, \"date\": %s, \"time\": \"%s\"}, \"Acc\": { \"X\": %3.2f, \"Y\": %3.2f , \"Z\": %3.2f }, \"Gyro\": { \"X\": %3.2f, \"Y\": %3.2f , \"Z\": %3.2f }, \"Compass\": { \"X\": %3.2f, \"Y\": %3.2f , \"Z\": %3.2f }, \"Magnetic\": { \"X\": %3.2f, \"Y\": %3.2f , \"Z\": %3.2f } }",
+        temperatureC, temperatureF,
+        latitude, longitude,
+        gps_date, gps_time,
+        AccX, AccY, AccZ,
+        GyroX, GyroY, GyroZ,
+        compassX, compassY, compassZ,
+        magneticX, magneticY, magneticZ);
+}
 
 void setup() {
 
@@ -84,21 +111,19 @@ void setup() {
     // Route for root / web page
     //Serial.println(index_html);
     server.on("/", []() {
-        Serial.println("Request for home page");
-        server.send(200, "text/html", index_html);
-    });
-    server.on("/update", []() {
-        char temp[512];
-        memset(temp, '\0', sizeof(temp));
-        sprintf(temp, "{ \"degC\": %2.2f, \"degF\": %2.2f, \"gps\": {\"latitude\": %3.2f, \"longitude\": %3.2f, \"date\": %s, \"time\": \"%s\"}, \"Acc\": { \"X\": %3.2f, \"Y\": %3.2f , \"Z\": %3.2f }, \"Gyro\": { \"X\": %3.2f, \"Y\": %3.2f , \"Z\": %3.2f } }",
-            temperatureC, temperatureF,
-            latitude, longitude,
-            gps_date, gps_time,
-            AccX, AccY, AccZ,
-            GyroX, GyroY, GyroZ);
-        Serial.print("Update request ");
-        Serial.println(temp);
-        server.send(200, "text/html", temp);
+        updateData();
+        char *responseHTML;
+        responseHTML = (char*)malloc(strlen(jsonData) + strlen(index_html) + 1);
+        if (responseHTML) {
+            memset(responseHTML, '\0', sizeof(responseHTML));
+            sprintf(responseHTML, index_html, jsonData);
+            Serial.print("Request for home page");
+            Serial.println(strlen(responseHTML));
+            server.send(200, "text/html", responseHTML);
+            free(responseHTML);
+        } else {
+            server.send(200, "text/html", "Memory alloc failed");
+        }
     });
 
     // Start server
@@ -195,4 +220,15 @@ void loop() {
 
     server.handleClient();
     MDNS.update();
+
+    if (Serial.available() > 0) {
+
+        // get incoming byte:
+        int inByte = Serial.read();
+        char single[2];
+        Serial.print("Read bytes: ");
+        itoa(inByte, single, 10);
+        Serial.println(single);
+
+    }
 }
