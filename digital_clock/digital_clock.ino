@@ -3,6 +3,13 @@
 #include <math.h>
 #include <time.h>
 
+// Import required libraries for esp8266
+#include <Arduino.h>
+#include <ESP8266WiFi.h>
+#include <Hash.h>
+#include <ESP8266WebServer.h>
+#include <ESP8266mDNS.h>
+
 #include "Adafruit_LEDBackpack.h"
 #include "Adafruit_GFX.h"
 
@@ -10,16 +17,94 @@
 
 Adafruit_AlphaNum4 alpha4 = Adafruit_AlphaNum4();
 
-#define SERIAL_BAUD 9600
+#define SERIAL_BAUD 115200
 
 // real time clock
 RTC_PCF8523 rtc;
 
+// wifi change these
+const char* ssid     = "*********";
+const char* password = "******";
+IPAddress local_IP(192, 168, 0, 1);
+IPAddress gateway(192, 168, 0, 1);
+IPAddress subnet(255, 255, 255, 0);
+
+// Create AsyncWebServer object on port 80
+ESP8266WebServer server(80);
+
+static const char index_html[] PROGMEM = R"rawliteral(
+<!DOCTYPE HTML><html>
+<head>
+  <title>Update Time</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+     font-family: Helvetica, Times, Arial;
+     margin: 0px auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>Update Time</h1>
+  <script type="text/javascript">
+    const now = new Date(); 
+    const dateStamp = `year=${now.getFullYear()}&month=${now.getMonth() + 1}&day=${now.getdate()}`; 
+  </script>
+</body>
+</html>)rawliteral";
+
+void setup_builtin_pin() {
+    pinMode(LED_BUILTIN, OUTPUT);
+    Serial.println("Pin enabled");
+    digitalWrite(LED_BUILTIN, LOW);
+}
+
+void blink_pin(int sleep_time) {
+    digitalWrite(LED_BUILTIN, HIGH);
+    delay(sleep_time);
+    digitalWrite(LED_BUILTIN, LOW);
+}
+
+void handleIndex() {
+    Serial.print("Request for index page");
+    Serial.println(WiFi.localIP());
+    Serial.println(WiFi.softAPIP());
+    server.send(200, "text/html", index_html);
+    Serial.print("Request for index page");
+}
+
+void handleUpdate() {
+    const String year = server.arg("year");
+    const String month = server.arg("month");
+    const String day = server.arg("day");
+    const String hours = server.arg("hour");
+    const String minutes = server.arg("minutes");
+    const String seconds = server.arg("seconds");
+    if (year != NULL && month != NULL && day != NULL) {
+        Serial.print("Year: ");
+        Serial.print(year);
+        Serial.print(" Month: ");
+        Serial.print(month);
+        Serial.print(" Day: ");
+        Serial.println(day);
+        if (hours != NULL && minutes != NULL && seconds != NULL) {
+            //RTCTime(int atoi(day), Month _m, int atoi(year), int atoi(hours), int atoi(minutes), int atoi(seconds), DayOfWeek _dof, SaveLight _sl);
+        }    
+    }    
+    server.send(200, "text/plain", "Thanks");
+}
+
 void setup()
 {
-
     Serial.begin(SERIAL_BAUD);
+    Serial.println();
     Serial.println("Application setup!");
+    Serial.print("Build date: ");
+    Serial.println(__DATE__);
+    Serial.print("Build time: ");
+    Serial.println(__TIME__);
+
+    setup_builtin_pin();
 
     // it does not seem to work unless you pass in the address?
     alpha4.begin(0x70);
@@ -46,7 +131,29 @@ void setup()
         // following line sets the RTC to the date & time this sketch was compiled
         rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
     } else {
-        Serial.print("Could NOT Begin RTC!");        
+        Serial.println("Could NOT Begin RTC!");        
+    }
+
+    Serial.println("Setting up Access Point");
+    WiFi.mode(WIFI_AP);
+    WiFi.softAPConfig(local_IP, gateway, subnet);
+    WiFi.softAP(ssid, password);
+
+    IPAddress IP = WiFi.softAPIP();
+    Serial.print("WiFi with IP address: ");
+    Serial.println(IP);
+
+
+    // Routes for web server
+    server.on("/", handleIndex);
+    server.on("/update", handleUpdate);
+
+    // Start server
+    server.begin();
+    Serial.printf("Web server started, open %s in a web browser\n", WiFi.softAPIP().toString().c_str());
+
+    if (MDNS.begin("esp8266")) {
+        Serial.println("MDNS responder started");
     }
 }
 
@@ -152,10 +259,14 @@ void loop() {
 
     char buff[255];
 
-    get_time();
+    //get_time();
 
-    writeString();
+    //writeString();
   
-    delay(1000);
+    blink_pin(100);
 
+    server.handleClient();
+    MDNS.update();
+
+    delay(100);
 }
