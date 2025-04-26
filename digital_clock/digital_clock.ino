@@ -15,19 +15,14 @@
 
 #include <RTClib.h>
 
+#include "Config.h"
+
 Adafruit_AlphaNum4 alpha4 = Adafruit_AlphaNum4();
 
 #define SERIAL_BAUD 115200
 
 // real time clock
 RTC_PCF8523 rtc;
-
-// wifi change these
-const char* ssid     = "*********";
-const char* password = "******";
-IPAddress local_IP(192, 168, 0, 1);
-IPAddress gateway(192, 168, 0, 1);
-IPAddress subnet(255, 255, 255, 0);
 
 // Create AsyncWebServer object on port 80
 ESP8266WebServer server(80);
