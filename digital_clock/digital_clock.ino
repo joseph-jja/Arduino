@@ -22,7 +22,7 @@ Adafruit_AlphaNum4 alpha4 = Adafruit_AlphaNum4();
 #define SERIAL_BAUD 115200
 
 // real time clock
-RTC_PCF8523 rtc;
+RTC_DS3231 rtc;
 
 // Create AsyncWebServer object on port 80
 ESP8266WebServer server(80);
@@ -42,8 +42,17 @@ static const char index_html[] PROGMEM = R"rawliteral(
 <body>
   <h1>Update Time</h1>
   <script type="text/javascript">
-    const now = new Date(); 
-    const dateStamp = `year=${now.getFullYear()}&month=${now.getMonth() + 1}&day=${now.getdate()}`; 
+    document.addEventListener('DOMContentLoaded', () => {
+      const now = new Date();
+      alert(now);
+      const dateStamp = `year=${now.getFullYear()}&month=${now.getMonth() + 1}&day=${now.getdate()}`; 
+      const timeStamp = `hour=${now.getHours()}&minutes=${now.getMinutes() + 1}&seconds=${now.getSeconds()}`; 
+      fetch(`/update?${dateStamp}&${timeStamp}`).then((resp => {
+        alert('then');
+      }).catch(e => {
+        alert('error);
+      });
+    });
   </script>
 </body>
 </html>)rawliteral";
@@ -62,10 +71,15 @@ void blink_pin(int sleep_time) {
 
 void handleIndex() {
     Serial.print("Request for index page");
-    Serial.println(WiFi.localIP());
     Serial.println(WiFi.softAPIP());
+    Serial.print("Client Header ");
+    Serial.println(server.header("If-Modified-Since"));
     server.send(200, "text/html", index_html);
     Serial.print("Request for index page");
+}
+
+int shiftBits(int a, int b) {
+    return (a * 100) + b; 
 }
 
 void handleUpdate() {
@@ -83,7 +97,8 @@ void handleUpdate() {
         Serial.print(" Day: ");
         Serial.println(day);
         if (hours != NULL && minutes != NULL && seconds != NULL) {
-            //RTCTime(int atoi(day), Month _m, int atoi(year), int atoi(hours), int atoi(minutes), int atoi(seconds), DayOfWeek _dof, SaveLight _sl);
+            const uint32_t timenow = (uint32_t)shiftBits((shiftBits(shiftBits(shiftBits(year.toInt(), month.toInt()), day.toInt()), hours.toInt()), minutes.toInt()), seconds.toInt());
+            rtc.adjust(timenow);
         }    
     }    
     server.send(200, "text/plain", "Thanks");
@@ -120,10 +135,6 @@ void setup()
     // clock found so initialize to current data time from computer
     if (rtc.begin()) {
         Serial.print("Begin RTC!");
-        if (!rtc.initialized()) {
-            Serial.print("Not initialized!");
-        }
-        // following line sets the RTC to the date & time this sketch was compiled
         rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
     } else {
         Serial.println("Could NOT Begin RTC!");        
@@ -178,15 +189,6 @@ void get_time() {
     Serial.print("Arduino Time Shows ");
     Serial.println(ampm);
     
-    // no rtc so just pull time from thin air
-    if (!rtc.begin()) {
-        return;
-    }
-  
-    if (!rtc.initialized()) {
-        // following line sets the RTC to the date & time this sketch was compiled
-        rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
-    }
     // gets the time from the RTC clock
     DateTime rtnow = rtc.now();
     Serial.print("RTC Time Shows ");
@@ -254,9 +256,9 @@ void loop() {
 
     char buff[255];
 
-    //get_time();
+    get_time();
 
-    //writeString();
+    writeString();
   
     blink_pin(100);
 
