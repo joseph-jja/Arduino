@@ -21,6 +21,8 @@ Adafruit_AlphaNum4 alpha4 = Adafruit_AlphaNum4();
 
 #define SERIAL_BAUD 115200
 
+bool debug = false;
+
 // real time clock
 RTC_DS3231 rtc;
 
@@ -43,14 +45,14 @@ static const char index_html[] PROGMEM = R"rawliteral(
   <h1>Update Time</h1>
   <script type="text/javascript">
     document.addEventListener('DOMContentLoaded', () => {
-      const now = new Date();
-      alert(now);
-      const dateStamp = `year=${now.getFullYear()}&month=${now.getMonth() + 1}&day=${now.getdate()}`; 
-      const timeStamp = `hour=${now.getHours()}&minutes=${now.getMinutes() + 1}&seconds=${now.getSeconds()}`; 
-      fetch(`/update?${dateStamp}&${timeStamp}`).then((resp => {
-        alert('then');
+      const now = new Date(), start = new Date(now.getFullYear(), 0, 0);
+      const doty = Math.floor((now - start) / 86400000);
+      const dateStamp = `year=${now.getFullYear()}&month=${now.getMonth() + 1}&day=${now.getDate()}`;
+      const timeStamp = `hour=${now.getHours()}&minutes=${now.getMinutes() + 1}&seconds=${now.getSeconds()}`;
+      fetch(`/update?${dateStamp}&${timeStamp}&dotw=${now.getDay()}&doty=${doty}`).then(resp => {
+        alert('time updated');
       }).catch(e => {
-        alert('error);
+        alert('error time not updated');
       });
     });
   </script>
@@ -78,10 +80,6 @@ void handleIndex() {
     Serial.print("Request for index page");
 }
 
-int shiftBits(int a, int b) {
-    return (a * 100) + b; 
-}
-
 void handleUpdate() {
     const String year = server.arg("year");
     const String month = server.arg("month");
@@ -89,21 +87,41 @@ void handleUpdate() {
     const String hours = server.arg("hour");
     const String minutes = server.arg("minutes");
     const String seconds = server.arg("seconds");
+    const String dotw = server.arg("dotw");
+    const String doty = server.arg("dotwy");
     if (year != NULL && month != NULL && day != NULL) {
-        Serial.print("Year: ");
-        Serial.print(year);
-        Serial.print(" Month: ");
-        Serial.print(month);
-        Serial.print(" Day: ");
-        Serial.println(day);
+        if (debug) {
+            Serial.print("Year: ");
+            Serial.print(year);
+            Serial.print(" Month: ");
+            Serial.print(month);
+            Serial.print(" Day: ");
+            Serial.println(day);
+        }
         if (hours != NULL && minutes != NULL && seconds != NULL) {
-            const uint32_t timenow = (uint32_t)shiftBits((shiftBits(shiftBits(shiftBits(year.toInt(), month.toInt()), day.toInt()), hours.toInt()), minutes.toInt()), seconds.toInt());
-            rtc.adjust(timenow);
+            tm newTime;
+            newTime.tm_year = year.toInt() - 1900;     // Years since 1900
+            newTime.tm_mon = month.toInt() - 10;       // Month (0-11)
+            newTime.tm_mday = day.toInt();             // Day of the month
+            newTime.tm_hour = hours.toInt();       // Hour (0-23)
+            newTime.tm_min = minutes.toInt() -1;          // Minute (0-59)
+            newTime.tm_sec = seconds.toInt();          // Second (0-59)
+            newTime.tm_wday = dotw.toInt();              // Day of the week (0-6, Sunday=0)
+            newTime.tm_yday = doty.toInt();            // Day of the year
+
+            time_t epoch_time;
+            epoch_time = mktime(&newTime);
+            uint32_t time_in_seconds;
+            time_in_seconds = (uint32_t)epoch_time;
+            DateTime *now;
+            now = new DateTime(time_in_seconds);
+            rtc.adjust(*now);
         }    
     }    
     server.send(200, "text/plain", "Thanks");
 }
 
+bool rtcInitialized = false;
 void setup()
 {
     Serial.begin(SERIAL_BAUD);
@@ -134,8 +152,15 @@ void setup()
 
     // clock found so initialize to current data time from computer
     if (rtc.begin()) {
-        Serial.print("Begin RTC!");
-        rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
+        Serial.println("Begin RTC!");
+        // get time
+        DateTime rtnow = rtc.now();
+        if (rtnow.hour() > 0 || rtnow.minute() > 0 || rtnow.day() > 0) {
+            Serial.println("RTC had time!");
+        } else {
+            rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
+        }
+        rtcInitialized = true;
     } else {
         Serial.println("Could NOT Begin RTC!");        
     }
@@ -171,13 +196,42 @@ void get_time() {
 
     int uptime = millis();
     int seconds = uptime/1000;
-    Serial.print("Uptime: ");
-    Serial.println(uptime);
+    if (debug) {
+        Serial.print("Uptime: ");
+        Serial.println(uptime);
+    }
 
     if (rawtime == NULL) { 
         time (&rawtime);
     }
     static tm *now = localtime(&rawtime);
+
+    if (rtcInitialized) {
+        // gets the time from the RTC clock
+        DateTime rtnow = rtc.now();
+        if (debug) {
+            Serial.print("RTC Time Shows ");
+            Serial.print(rtnow.year(), DEC);
+            Serial.print('/');
+            Serial.print(rtnow.month(), DEC);
+            Serial.print('/');
+            Serial.print(rtnow.day(), DEC);
+            Serial.print(' ');
+            Serial.print(rtnow.hour(), DEC);
+            Serial.print(':');
+            Serial.print(rtnow.minute(), DEC);
+            Serial.print(':');
+            Serial.println(rtnow.second(), DEC);
+            // separator
+            Serial.println("##################################################");
+        }
+        // updates the clock time 
+        now->tm_hour = rtnow.hour();
+        now->tm_min = rtnow.minute();
+        now->tm_sec = rtnow.second();
+        rawtime = mktime ( now );
+    }
+
     currentHour = now->tm_hour;
     currentMinute = now->tm_min;
 
@@ -186,32 +240,10 @@ void get_time() {
     memset(ampm, '\0', sizeof(ampm) + 1);
     sprintf(ampm, "%2d:%2d", currentHour, currentMinute);
 
-    Serial.print("Arduino Time Shows ");
-    Serial.println(ampm);
-    
-    // gets the time from the RTC clock
-    DateTime rtnow = rtc.now();
-    Serial.print("RTC Time Shows ");
-    Serial.print(rtnow.year(), DEC);
-    Serial.print('/');
-    Serial.print(rtnow.month(), DEC);
-    Serial.print('/');
-    Serial.print(rtnow.day(), DEC);
-    Serial.print(' ');
-    Serial.print(rtnow.hour(), DEC);
-    Serial.print(':');
-    Serial.print(rtnow.minute(), DEC);
-    Serial.print(':');
-    Serial.println(rtnow.second(), DEC);
-
-    // updates the clock time 
-    now->tm_hour = rtnow.hour();
-    now->tm_min = rtnow.minute();
-    now->tm_sec = rtnow.second();
-    rawtime = mktime ( now );
-
-    // separator
-    Serial.println("##################################################");
+    if (debug) {
+        Serial.print("Arduino Time Shows ");
+        Serial.println(ampm);
+    }
 }
 
 // called after get time and uses the values or currentHour and currentMinute
@@ -235,13 +267,15 @@ void writeString()
         sprintf(minutes, "%d", currentMinute);
     }
 
-    Serial.print("Write Time: ");
-    Serial.print(hours);
-    Serial.print(':');
-    Serial.println(minutes);
-    // separator
-    Serial.println("##################################################");
-    
+    if (debug) {
+        Serial.print("Write Time: ");
+        Serial.print(hours);
+        Serial.print(':');
+        Serial.println(minutes);
+        // separator
+        Serial.println("##################################################");
+    }
+
     alpha4.clear();
     alpha4.writeDigitAscii(0, hours[0], false);
     alpha4.writeDigitAscii(1, hours[1], true);
