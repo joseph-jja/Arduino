@@ -40,7 +40,8 @@
 #define STATUS_LED_PIN                 15
 #define STATUS_LED_ON_STATE          HIGH
 
-// Specify the ESP32-S2 I2C pins
+// Specify the ESP32-S2 I2C
+// actual pins 17 and 18 respectively 
 #define I2C_SDA_PIN                    21
 #define I2C_SCL_PIN                    22
 
