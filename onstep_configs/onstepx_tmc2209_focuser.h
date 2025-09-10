@@ -18,6 +18,7 @@
 #define CONFIG_NAME       "FC100 Focuser"
 #define AP_SSID           "FC100 Focuser"         // set WiFi SSID name
 #define MDNS_NAME         "FC100.Focuser"         // set mDNS name
+#define SERIAL_RADIO WIFI_ACCESS_POINT
 
 #define FOCUSER_TEMPERATURE_PIN         2         // ESP32-S2 GPIO2 ADC1
 #define THERMISTOR1_TNOM               25         // Nominal temperature (Celsius)
@@ -111,7 +112,7 @@
 
 // for TMC2130, TMC5160, TMC2209, TMC2226 STEP/DIR driver models:
 #define AXIS4_DRIVER_IHOLD            OFF //    OFF, n, (mA.) Current during standstill. OFF uses IRUN/2.0                    Option
-#define AXIS4_DRIVER_IRUN             200 //    OFF, n, (mA.) Current during tracking, appropriate for stepper/driver/etc.    Option
+#define AXIS4_DRIVER_IRUN             500 //    OFF, n, (mA.) Current during tracking, appropriate for stepper/driver/etc.    Option
 #define AXIS4_DRIVER_IGOTO            OFF //    OFF, n, (mA.) Current during slews. OFF uses IRUN.                            Option
 // /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /
 
