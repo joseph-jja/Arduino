@@ -11,6 +11,17 @@ const char* password = STATION_PWD;
 IPAddress gateway;
 WiFiClient client;
 
+// latitude and longitude defaults holder
+// +xx:yyy and +zzz:abc
+static int DEFAULT_LOCATION_SIZE = 20;
+char latitude[DEFAULT_LOCATION_SIZE];
+char longitude[DEFAULT_LOCATION_SIZE];
+int utcoffset = -5;
+
+// about the center of the US
+const char* DEFAULT_LATITUDE = "+38:80";
+const char* DEFAULT_LONGITUDE = "+106:50";
+
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
@@ -47,6 +58,12 @@ void setup() {
   Serial.print("gateway address: ");
   Serial.println(gateway.toString());
 #endif
+
+  memset(latitude, '\0', sizeof(latitude)); 
+  memset(longitude, '\0', sizeof(longitude)); 
+
+  memcpy(latitude, DEFAULT_LATITUDE, strlen(DEFAULT_LATITUDE));
+  memcpy(longitude, DEFAULT_LONGITUDE , strlen(DEFAULT_LONGITUDE));
 
   Serial.flush();
 }
@@ -108,16 +125,30 @@ void loop() {
         }
       }
 
+      boolean isCcommandOverridden = false;
       if (strlen(bufferIn) > 0) {
 #ifdef USB_DEBUG_ENABLED
         Serial.print("We got the command in ");
         Serial.println(bufferIn);
 #endif
+        // commands to skip
+        // date and time commands
+        // latitude and lingitude commands and offset
+        if (memcmp(bufferIn, ":Gt#", strlen(":Gt#")) {
+          isCcommandOverridden = true;
+          Serial.write(latitude);
+        } else if (memcmp(bufferIn, ":Gg#", strlen(":Gg#")) {
+          isCcommandOverridden = true;
+          Serial.write(longitude);
+        } else if (memcmp(bufferIn, ":GG#", strlen(":GG#")) {
+          isCcommandOverridden = true;
+          Serial.write(utcoffset);
+        }
         client.write(bufferIn);
       }
 
       int j = 0;
-       while (client.available()) {
+      while (client.available()) {
         char incomingByte = client.read();
         if (incomingByte != -1 && incomingByte != NULL) {
           bufferOut[j] = incomingByte;
@@ -125,7 +156,7 @@ void loop() {
         }
       }
 
-      if (strlen(bufferOut) > 0) {
+      if (strlen(bufferOut) > 0 && !isCcommandOverridden) {
         Serial.write(bufferOut);
 #ifdef USB_DEBUG_ENABLED
         Serial.print("We responded with ");
