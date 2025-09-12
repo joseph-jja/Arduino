@@ -1,8 +1,8 @@
 #include <ESP8266WiFi.h>
 
-#include <Config.h>
+#include "Config.h"
 
-//#define USB_DEBUG_ENABLED  
+//#define USB_DEBUG_ENABLED 1 
 
 const char* ssid     = STATION_ID;
 const char* password = STATION_PWD;
@@ -12,9 +12,15 @@ WiFiClient client;
 
 // latitude and longitude defaults holder
 // +xx:yyy and +zzz:abc
-static int DEFAULT_LOCATION_SIZE = 20;
+#define DEFAULT_LOCATION_SIZE 20
 char latitude[DEFAULT_LOCATION_SIZE];
 char longitude[DEFAULT_LOCATION_SIZE];
+
+// date and time stuff
+#define DEFAULT_DATE_TIME_SIZE 10
+char date_str[DEFAULT_DATE_TIME_SIZE];
+char local_time_str[DEFAULT_DATE_TIME_SIZE];
+char time_str[DEFAULT_DATE_TIME_SIZE];
 
 void setup() {
   // put your setup code here, to run once:
@@ -53,13 +59,29 @@ void setup() {
   Serial.println(gateway.toString());
 #endif
 
-  memset(latitude, '\0', sizeof(latitude)); 
-  memset(longitude, '\0', sizeof(longitude)); 
+  memset(latitude, '\0', DEFAULT_LOCATION_SIZE); 
+  memset(longitude, '\0', DEFAULT_LOCATION_SIZE); 
 
   memcpy(latitude, DEFAULT_LATITUDE, strlen(DEFAULT_LATITUDE));
   memcpy(longitude, DEFAULT_LONGITUDE , strlen(DEFAULT_LONGITUDE));
 
+  memset(date_str, '\0', DEFAULT_DATE_TIME_SIZE); 
+  memset(local_time_str, '\0', DEFAULT_DATE_TIME_SIZE); 
+  memset(time_str, '\0', DEFAULT_DATE_TIME_SIZE); 
+
+  memcpy(date_str, "09/12/25#", strlen("09/12/25#"));
+  memcpy(local_time_str, "12:12:15#" , strlen("12:12:15#"));
+  memcpy(time_str, "12:12:15#" , strlen("12:12:15#"));
+
   Serial.flush();
+}
+
+boolean compare(char *commandIn, char *commandStr) {
+    return (memcmp(commandIn, commandStr, strlen(commandStr)) == 0);
+}
+
+void substring(char *source, int start_index, int length, char *destination) {
+    strncpy(destination, source + start_index, length);
 }
 
 /*
@@ -80,23 +102,75 @@ Get Latitude (for current site)	:Gt#	Reply: sDD*MM#
 Set Longitude (for current site)	:SgDDD*MM#	Reply: 0 or 1
 Get Longitude (for current site)	:Gg#	Reply: DDD*MM#
 */
-boolean check_override(command) {
+boolean check_override(char *bufferIn) {
 
-   boolean overide = false;
+    boolean override = false;
+
+    char buffer[20];
+    memset(buffer, '\0', sizeof(buffer));
+    int bufferInLen = strlen(bufferIn);
 
    // commands to skip
    // date and time commands
    // latitude and lingitude commands and offset
-   if (memcmp(bufferIn, ":Gt#", strlen(":Gt#")) {
-     overide = true;
+   if (compare(bufferIn, ":Gt#")) {
+     override = true;
      Serial.write(latitude);
-   } else if (memcmp(bufferIn, ":Gg#", strlen(":Gg#")) {
-     overide = true;
+   } else if (compare(bufferIn, ":St")) {
+     override = true;
+     substring(bufferIn, 3, bufferInLen - 4, latitude);
+     Serial.write(0);
+   } else if (compare(bufferIn, ":Gg#")) {
+     override = true;
      Serial.write(longitude);
-   } else if (memcmp(bufferIn, ":GG#", strlen(":GG#")) {
-     overide = true;
+   } else if (compare(bufferIn, ":Sg")) {
+     override = true;
+     substring(bufferIn, 3, bufferInLen - 4, longitude);
+     Serial.write(0);
+   } else if (compare(bufferIn, ":GG#")) {
+     override = true;
      Serial.write(utcoffset);
+   } else if (compare(bufferIn, ":SG")) {
+     override = true;
+     substring(bufferIn, 3, bufferInLen - 4, buffer);
+     utcoffset = atoi(buffer);
+     Serial.write(0);   
+   // date functions 
+   } else if (compare(bufferIn, ":GC#")) {
+     override = true;
+     Serial.write(date_str);                 // TODO add this in Config.h as char date_str[9] = "MM/DD/YY"
+   } else if (compare(bufferIn, ":SC")) {
+     override = true;
+     substring(bufferIn, 3, bufferInLen - 4, date_str);
+     Serial.write(0);
+   // local time functions 
+   } else if (compare(bufferIn, ":Ga#")) {
+     override = true;
+     Serial.write(local_time_str);                 // TODO add this in Config.h as char local_time_str[9] = "HH:MM:SS"
+   } else if (compare(bufferIn, ":GL#")) {
+     override = true;
+     Serial.write(local_time_str);                 
+   } else if (compare(bufferIn, ":SL")) {
+     override = true;
+     substring(bufferIn, 3, bufferInLen - 4, local_time_str);
+     Serial.write(0);
+   // local time functions 
+   } else if (compare(bufferIn, ":GS#")) {
+     override = true;
+     Serial.write(time_str);                 // TODO add this in Config.h as char time_str[9] = "HH:MM:SS"
+   } else if (compare(bufferIn, ":SS")) {
+     override = true;
+     substring(bufferIn, 3, bufferInLen - 4, time_str);
+     Serial.write(0);
    }
+
+#ifdef USB_DEBUG_ENABLED
+  Serial.print("Command ");
+  Serial.print(bufferIn);
+  Serial.print(" override ");
+  Serial.println(override);
+#endif
+
    return override;
 }
 
@@ -121,7 +195,7 @@ void loop() {
 #ifdef USB_DEBUG_ENABLED
         Serial.println("connection failed");
 #endif
-        delay(5000);
+        delay(10);
         if (port >= 9996) {
           port--;
         } else {
@@ -159,11 +233,13 @@ void loop() {
 
       boolean isCommandOverridden = false;
       if (strlen(bufferIn) > 0) {
+        isCommandOverridden = check_override(bufferIn);
 #ifdef USB_DEBUG_ENABLED
         Serial.print("We got the command in ");
         Serial.println(bufferIn);
+        Serial.print("Override says what ");
+        Serial.println(isCommandOverridden);
 #endif
-        isCommandOverridden = check_override(bufferIn);
         if (!isCommandOverridden) {
             client.write(bufferIn);
         }
