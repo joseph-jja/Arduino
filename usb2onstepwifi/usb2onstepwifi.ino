@@ -62,6 +62,26 @@ void setup() {
   Serial.flush();
 }
 
+boolean check_override(command) {
+
+   boolean overide = false;
+
+   // commands to skip
+   // date and time commands
+   // latitude and lingitude commands and offset
+   if (memcmp(bufferIn, ":Gt#", strlen(":Gt#")) {
+     overide = true;
+     Serial.write(latitude);
+   } else if (memcmp(bufferIn, ":Gg#", strlen(":Gg#")) {
+     overide = true;
+     Serial.write(longitude);
+   } else if (memcmp(bufferIn, ":GG#", strlen(":GG#")) {
+     overide = true;
+     Serial.write(utcoffset);
+   }
+   return override;
+}
+
 void loop() {
   
    String host_str = gateway.toString();
@@ -119,26 +139,16 @@ void loop() {
         }
       }
 
-      boolean isCcommandOverridden = false;
+      boolean isCommandOverridden = false;
       if (strlen(bufferIn) > 0) {
 #ifdef USB_DEBUG_ENABLED
         Serial.print("We got the command in ");
         Serial.println(bufferIn);
 #endif
-        // commands to skip
-        // date and time commands
-        // latitude and lingitude commands and offset
-        if (memcmp(bufferIn, ":Gt#", strlen(":Gt#")) {
-          isCcommandOverridden = true;
-          Serial.write(latitude);
-        } else if (memcmp(bufferIn, ":Gg#", strlen(":Gg#")) {
-          isCcommandOverridden = true;
-          Serial.write(longitude);
-        } else if (memcmp(bufferIn, ":GG#", strlen(":GG#")) {
-          isCcommandOverridden = true;
-          Serial.write(utcoffset);
+        isCommandOverridden = check_override(bufferIn);
+        if (!isCommandOverridden) {
+            client.write(bufferIn);
         }
-        client.write(bufferIn);
       }
 
       int j = 0;
@@ -150,7 +160,7 @@ void loop() {
         }
       }
 
-      if (strlen(bufferOut) > 0 && !isCcommandOverridden) {
+      if (strlen(bufferOut) > 0 && !isCommandOverridden) {
         Serial.write(bufferOut);
 #ifdef USB_DEBUG_ENABLED
         Serial.print("We responded with ");
