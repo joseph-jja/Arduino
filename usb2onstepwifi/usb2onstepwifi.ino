@@ -22,9 +22,23 @@ char date_str[DEFAULT_DATE_TIME_SIZE];
 char local_time_str[DEFAULT_DATE_TIME_SIZE];
 char time_str[DEFAULT_DATE_TIME_SIZE];
 
+void setup_builtin_pin() {
+    pinMode(LED_BUILTIN, OUTPUT);
+    //Serial.println("Pin enabled");
+    digitalWrite(LED_BUILTIN, LOW);
+}
+
+void blink_pin(int sleep_time) {
+    digitalWrite(LED_BUILTIN, HIGH);
+    delay(sleep_time);
+    digitalWrite(LED_BUILTIN, LOW);
+}
+
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
+
+  setup_builtin_pin();
 
 #ifdef USB_DEBUG_ENABLED
   Serial.println();
@@ -48,6 +62,7 @@ void setup() {
 
   WiFi.setAutoReconnect(true);
   WiFi.persistent(true);
+  WiFi.setSleepMode(WIFI_NONE_SLEEP);
 
   gateway = WiFi.gatewayIP();
 #ifdef USB_DEBUG_ENABLED
@@ -72,6 +87,11 @@ void setup() {
   memcpy(date_str, "09/12/25#", strlen("09/12/25#"));
   memcpy(local_time_str, "12:12:15#" , strlen("12:12:15#"));
   memcpy(time_str, "12:12:15#" , strlen("12:12:15#"));
+
+  for ( int i =0; i < 5; i++) {
+    blink_pin(10);
+    delay(5);
+  }
 
   Serial.flush();
 }
@@ -129,7 +149,10 @@ boolean check_override(char *bufferIn) {
      Serial.write(0);
    } else if (compare(bufferIn, ":GG#")) {
      override = true;
-     Serial.write(utcoffset);
+     char offsetBuff[5];
+     memset(offsetBuff, '\0', 5);
+     sprintf(offsetBuff, "%d", utcoffset);
+     Serial.write(offsetBuff);
    } else if (compare(bufferIn, ":SG")) {
      override = true;
      substring(bufferIn, 3, bufferInLen - 4, buffer);
@@ -138,7 +161,7 @@ boolean check_override(char *bufferIn) {
    // date functions 
    } else if (compare(bufferIn, ":GC#")) {
      override = true;
-     Serial.write(date_str);                 // TODO add this in Config.h as char date_str[9] = "MM/DD/YY"
+     Serial.write(date_str);                 
    } else if (compare(bufferIn, ":SC")) {
      override = true;
      substring(bufferIn, 3, bufferInLen - 4, date_str);
@@ -146,7 +169,7 @@ boolean check_override(char *bufferIn) {
    // local time functions 
    } else if (compare(bufferIn, ":Ga#")) {
      override = true;
-     Serial.write(local_time_str);                 // TODO add this in Config.h as char local_time_str[9] = "HH:MM:SS"
+     Serial.write(local_time_str);                 
    } else if (compare(bufferIn, ":GL#")) {
      override = true;
      Serial.write(local_time_str);                 
@@ -157,7 +180,7 @@ boolean check_override(char *bufferIn) {
    // local time functions 
    } else if (compare(bufferIn, ":GS#")) {
      override = true;
-     Serial.write(time_str);                 // TODO add this in Config.h as char time_str[9] = "HH:MM:SS"
+     Serial.write(time_str);                 
    } else if (compare(bufferIn, ":SS")) {
      override = true;
      substring(bufferIn, 3, bufferInLen - 4, time_str);
@@ -195,7 +218,7 @@ void loop() {
 #ifdef USB_DEBUG_ENABLED
         Serial.println("connection failed");
 #endif
-        delay(10);
+        blink_pin(10);
         if (port >= 9996) {
           port--;
         } else {
@@ -207,6 +230,7 @@ void loop() {
         Serial.println("connected!!");
 #endif
         client.keepAlive(86400, 100, 100);
+        blink_pin(10);
       }
     }
     delay(10);
