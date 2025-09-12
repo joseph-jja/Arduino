@@ -3,6 +3,8 @@
 #define STATION_ID "xxx"
 #define STATION_PWD "xxx"
 
+//#define USB_DEBUG_ENABLED  
+
 const char* ssid     = STATION_ID;
 const char* password = STATION_PWD;
 
@@ -11,12 +13,14 @@ WiFiClient client;
 
 void setup() {
   // put your setup code here, to run once:
-  Serial.begin(115200);
+  Serial.begin(9600);
 
+#ifdef USB_DEBUG_ENABLED
   Serial.println();
   Serial.println();
   Serial.print("Connecting to ");
   Serial.println(ssid);
+#endif
 
   /* Explicitly set the ESP8266 to be a WiFi-client, otherwise, it by default,
      would try to act as both a client and an access-point and could cause
@@ -26,19 +30,25 @@ void setup() {
 
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
+#ifdef USB_DEBUG_ENABLED
     Serial.print(".");
+#endif
   }
 
   WiFi.setAutoReconnect(true);
   WiFi.persistent(true);
 
   gateway = WiFi.gatewayIP();
+#ifdef USB_DEBUG_ENABLED
   Serial.println("");
   Serial.println("WiFi connected");
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP().toString());
   Serial.print("gateway address: ");
   Serial.println(gateway.toString());
+#endif
+
+  Serial.flush();
 }
 
 void loop() {
@@ -49,15 +59,19 @@ void loop() {
 
     // Use WiFiClient class to create TCP connections
     if (!client.connected()) {
+#ifdef USB_DEBUG_ENABLED
       Serial.print("connecting to ");
       Serial.print(host_str);
       Serial.print(' ');
       Serial.print(host);
       Serial.print(':');
       Serial.println(port);
+#endif
 
       if (!client.connect(host, port)) {
+#ifdef USB_DEBUG_ENABLED
         Serial.println("connection failed");
+#endif
         delay(5000);
         if (port >= 9996) {
           port--;
@@ -66,7 +80,9 @@ void loop() {
         } 
         return;
       } else {
+#ifdef USB_DEBUG_ENABLED
         Serial.println("connected!!");
+#endif
         client.keepAlive(86400, 100, 100);
       }
     }
@@ -74,15 +90,50 @@ void loop() {
 
     if (client.connected()) {
 
+      char bufferIn[128];
+      char bufferOut[128];
+
+      memset(bufferIn, '\0', sizeof(bufferIn)); 
+      memset(bufferOut, '\0', sizeof(bufferOut)); 
+
+      int i = 0;
       while (Serial.available()) {
-        Serial.println("Data being read");
-        client.write(Serial.read());
+#ifdef USB_DEBUG_ENABLED
+        Serial.println("Data being read ");
+#endif
+        char incomingByte = Serial.read();
+        if (incomingByte != -1 && incomingByte != NULL) {
+          bufferIn[i] = incomingByte;
+          i++;
+        }
       }
 
-      while (client.available()) {
-        Serial.write(client.read());
+      if (strlen(bufferIn) > 0) {
+#ifdef USB_DEBUG_ENABLED
+        Serial.print("We got the command in ");
+        Serial.println(bufferIn);
+#endif
+        client.write(bufferIn);
       }
 
+      int j = 0;
+       while (client.available()) {
+        char incomingByte = client.read();
+        if (incomingByte != -1 && incomingByte != NULL) {
+          bufferOut[j] = incomingByte;
+          j++;
+        }
+      }
+
+      if (strlen(bufferOut) > 0) {
+        Serial.write(bufferOut);
+#ifdef USB_DEBUG_ENABLED
+        Serial.print("We responded with ");
+        Serial.println(bufferOut);
+#endif
+      }
+
+      Serial.flush();
       client.flush();
     }
 }
