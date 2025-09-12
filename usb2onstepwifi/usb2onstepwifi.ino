@@ -1,7 +1,6 @@
 #include <ESP8266WiFi.h>
 
-#define STATION_ID "xxx"
-#define STATION_PWD "xxx"
+#include <Config.h>
 
 //#define USB_DEBUG_ENABLED  
 
@@ -16,11 +15,6 @@ WiFiClient client;
 static int DEFAULT_LOCATION_SIZE = 20;
 char latitude[DEFAULT_LOCATION_SIZE];
 char longitude[DEFAULT_LOCATION_SIZE];
-int utcoffset = -5;
-
-// about the center of the US
-const char* DEFAULT_LATITUDE = "+38:80";
-const char* DEFAULT_LONGITUDE = "+106:50";
 
 void setup() {
   // put your setup code here, to run once:
