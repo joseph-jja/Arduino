@@ -7,4 +7,4 @@
 const char* DEFAULT_LATITUDE = "+38:80";
 const char* DEFAULT_LONGITUDE = "+106:50";
 
-int utcoffset = -5;
+int utcoffset = 5;
