@@ -1,4 +1,5 @@
 #include <ESP8266WiFi.h>
+#include <ctype.h>
 
 #include "Config.h"
 
@@ -245,7 +246,7 @@ void loop() {
       while (Serial.available()) {
         println("Data being read ");
         char incomingByte = Serial.read();
-        if (incomingByte != -1 && incomingByte != NULL) {
+        if (incomingByte != NULL && isprint(incomingByte)) {
           bufferIn[i] = incomingByte;
           i++;
         }
