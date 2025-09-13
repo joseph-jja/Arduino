@@ -301,7 +301,31 @@ void read_in_wifi_data(boolean isCommandOverridden) {
     println(bufferOut);
   }
 }
-void loop() {
+
+void read_in_wire_data(boolean isCommandOverridden) {
+
+  memset(bufferOut, '\0', sizeof(bufferOut));
+  int j = 0;
+  while (Wire.available()) {
+    char incomingByte = Wire.requestFrom(ESP32_I2C_ADDRESS, 1);
+    if (incomingByte != NULL && isprint(incomingByte)) {
+      bufferOut[j] = incomingByte;
+      j++;
+    }
+  }
+
+  if (strlen(bufferOut) > 0 && !isCommandOverridden) {
+    Serial.write(bufferOut);
+    print("We responded with ");
+    println(bufferOut);
+  }
+
+  // to flush or not to flush
+  //Serial.flush();
+  //client.flush();
+}
+
+void use_wifi_client() {
 
   // Use WiFiClient class to create TCP connections
   if (!client.connected()) {
@@ -314,20 +338,29 @@ void loop() {
     // read in the data from USB port
     boolean isCommandOverridden = read_in_usb_data();
     if (!isCommandOverridden) {
-// for i2c we can change client.write to Wire
-#ifdef USE_I2C_CHANNEL
-      Wire.write(buffer);
-#else
       client.write(bufferIn);
-#endif
     }
 
-#ifdef USE_I2C_CHANNEL
-#else
     read_in_wifi_data(isCommandOverridden);
+  }
+}
+
+void use_wire_client() {
+  // read in the data from USB port
+  boolean isCommandOverridden = read_in_usb_data();
+  if (!isCommandOverridden) {
+    Wire.write(bufferIn);
+  }
+
+  read_in_wire_data(isCommandOverridden);
+}
+
+void loop() {
+
+#ifdef USE_I2C_CHANNEL
+  use_wire_client();
+#else
+  use_wifi_client();
 #endif
 
-    Serial.flush();
-    client.flush();
-  }
 }
