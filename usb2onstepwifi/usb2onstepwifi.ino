@@ -289,18 +289,7 @@ boolean read_in_usb_data() {
     }
   }
 
-  isCommandOverridden = check_override(bufferIn);
-
-  if (strlen(bufferIn) > 0) {
-    print("We got the command in ");
-    println(bufferIn);
-    if (isCommandOverridden) {
-      print("Override says what ");
-      println(isCommandOverridden);
-    }
-  }
-
-  return isCommandOverridden;
+  return check_override(bufferIn);
 }
 
 void read_in_wifi_data(boolean isCommandOverridden) {
