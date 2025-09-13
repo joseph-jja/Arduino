@@ -26,18 +26,6 @@ char date_str[DEFAULT_DATE_TIME_SIZE];
 char local_time_str[DEFAULT_DATE_TIME_SIZE];
 char time_str[DEFAULT_DATE_TIME_SIZE];
 
-void setup_builtin_pin() {
-  pinMode(LED_BUILTIN, OUTPUT);
-  //Serial.println("Pin enabled");
-  digitalWrite(LED_BUILTIN, LOW);
-}
-
-void blink_pin(int sleep_time) {
-  digitalWrite(LED_BUILTIN, HIGH);
-  delay(sleep_time);
-  digitalWrite(LED_BUILTIN, LOW);
-}
-
 template<typename T>
 void print(T line) {
 #ifdef USB_DEBUG_ENABLED
@@ -52,6 +40,18 @@ void println(T line) {
   String myString = String(line);
   Serial.println(line);
 #endif
+}
+
+void setup_builtin_pin() {
+  pinMode(LED_BUILTIN, OUTPUT);
+  println("Pin enabled");
+  digitalWrite(LED_BUILTIN, LOW);
+}
+
+void blink_pin(int sleep_time) {
+  digitalWrite(LED_BUILTIN, HIGH);
+  delay(sleep_time);
+  digitalWrite(LED_BUILTIN, LOW);
 }
 
 void setup_i2c_wire() {
