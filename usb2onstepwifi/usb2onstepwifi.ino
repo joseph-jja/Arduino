@@ -107,10 +107,12 @@ void setup() {
   Serial.flush();
 }
 
+// compares 2 string
 boolean compare(char *commandIn, char *commandStr) {
     return (memcmp(commandIn, commandStr, strlen(commandStr)) == 0);
 }
 
+// copies part of a string from source to destination
 void substring(char *source, int start_index, int length, char *destination) {
     strncpy(destination, source + start_index, length);
 }
@@ -277,7 +279,7 @@ void loop() {
       int j = 0;
       while (client.available()) {
         char incomingByte = client.read();
-        if (incomingByte != -1 && incomingByte != NULL) {
+        if (incomingByte != NULL && isprint(incomingByte)) {
           bufferOut[j] = incomingByte;
           j++;
         }
