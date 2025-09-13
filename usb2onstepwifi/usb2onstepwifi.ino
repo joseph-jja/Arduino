@@ -4,7 +4,7 @@
 
 #include "Config.h"
 
-//#define USB_DEBUG_ENABLED 1
+#define USB_DEBUG_ENABLED 1
 //#define USE_I2C_CHANNEL 1
 #define ESP32_I2C_ADDRESS 24
 
@@ -248,7 +248,8 @@ void connect_client() {
     return;
   } else {
     println("connected!!");
-    client.keepAlive(86400, 100, 100);
+    client.keepAlive(86400, 100, 10000);
+    client.setTimeout(86400);
     blink_pin(10);
   }
 }
@@ -264,21 +265,40 @@ boolean read_in_usb_data() {
   memset(bufferIn, '\0', sizeof(bufferIn));
 
   int i = 0;
-  while (Serial.available()) {
-    println("Data being read ");
+  /*
+    a sentace is a command starting with : and ending with #
+    we need a whole sentance in order for the commands to be recognized
+  */
+  boolean sentance = true;
+  boolean capture = false;
+  while (Serial.available() || sentance) {
     char incomingByte = Serial.read();
     if (incomingByte != NULL && isprint(incomingByte)) {
-      bufferIn[i] = incomingByte;
-      i++;
+      println("Data being read ");
+      if (incomingByte == ':') {
+        capture = true;
+      }
+      if (capture) {
+        bufferIn[i] = incomingByte;
+        i++;
+      }
+      if (incomingByte == '#') {
+        capture = false;
+        sentance = false;
+      }
     }
   }
 
   isCommandOverridden = check_override(bufferIn);
 
-  print("We got the command in ");
-  println(bufferIn);
-  print("Override says what ");
-  println(isCommandOverridden);
+  if (strlen(bufferIn) > 0) {
+    print("We got the command in ");
+    println(bufferIn);
+    if (isCommandOverridden) {
+      print("Override says what ");
+      println(isCommandOverridden);
+    }
+  }
 
   return isCommandOverridden;
 }
@@ -295,7 +315,12 @@ void read_in_wifi_data(boolean isCommandOverridden) {
     }
   }
 
-  if (strlen(bufferOut) > 0 && !isCommandOverridden) {
+   int end = strlen(bufferOut);
+  if (end > 0 && !isCommandOverridden) {
+    boolean valid = true;
+    for ( int i = 0; i < end; i++) {
+
+    }
     Serial.write(bufferOut);
     print("We responded with ");
     println(bufferOut);
