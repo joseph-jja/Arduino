@@ -1,12 +1,15 @@
 #include <ESP8266WiFi.h>
 #include <ctype.h>
+#include <Wire.h>
 
 #include "Config.h"
 
-//#define USB_DEBUG_ENABLED 1 
+//#define USB_DEBUG_ENABLED 1
+//#define USE_I2C_CHANNEL 1
+#define ESP32_I2C_ADDRESS 24
 
-const char* ssid     = STATION_ID;
-const char* password = STATION_PWD;
+const char *ssid = STATION_ID;
+const char *password = STATION_PWD;
 
 IPAddress gateway;
 WiFiClient client;
@@ -24,18 +27,18 @@ char local_time_str[DEFAULT_DATE_TIME_SIZE];
 char time_str[DEFAULT_DATE_TIME_SIZE];
 
 void setup_builtin_pin() {
-    pinMode(LED_BUILTIN, OUTPUT);
-    //Serial.println("Pin enabled");
-    digitalWrite(LED_BUILTIN, LOW);
+  pinMode(LED_BUILTIN, OUTPUT);
+  //Serial.println("Pin enabled");
+  digitalWrite(LED_BUILTIN, LOW);
 }
 
 void blink_pin(int sleep_time) {
-    digitalWrite(LED_BUILTIN, HIGH);
-    delay(sleep_time);
-    digitalWrite(LED_BUILTIN, LOW);
+  digitalWrite(LED_BUILTIN, HIGH);
+  delay(sleep_time);
+  digitalWrite(LED_BUILTIN, LOW);
 }
 
-template <typename T>
+template<typename T>
 void print(T line) {
 #ifdef USB_DEBUG_ENABLED
   String myString = String(line);
@@ -43,11 +46,17 @@ void print(T line) {
 #endif
 }
 
-template <typename T>
+template<typename T>
 void println(T line) {
 #ifdef USB_DEBUG_ENABLED
   String myString = String(line);
   Serial.println(line);
+#endif
+}
+
+void setup_i2c_wire() {
+#ifdef USE_I2C_CHANNEL
+  Wire.begin(ESP32_I2C_ADDRESS);
 #endif
 }
 
@@ -56,6 +65,9 @@ void setup() {
   Serial.begin(9600);
 
   setup_builtin_pin();
+
+  // called but depends on ifdef
+  setup_i2c_wire();
 
   println("");
   println("");
@@ -85,21 +97,21 @@ void setup() {
   print("gateway address: ");
   println(gateway.toString());
 
-  memset(latitude, '\0', DEFAULT_LOCATION_SIZE); 
-  memset(longitude, '\0', DEFAULT_LOCATION_SIZE); 
+  memset(latitude, '\0', DEFAULT_LOCATION_SIZE);
+  memset(longitude, '\0', DEFAULT_LOCATION_SIZE);
 
   memcpy(latitude, DEFAULT_LATITUDE, strlen(DEFAULT_LATITUDE));
-  memcpy(longitude, DEFAULT_LONGITUDE , strlen(DEFAULT_LONGITUDE));
+  memcpy(longitude, DEFAULT_LONGITUDE, strlen(DEFAULT_LONGITUDE));
 
-  memset(date_str, '\0', DEFAULT_DATE_TIME_SIZE); 
-  memset(local_time_str, '\0', DEFAULT_DATE_TIME_SIZE); 
-  memset(time_str, '\0', DEFAULT_DATE_TIME_SIZE); 
+  memset(date_str, '\0', DEFAULT_DATE_TIME_SIZE);
+  memset(local_time_str, '\0', DEFAULT_DATE_TIME_SIZE);
+  memset(time_str, '\0', DEFAULT_DATE_TIME_SIZE);
 
   memcpy(date_str, "09/12/25#", strlen("09/12/25#"));
-  memcpy(local_time_str, "12:12:15#" , strlen("12:12:15#"));
-  memcpy(time_str, "12:12:15#" , strlen("12:12:15#"));
+  memcpy(local_time_str, "12:12:15#", strlen("12:12:15#"));
+  memcpy(time_str, "12:12:15#", strlen("12:12:15#"));
 
-  for ( int i =0; i < 5; i++) {
+  for (int i = 0; i < 5; i++) {
     blink_pin(10);
     delay(5);
   }
@@ -109,12 +121,12 @@ void setup() {
 
 // compares 2 string
 boolean compare(char *commandIn, char *commandStr) {
-    return (memcmp(commandIn, commandStr, strlen(commandStr)) == 0);
+  return (memcmp(commandIn, commandStr, strlen(commandStr)) == 0);
 }
 
 // copies part of a string from source to destination
 void substring(char *source, int start_index, int length, char *destination) {
-    strncpy(destination, source + start_index, length);
+  strncpy(destination, source + start_index, length);
 }
 
 /*
@@ -137,83 +149,86 @@ Get Longitude (for current site)	:Gg#	Reply: DDD*MM#
 */
 boolean check_override(char *bufferIn) {
 
-    boolean override = false;
+  boolean override = false;
 
-    char buffer[20];
-    memset(buffer, '\0', sizeof(buffer));
-    int bufferInLen = strlen(bufferIn);
+  char buffer[20];
+  memset(buffer, '\0', sizeof(buffer));
+  int bufferInLen = strlen(bufferIn);
 
-   // commands to skip
-   // date and time commands
-   // latitude and lingitude commands and offset
-   if (compare(bufferIn, ":Gt#")) {
-     override = true;
-     Serial.write(latitude);
-   } else if (compare(bufferIn, ":St")) {
-     override = true;
-     substring(bufferIn, 3, bufferInLen - 4, latitude);
-     Serial.write(0);
-   } else if (compare(bufferIn, ":Gg#")) {
-     override = true;
-     Serial.write(longitude);
-   } else if (compare(bufferIn, ":Sg")) {
-     override = true;
-     substring(bufferIn, 3, bufferInLen - 4, longitude);
-     Serial.write(0);
-   } else if (compare(bufferIn, ":GG#")) {
-     override = true;
-     char offsetBuff[5];
-     memset(offsetBuff, '\0', 5);
-     sprintf(offsetBuff, "%d", utcoffset);
-     Serial.write(offsetBuff);
-   } else if (compare(bufferIn, ":SG")) {
-     override = true;
-     substring(bufferIn, 3, bufferInLen - 4, buffer);
-     utcoffset = atoi(buffer);
-     Serial.write(0);   
-   // date functions 
-   } else if (compare(bufferIn, ":GC#")) {
-     override = true;
-     Serial.write(date_str);                 
-   } else if (compare(bufferIn, ":SC")) {
-     override = true;
-     substring(bufferIn, 3, bufferInLen - 4, date_str);
-     Serial.write(0);
-   // local time functions 
-   } else if (compare(bufferIn, ":Ga#")) {
-     override = true;
-     Serial.write(local_time_str);                 
-   } else if (compare(bufferIn, ":GL#")) {
-     override = true;
-     Serial.write(local_time_str);                 
-   } else if (compare(bufferIn, ":SL")) {
-     override = true;
-     substring(bufferIn, 3, bufferInLen - 4, local_time_str);
-     Serial.write(0);
-   // local time functions 
-   } else if (compare(bufferIn, ":GS#")) {
-     override = true;
-     Serial.write(time_str);                 
-   } else if (compare(bufferIn, ":SS")) {
-     override = true;
-     substring(bufferIn, 3, bufferInLen - 4, time_str);
-     Serial.write(0);
-   }
+  if (bufferIn == NULL || bufferInLen == 0) {
+    return override;
+  }
+
+  // commands to skip
+  // date and time commands
+  // latitude and lingitude commands and offset
+  if (compare(bufferIn, ":Gt#")) {
+    override = true;
+    Serial.write(latitude);
+  } else if (compare(bufferIn, ":St")) {
+    override = true;
+    substring(bufferIn, 3, bufferInLen - 4, latitude);
+    Serial.write(0);
+  } else if (compare(bufferIn, ":Gg#")) {
+    override = true;
+    Serial.write(longitude);
+  } else if (compare(bufferIn, ":Sg")) {
+    override = true;
+    substring(bufferIn, 3, bufferInLen - 4, longitude);
+    Serial.write(0);
+  } else if (compare(bufferIn, ":GG#")) {
+    override = true;
+    char offsetBuff[5];
+    memset(offsetBuff, '\0', 5);
+    sprintf(offsetBuff, "%d", utcoffset);
+    Serial.write(offsetBuff);
+  } else if (compare(bufferIn, ":SG")) {
+    override = true;
+    substring(bufferIn, 3, bufferInLen - 4, buffer);
+    utcoffset = atoi(buffer);
+    Serial.write(0);
+    // date functions
+  } else if (compare(bufferIn, ":GC#")) {
+    override = true;
+    Serial.write(date_str);
+  } else if (compare(bufferIn, ":SC")) {
+    override = true;
+    substring(bufferIn, 3, bufferInLen - 4, date_str);
+    Serial.write(0);
+    // local time functions
+  } else if (compare(bufferIn, ":Ga#")) {
+    override = true;
+    Serial.write(local_time_str);
+  } else if (compare(bufferIn, ":GL#")) {
+    override = true;
+    Serial.write(local_time_str);
+  } else if (compare(bufferIn, ":SL")) {
+    override = true;
+    substring(bufferIn, 3, bufferInLen - 4, local_time_str);
+    Serial.write(0);
+    // local time functions
+  } else if (compare(bufferIn, ":GS#")) {
+    override = true;
+    Serial.write(time_str);
+  } else if (compare(bufferIn, ":SS")) {
+    override = true;
+    substring(bufferIn, 3, bufferInLen - 4, time_str);
+    Serial.write(0);
+  }
 
   print("Command ");
   print(bufferIn);
   print(" override ");
   println(override);
 
-   return override;
+  return override;
 }
-
 
 uint16_t port = 9999;
 void connect_client() {
 
   String host_str = gateway.toString();
-  const char* host = host_str.c_str();
+  const char *host = host_str.c_str();
 
   print("connecting to ");
   print(host_str);
@@ -229,7 +244,7 @@ void connect_client() {
       port--;
     } else {
       port = 9999;
-    } 
+    }
     return;
   } else {
     println("connected!!");
@@ -238,60 +253,81 @@ void connect_client() {
   }
 }
 
+char bufferIn[128];
+char bufferOut[128];
+
+// generic function for reading data into bufferIn from USB port
+boolean read_in_usb_data() {
+
+  boolean isCommandOverridden = false;
+
+  memset(bufferIn, '\0', sizeof(bufferIn));
+
+  int i = 0;
+  while (Serial.available()) {
+    println("Data being read ");
+    char incomingByte = Serial.read();
+    if (incomingByte != NULL && isprint(incomingByte)) {
+      bufferIn[i] = incomingByte;
+      i++;
+    }
+  }
+
+  isCommandOverridden = check_override(bufferIn);
+
+  print("We got the command in ");
+  println(bufferIn);
+  print("Override says what ");
+  println(isCommandOverridden);
+
+  return isCommandOverridden;
+}
+
+void read_in_wifi_data(boolean isCommandOverridden) {
+
+  memset(bufferOut, '\0', sizeof(bufferOut));
+  int j = 0;
+  while (client.available()) {
+    char incomingByte = client.read();
+    if (incomingByte != NULL && isprint(incomingByte)) {
+      bufferOut[j] = incomingByte;
+      j++;
+    }
+  }
+
+  if (strlen(bufferOut) > 0 && !isCommandOverridden) {
+    Serial.write(bufferOut);
+    print("We responded with ");
+    println(bufferOut);
+  }
+}
 void loop() {
 
-    // Use WiFiClient class to create TCP connections
-    if (!client.connected()) {
-      connect_client();
+  // Use WiFiClient class to create TCP connections
+  if (!client.connected()) {
+    connect_client();
+  }
+  delay(10);
+
+  if (client.connected()) {
+
+    // read in the data from USB port
+    boolean isCommandOverridden = read_in_usb_data();
+    if (!isCommandOverridden) {
+// for i2c we can change client.write to Wire
+#ifdef USE_I2C_CHANNEL
+      Wire.write(buffer);
+#else
+      client.write(bufferIn);
+#endif
     }
-    delay(10);
 
-    if (client.connected()) {
+#ifdef USE_I2C_CHANNEL
+#else
+    read_in_wifi_data(isCommandOverridden);
+#endif
 
-      char bufferIn[128];
-      char bufferOut[128];
-
-      memset(bufferIn, '\0', sizeof(bufferIn)); 
-      memset(bufferOut, '\0', sizeof(bufferOut)); 
-
-      int i = 0;
-      while (Serial.available()) {
-        println("Data being read ");
-        char incomingByte = Serial.read();
-        if (incomingByte != NULL && isprint(incomingByte)) {
-          bufferIn[i] = incomingByte;
-          i++;
-        }
-      }
-
-      boolean isCommandOverridden = false;
-      if (strlen(bufferIn) > 0) {
-        isCommandOverridden = check_override(bufferIn);
-        print("We got the command in ");
-        println(bufferIn);
-        print("Override says what ");
-        println(isCommandOverridden);
-        if (!isCommandOverridden) {
-            client.write(bufferIn);
-        }
-      }
-
-      int j = 0;
-      while (client.available()) {
-        char incomingByte = client.read();
-        if (incomingByte != NULL && isprint(incomingByte)) {
-          bufferOut[j] = incomingByte;
-          j++;
-        }
-      }
-
-      if (strlen(bufferOut) > 0 && !isCommandOverridden) {
-        Serial.write(bufferOut);
-        print("We responded with ");
-        println(bufferOut);
-      }
-
-      Serial.flush();
-      client.flush();
-    }
+    Serial.flush();
+    client.flush();
+  }
 }
