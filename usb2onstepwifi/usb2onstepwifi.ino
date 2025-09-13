@@ -274,7 +274,8 @@ boolean read_in_usb_data() {
   while (Serial.available() || sentance) {
     char incomingByte = Serial.read();
     if (incomingByte != NULL && isprint(incomingByte)) {
-      println("Data being read ");
+      print("USB data being read ");
+      println(incomingByte);
       if (incomingByte == ':') {
         capture = true;
       }
@@ -289,26 +290,28 @@ boolean read_in_usb_data() {
     }
   }
 
+  Serial.flush();
   return check_override(bufferIn);
 }
 
-void read_in_wifi_data(boolean isCommandOverridden) {
+void read_in_wifi_data() {
 
   memset(bufferOut, '\0', sizeof(bufferOut));
   int j = 0;
   while (client.available()) {
     char incomingByte = client.read();
+    print("WIFI data read in ");
+    println(incomingByte);
     if (incomingByte != NULL && isprint(incomingByte)) {
       bufferOut[j] = incomingByte;
       j++;
     }
   }
 
-   int end = strlen(bufferOut);
-  if (end > 0 && !isCommandOverridden) {
+  int end = strlen(bufferOut);
+  if (end > 0) {
     boolean valid = true;
-    for ( int i = 0; i < end; i++) {
-
+    for (int i = 0; i < end; i++) {
     }
     Serial.write(bufferOut);
     print("We responded with ");
@@ -343,19 +346,23 @@ void use_wifi_client() {
 
   // Use WiFiClient class to create TCP connections
   if (!client.connected()) {
+    client.stop();
     connect_client();
+    delay(10);
   }
-  delay(10);
 
-  if (client.connected()) {
+  // read in the data from USB port
+  boolean isCommandOverridden = read_in_usb_data();
+  if (!isCommandOverridden) {
+    print("Sending focuser the command ");
+    println(bufferIn);
+    client.write(bufferIn);
+    client.flush();
+    delay(10);
 
-    // read in the data from USB port
-    boolean isCommandOverridden = read_in_usb_data();
-    if (!isCommandOverridden) {
-      client.write(bufferIn);
-    }
-
-    read_in_wifi_data(isCommandOverridden);
+    read_in_wifi_data();
+    delay(10);
+    read_in_wifi_data();
   }
 }
 
@@ -376,5 +383,4 @@ void loop() {
 #else
   use_wifi_client();
 #endif
-
 }
