@@ -206,35 +206,41 @@ boolean check_override(char *bufferIn) {
    return override;
 }
 
+
+uint16_t port = 9999;
+void connect_client() {
+
+  String host_str = gateway.toString();
+  const char* host = host_str.c_str();
+
+  print("connecting to ");
+  print(host_str);
+  print(" ");
+  print(host);
+  print(":");
+  println(port);
+
+  if (!client.connect(host, port)) {
+    println("connection failed");
+    blink_pin(10);
+    if (port >= 9996) {
+      port--;
+    } else {
+      port = 9999;
+    } 
+    return;
+  } else {
+    println("connected!!");
+    client.keepAlive(86400, 100, 100);
+    blink_pin(10);
+  }
+}
+
 void loop() {
-  
-   String host_str = gateway.toString();
-   const char* host = host_str.c_str();
-   uint16_t port = 9999;
 
     // Use WiFiClient class to create TCP connections
     if (!client.connected()) {
-      print("connecting to ");
-      print(host_str);
-      print(" ");
-      print(host);
-      print(":");
-      println(port);
-
-      if (!client.connect(host, port)) {
-        println("connection failed");
-        blink_pin(10);
-        if (port >= 9996) {
-          port--;
-        } else {
-          port = 9999;
-        } 
-        return;
-      } else {
-        println("connected!!");
-        client.keepAlive(86400, 100, 100);
-        blink_pin(10);
-      }
+      connect_client();
     }
     delay(10);
 
