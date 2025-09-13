@@ -3,8 +3,6 @@
 
 #include <Wire.h>
 
-#include "../../lib/commands/CommandErrors.h"
-
 // Define the I2C address for this device
 #define I2C_SLAVE_ADDRESS 0x24
 
