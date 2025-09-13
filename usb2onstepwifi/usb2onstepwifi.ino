@@ -56,7 +56,7 @@ void setup() {
   println("");
   println("");
   print("Connecting to ");
-  println(ssid);
+  println((char *)ssid);
 
   /* Explicitly set the ESP8266 to be a WiFi-client, otherwise, it by default,
      would try to act as both a client and an access-point and could cause
@@ -77,9 +77,9 @@ void setup() {
   println("");
   println("WiFi connected");
   print("IP address: ");
-  println(WiFi.localIP().toString());
+  println((char *)WiFi.localIP().toString().c_str());
   print("gateway address: ");
-  println(gateway.toString());
+  println((char *)gateway.toString().c_str());
 
   memset(latitude, '\0', DEFAULT_LOCATION_SIZE); 
   memset(longitude, '\0', DEFAULT_LOCATION_SIZE); 
@@ -197,7 +197,7 @@ boolean check_override(char *bufferIn) {
   print("Command ");
   print(bufferIn);
   print(" override ");
-  println(override);
+  println((char *)String(override).c_str());
 
    return override;
 }
@@ -211,11 +211,11 @@ void loop() {
     // Use WiFiClient class to create TCP connections
     if (!client.connected()) {
       print("connecting to ");
-      print(host_str);
-      print(' ');
-      print(host);
-      print(':');
-      println(port);
+      print((char *)host_str.c_str());
+      print(" ");
+      print((char *)host);
+      print(":");
+      println((char *)String(port).c_str());
 
       if (!client.connect(host, port)) {
         println("connection failed");
@@ -258,7 +258,7 @@ void loop() {
         print("We got the command in ");
         println(bufferIn);
         print("Override says what ");
-        println(isCommandOverridden);
+        println((char *)String(isCommandOverridden).c_str());
         if (!isCommandOverridden) {
             client.write(bufferIn);
         }
