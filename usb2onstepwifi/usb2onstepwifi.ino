@@ -7,7 +7,7 @@
 //#define USB_DEBUG_ENABLED 1
 //#define USE_I2C_CHANNEL 1
 #define ESP32_I2C_ADDRESS 24
-#define WIFI_CLIENT_READ_TRIES 5
+#define WIFI_CLIENT_READ_TRIES 25
 
 const char *ssid = STATION_ID;
 const char *password = STATION_PWD;
@@ -303,9 +303,14 @@ boolean read_in_usb_data() {
 
 void read_in_wifi_data() {
 
+  reconnect_check();
+  
   memset(bufferOut, '\0', sizeof(bufferOut));
   int j = 0;
-  while (client.available()) {
+  int k = 0;
+  print("Checking data?");
+  println(client.available());
+  while (client.available() && k < WIFI_CLIENT_READ_TRIES) {
     char incomingByte = client.read();
     print("WIFI data read in ");
     println(incomingByte);
@@ -313,6 +318,8 @@ void read_in_wifi_data() {
       bufferOut[j] = incomingByte;
       j++;
     }
+    k++;
+    delay(10);
   }
 
   int end = strlen(bufferOut);
@@ -339,17 +346,13 @@ void read_in_wire_data(boolean isCommandOverridden) {
 
   if (strlen(bufferOut) > 0 && !isCommandOverridden) {
     Serial.write(bufferOut);
+    Serial.flush();
     print("We responded with ");
     println(bufferOut);
   }
-
-  // to flush or not to flush
-  //Serial.flush();
-  //client.flush();
 }
 
-void use_wifi_client() {
-
+void reconnect_check() {
   // Use WiFiClient class to create TCP connections
   // so if there is no data to read on the port the client.connected() 
   // returns false or closed, which is inaccurate
@@ -361,6 +364,11 @@ void use_wifi_client() {
     connect_client();
     delay(10);
   }
+}
+
+void use_wifi_client() {
+
+  reconnect_check();
 
   // read in the data from USB port
   boolean isCommandOverridden = read_in_usb_data();
@@ -373,10 +381,7 @@ void use_wifi_client() {
 
     // try a few times to read in data
     // a sort of polling
-    for (int i = 0; i < WIFI_CLIENT_READ_TRIES; i++) {
-      read_in_wifi_data();
-      delay(10);
-    }
+    read_in_wifi_data();
   }
 }
 
@@ -396,5 +401,8 @@ void loop() {
   use_wire_client();
 #else
   use_wifi_client();
+  // to flush or not to flush
+  Serial.flush();
+  client.flush();
 #endif
 }
