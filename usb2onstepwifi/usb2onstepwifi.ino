@@ -256,6 +256,7 @@ void connect_client() {
     println("connected!!");
     client.keepAlive(86400, 100, 10000);
     client.setTimeout(86400);
+    client.setNoDelay(true);
     blink_pin(10);
   }
 }
