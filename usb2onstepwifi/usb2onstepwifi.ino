@@ -7,6 +7,7 @@
 //#define USB_DEBUG_ENABLED 1
 //#define USE_I2C_CHANNEL 1
 #define ESP32_I2C_ADDRESS 24
+#define WIFI_CLIENT_READ_TRIES 5
 
 const char *ssid = STATION_ID;
 const char *password = STATION_PWD;
@@ -221,6 +222,11 @@ boolean check_override(char *bufferIn) {
   print(" override ");
   println(override);
 
+  // we are overriding so we make sure to flush
+  if (override) {
+    Serial.flush();
+  }
+
   return override;
 }
 
@@ -311,9 +317,8 @@ void read_in_wifi_data() {
   int end = strlen(bufferOut);
   if (end > 0) {
     boolean valid = true;
-    for (int i = 0; i < end; i++) {
-    }
     Serial.write(bufferOut);
+    Serial.flush();
     print("We responded with ");
     println(bufferOut);
   }
@@ -360,9 +365,12 @@ void use_wifi_client() {
     client.flush();
     delay(10);
 
-    read_in_wifi_data();
-    delay(10);
-    read_in_wifi_data();
+    // try a few times to read in data
+    // a sort of polling
+    for (int i = 0; i < WIFI_CLIENT_READ_TRIES; i++) {
+      read_in_wifi_data();
+      delay(10);
+    }
   }
 }
 
