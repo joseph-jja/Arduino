@@ -356,7 +356,7 @@ void use_wifi_client() {
   // status can be established which means we are connected
   boolean isConnected = client.connected();
   boolean isEstablishedConnection = (client.status() == ESTABLISHED);
-  if (!isEstablishedConnection && !isConnected) {
+  if (!isConnected) {
     client.stop();
     connect_client();
     delay(10);
