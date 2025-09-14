@@ -4,7 +4,7 @@
 
 #include "Config.h"
 
-#define USB_DEBUG_ENABLED 1
+//#define USB_DEBUG_ENABLED 1
 //#define USE_I2C_CHANNEL 1
 #define ESP32_I2C_ADDRESS 24
 
