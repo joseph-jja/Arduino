@@ -166,15 +166,19 @@ void reconnect_check() {
   }
 }
 
-char bufferIn[128];
-char bufferOut[128];
+void write_out_usb_data(char *buffer) {
+
+    Serial.write(buffer);
+    Serial.flush();
+    print("We responded with ");
+    println(buffer);
+}
 
 // generic function for reading data into bufferIn from USB port
-boolean read_in_usb_data() {
+void read_in_usb_data(char usbBufferIn[], char usbBufferOut[]) {
 
-  boolean isCommandOverridden = false;
-
-  memset(bufferIn, '\0', sizeof(bufferIn));
+  memset(usbBufferIn, '\0', sizeof(usbBufferIn));
+  memset(usbBufferOut, '\0', sizeof(usbBufferOut));
 
   int i = 0;
   /*
@@ -192,7 +196,7 @@ boolean read_in_usb_data() {
         capture = true;
       }
       if (capture) {
-        bufferIn[i] = incomingByte;
+        usbBufferIn[i] = incomingByte;
         i++;
       }
       if (incomingByte == '#') {
@@ -202,35 +206,20 @@ boolean read_in_usb_data() {
     }
   }
 
-  Serial.flush();
-
-    char buffer[20];
-
-  boolean overridden = overrides.check_override(bufferIn, buffer, 20);
-  if (overridden) {
-    Serial.write(buffer);
-    Serial.flush();
-  }
-
-  print("Command ");
-  print(bufferIn);
-  print(" override ");
-  println(overridden);
-
-  return overridden;
+  return overrides.check_override(usbBufferIn, usbBufferOut, 128);
 }
 
-void read_in_wifi_data(char *messageIn) {
+void write_out_wifi_data(char *buffer) {
 
-  // check if we should be getting a response
-  boolean hasResponse = has_reply(messageIn);
-  if (!hasResponse) {
-    print("Message in has no reply data ");
-    println(messageIn);
-    return;
-  }
+    client.write(buffer);
+    client.flush();
+    print("Sending focuser the command ");
+    println(buffer);
+}
 
-  memset(bufferOut, '\0', sizeof(bufferOut));
+void read_in_wifi_data(char wifiBufferOut[]) {
+
+  memset(wifiBufferOut, '\0', sizeof(wifiBufferOut));
 
   int j = 0;
   int start_time = millis();
@@ -243,20 +232,47 @@ void read_in_wifi_data(char *messageIn) {
       print("WIFI data read in ");
       println(incomingByte);
       if (incomingByte != NULL && isprint(incomingByte)) {
-        bufferOut[j] = incomingByte;
+        wifiBufferOut[j] = incomingByte;
         j++;
       }
     }
     delay(10);
   }
+}
 
-  int end = strlen(bufferOut);
-  if (end > 0) {
-    boolean valid = true;
-    Serial.write(bufferOut);
-    Serial.flush();
-    print("We responded with ");
-    println(bufferOut);
+void use_wifi_client() {
+
+  reconnect_check();
+
+  char usbBufferIn[128];
+  char usbBufferOut[128];
+  char wifiBufferIn[128];
+  char wifiBufferOut[128];
+
+  // read in the data from USB port
+  boolean isCommandOverridden = read_in_usb_data(usbBufferIn, usbBufferOut);
+  if (isCommandOverridden && strlen(usbBufferOut) > 0) {
+    write_out_usb_data(usbBufferOut);
+    print("Command ");
+    print(usbBufferIn);4
+    print(" override ");
+    println(overridden);
+  } else {
+    write_out_wifi_data(usbBufferIn);
+
+    // check if we should be getting a response
+    boolean hasResponse = has_reply(usbBufferIn);
+    if (!hasResponse) {
+        print("Message in has no reply data ");
+        println(usbBufferIn);
+        return;
+    }
+    // try a few times to read in data
+    // a sort of polling
+    read_in_wifi_data(wifiBufferOut);
+    if (strlen(wifiBufferOut) > 0) {
+        write_out_usb_data(wifiBufferOut);
+    }
   }
 }
 
@@ -277,25 +293,6 @@ void read_in_wire_data(boolean isCommandOverridden) {
     Serial.flush();
     print("We responded with ");
     println(bufferOut);
-  }
-}
-
-void use_wifi_client() {
-
-  reconnect_check();
-
-  // read in the data from USB port
-  boolean isCommandOverridden = read_in_usb_data();
-  if (!isCommandOverridden) {
-    print("Sending focuser the command ");
-    println(bufferIn);
-    client.write(bufferIn);
-    client.flush();
-    delay(10);
-
-    // try a few times to read in data
-    // a sort of polling
-    read_in_wifi_data(bufferIn);
   }
 }
 
