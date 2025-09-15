@@ -1,5 +1,13 @@
 #pragma once
 
+//#define USB_DEBUG_ENABLED 1
+//#define USE_I2C_CHANNEL 1
+#define ESP32_I2C_ADDRESS 24
+#define WIFI_CLIENT_READ_TIMOUT 2500
+
+#define DEFAULT_LOCATION_SIZE 20
+#define DEFAULT_DATE_TIME_SIZE 10
+
 const int NUMBER_OF_STRINGS = 56;
 const int MAX_STRING_LENGTH = 10;
 

@@ -3,12 +3,8 @@
 #include <Wire.h>
 
 #include "Config.h"
+#include "Constants.h"
 #include "string_functions.h"
-
-//#define USB_DEBUG_ENABLED 1
-//#define USE_I2C_CHANNEL 1
-#define ESP32_I2C_ADDRESS 24
-#define WIFI_CLIENT_READ_TIMOUT 2500
 
 const char *ssid = STATION_ID;
 const char *password = STATION_PWD;
@@ -18,12 +14,10 @@ WiFiClient client;
 
 // latitude and longitude defaults holder
 // +xx:yyy and +zzz:abc
-#define DEFAULT_LOCATION_SIZE 20
 char latitude[DEFAULT_LOCATION_SIZE];
 char longitude[DEFAULT_LOCATION_SIZE];
 
 // date and time stuff
-#define DEFAULT_DATE_TIME_SIZE 10
 char date_str[DEFAULT_DATE_TIME_SIZE];
 char local_time_str[DEFAULT_DATE_TIME_SIZE];
 char time_str[DEFAULT_DATE_TIME_SIZE];
@@ -128,8 +122,8 @@ void setup() {
   memcpy(time_str, "12:12:15#", strlen("12:12:15#"));
 
   for (int i = 0; i < 5; i++) {
-    blink_pin(10);
-    delay(5);
+    blink_pin(50);
+    delay(25);
   }
 
   Serial.flush();
@@ -178,14 +172,14 @@ boolean check_override(char *bufferIn) {
   } else if (compare(bufferIn, ":St")) {
     override = true;
     substring(bufferIn, 3, bufferInLen - 4, latitude);
-    Serial.write(0);
+    Serial.write("0");
   } else if (compare(bufferIn, ":Gg#")) {
     override = true;
     Serial.write(longitude);
   } else if (compare(bufferIn, ":Sg")) {
     override = true;
     substring(bufferIn, 3, bufferInLen - 4, longitude);
-    Serial.write(0);
+    Serial.write("0");
   } else if (compare(bufferIn, ":GG#")) {
     override = true;
     char offsetBuff[5];
@@ -196,7 +190,7 @@ boolean check_override(char *bufferIn) {
     override = true;
     substring(bufferIn, 3, bufferInLen - 4, buffer);
     utcoffset = atoi(buffer);
-    Serial.write(0);
+    Serial.write("0");
     // date functions
   } else if (compare(bufferIn, ":GC#")) {
     override = true;
@@ -204,7 +198,7 @@ boolean check_override(char *bufferIn) {
   } else if (compare(bufferIn, ":SC")) {
     override = true;
     substring(bufferIn, 3, bufferInLen - 4, date_str);
-    Serial.write(0);
+    Serial.write("0");
     // local time functions
   } else if (compare(bufferIn, ":Ga#")) {
     override = true;
@@ -215,7 +209,7 @@ boolean check_override(char *bufferIn) {
   } else if (compare(bufferIn, ":SL")) {
     override = true;
     substring(bufferIn, 3, bufferInLen - 4, local_time_str);
-    Serial.write(0);
+    Serial.write("0");
     // local time functions
   } else if (compare(bufferIn, ":GS#")) {
     override = true;
@@ -223,7 +217,7 @@ boolean check_override(char *bufferIn) {
   } else if (compare(bufferIn, ":SS")) {
     override = true;
     substring(bufferIn, 3, bufferInLen - 4, time_str);
-    Serial.write(0);
+    Serial.write("0");
   }
 
   print("Command ");
