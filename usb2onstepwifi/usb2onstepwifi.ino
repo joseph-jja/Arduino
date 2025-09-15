@@ -119,42 +119,6 @@ void setup() {
   Serial.flush();
 }
 
-/*
-Set date    :SCMM/DD/YY#	Reply: 0 or 1
-Get date	:GC#	Reply: MM/DD/YY#
-Set time (Local)	:SLHH:MM:SS#	Reply: 0 or 1
-Get time (Local, 12hr format)	:Ga#	Reply: HH:MM:SS#
-Get time (Local, 24hr format)	:GL#	Reply: HH:MM:SS#
-Set time (Sidereal)	:SSHH:MM:SS#	Reply: 0 or 1
-Get time (Sidereal)	:GS#	Reply: HH:MM:SS#
-
-Site/Location commands	 
-Set UTC Offset(for current site)	:SGsHH#	Reply: 0 or 1
-Get UTC Offset(for current site)	:GG#	Reply: sHH#
-The UTC Offset value is the number of hours to add to your Local Time (Standard Time) to get Universal Time.	 
-Set Latitude (for current site)	:StsDD*MM#	Reply: 0 or 1
-Get Latitude (for current site)	:Gt#	Reply: sDD*MM#
-Set Longitude (for current site)	:SgDDD*MM#	Reply: 0 or 1
-Get Longitude (for current site)	:Gg#	Reply: DDD*MM#
-*/
-boolean check_override(char *bufferIn) {
-
-  char buffer[20];
-
-  boolean overridden = overrides.check_override(bufferIn, buffer, 20);
-  if (overridden) {
-    Serial.write(buffer);
-    Serial.flush();
-  }
-
-  print("Command ");
-  print(bufferIn);
-  print(" override ");
-  println(overridden);
-
-  return overridden;
-}
-
 uint16_t port = 9999;
 void connect_client() {
 
@@ -237,7 +201,21 @@ boolean read_in_usb_data() {
   }
 
   Serial.flush();
-  return check_override(bufferIn);
+
+    char buffer[20];
+
+  boolean overridden = overrides.check_override(bufferIn, buffer, 20);
+  if (overridden) {
+    Serial.write(buffer);
+    Serial.flush();
+  }
+
+  print("Command ");
+  print(bufferIn);
+  print(" override ");
+  println(overridden);
+
+  return overridden;
 }
 
 void read_in_wifi_data(char *messageIn) {
