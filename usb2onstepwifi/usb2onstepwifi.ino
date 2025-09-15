@@ -61,6 +61,7 @@ void setup_i2c_wire() {
 // Define a callback function to handle the event
 void onWifiDisconnect(const WiFiEventStationModeDisconnected &event) {
   digitalWrite(LED_BUILTIN, LOW);
+  println("WiFi disconnected!");
 }
 
 // Define a callback function to handle the event
@@ -68,6 +69,7 @@ void onWifiConnect(const WiFiEventStationModeConnected &event) {
   for (int i = 0; i < 5; i++) {
     blink_pin(50);
   }
+  println("WiFi connected!");
 }
 
 void setup() {
