@@ -5,6 +5,7 @@
 #include "Config.h"
 #include "Constants.h"
 #include "string_functions.h"
+#include "Overrides.h"
 
 const char *ssid = STATION_ID;
 const char *password = STATION_PWD;
@@ -16,6 +17,7 @@ WiFiClient client;
 // +xx:yyy and +zzz:abc
 char latitude[DEFAULT_LOCATION_SIZE];
 char longitude[DEFAULT_LOCATION_SIZE];
+int utcoffset = 5;
 
 // date and time stuff
 char date_str[DEFAULT_DATE_TIME_SIZE];
@@ -112,6 +114,8 @@ void setup() {
 
   memcpy(latitude, DEFAULT_LATITUDE, strlen(DEFAULT_LATITUDE));
   memcpy(longitude, DEFAULT_LONGITUDE, strlen(DEFAULT_LONGITUDE));
+
+  utcoffset = DEFAULT_UTC_OFFSET;
 
   memset(date_str, '\0', DEFAULT_DATE_TIME_SIZE);
   memset(local_time_str, '\0', DEFAULT_DATE_TIME_SIZE);
