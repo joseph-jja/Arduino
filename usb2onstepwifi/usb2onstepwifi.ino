@@ -61,6 +61,18 @@ void setup_i2c_wire() {
 #endif
 }
 
+// Define a callback function to handle the event
+void onWifiDisconnect(const WiFiEventStationModeDisconnected& event) {
+  digitalWrite(LED_BUILTIN, LOW);
+}
+
+// Define a callback function to handle the event
+void onWifiConnect(const WiFiEventStationModeConnected& event) {
+    for (int i = 0; i < 5; i++) {
+      blink_pin(50);
+    }
+}
+
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
@@ -80,6 +92,8 @@ void setup() {
      network-issues with your other WiFi-devices on your WiFi-network. */
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
+  WiFi.onStationModeDisconnected(onWifiDisconnect);
+  WiFi.onStationModeConnected(onWifiConnect);
 
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
@@ -152,11 +166,15 @@ boolean check_override(char *bufferIn) {
 
   boolean override = false;
 
+  if (bufferIn == NULL) {
+    return override;
+  }
+
   char buffer[20];
   memset(buffer, '\0', sizeof(buffer));
   int bufferInLen = strlen(bufferIn);
 
-  if (bufferIn == NULL || bufferInLen == 0) {
+  if (bufferInLen == 0) {
     return override;
   }
 
