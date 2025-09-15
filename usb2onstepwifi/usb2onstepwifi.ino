@@ -342,7 +342,7 @@ void read_in_wifi_data() {
   int start_time = millis();
   print("Checking data?");
   println(client.available());
-  while (millis() - start_time < WIFI_CLIENT_READ_TIMOUT) {
+  while ((millis() - start_time) < WIFI_CLIENT_READ_TIMOUT) {
     if (client.available()) {
       char incomingByte = client.read();
       print("WIFI data read in ");
