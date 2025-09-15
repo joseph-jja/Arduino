@@ -1,9 +1,9 @@
 #pragma once
 
-const int NUMBER_OF_STRINGS = 60;
+const int NUMBER_OF_STRINGS = 56;
 const int MAX_STRING_LENGTH = 10;
 
-const char COMMANDS_WITH_NO_REPLY[NUMBER_OF_STRINGS][MAX_STRING_LENGTH] = {
+static char COMMANDS_WITH_NO_REPLY[NUMBER_OF_STRINGS][MAX_STRING_LENGTH] = {
   ":W0#", 
   ":W1#", 
   ":W2#", 
