@@ -3,6 +3,7 @@
 #include <Wire.h>
 
 #include "Config.h"
+#include "Constants.h"
 
 //#define USB_DEBUG_ENABLED 1
 //#define USE_I2C_CHANNEL 1
@@ -62,15 +63,15 @@ void setup_i2c_wire() {
 }
 
 // Define a callback function to handle the event
-void onWifiDisconnect(const WiFiEventStationModeDisconnected& event) {
+void onWifiDisconnect(const WiFiEventStationModeDisconnected &event) {
   digitalWrite(LED_BUILTIN, LOW);
 }
 
 // Define a callback function to handle the event
-void onWifiConnect(const WiFiEventStationModeConnected& event) {
-    for (int i = 0; i < 5; i++) {
-      blink_pin(50);
-    }
+void onWifiConnect(const WiFiEventStationModeConnected &event) {
+  for (int i = 0; i < 5; i++) {
+    blink_pin(50);
+  }
 }
 
 void setup() {
@@ -281,7 +282,7 @@ void connect_client() {
 
 void reconnect_check() {
   // Use WiFiClient class to create TCP connections
-  // so if there is no data to read on the port the client.connected() 
+  // so if there is no data to read on the port the client.connected()
   // returns false or closed, which is inaccurate
   // status can be established which means we are connected
   boolean isConnected = client.connected();
@@ -335,9 +336,19 @@ boolean read_in_usb_data() {
 
 boolean has_reply(char *messageIn) {
 
-  boolean hasResponse = false;
+  boolean hasResponse = true;
+  // we know that :S is setting something and reply is 0 or 1
+  // we know that :G is getting something so these have a reply message
   if (compare(messageIn, ":S") || compare(messageIn, ":G")) {
     hasResponse = true;
+  } else {
+    int i = 0;
+    while (i < NUMBER_OF_STRINGS && hasResponse) {
+      if (compare(messageIn, COMMANDS_WITH_NO_REPLY[i])) {
+        hasResponse = false;
+      }
+      i++;
+    }
   }
 
   return hasResponse;
@@ -345,11 +356,11 @@ boolean has_reply(char *messageIn) {
 
 void read_in_wifi_data(char *messageIn) {
 
-  reconnect_check();
-
   // check if we should be getting a response
   boolean hasResponse = has_reply(messageIn);
   if (!hasResponse) {
+    print("Message in has no reply data ");
+    println(messageIn);
     return;
   }
 
@@ -359,6 +370,7 @@ void read_in_wifi_data(char *messageIn) {
   int start_time = millis();
   print("Checking data?");
   println(client.available());
+  reconnect_check();
   while ((millis() - start_time) < WIFI_CLIENT_READ_TIMOUT) {
     if (client.available()) {
       char incomingByte = client.read();
