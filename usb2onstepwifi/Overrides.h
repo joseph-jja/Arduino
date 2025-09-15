@@ -7,7 +7,7 @@ class Overrides {
 public:
     // Public members (accessible from outside the class)
     void init(); // Constructor
-    bool check_override(char *bufferIn);
+    bool check_override(char *bufferIn, char returnOut[], int buffer_size);
 
 private:
     // latitude and longitude defaults holder

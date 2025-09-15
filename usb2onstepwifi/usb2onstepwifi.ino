@@ -109,21 +109,7 @@ void setup() {
   print("gateway address: ");
   println(gateway.toString());
 
-  memset(latitude, '\0', DEFAULT_LOCATION_SIZE);
-  memset(longitude, '\0', DEFAULT_LOCATION_SIZE);
-
-  memcpy(latitude, DEFAULT_LATITUDE, strlen(DEFAULT_LATITUDE));
-  memcpy(longitude, DEFAULT_LONGITUDE, strlen(DEFAULT_LONGITUDE));
-
-  utcoffset = DEFAULT_UTC_OFFSET;
-
-  memset(date_str, '\0', DEFAULT_DATE_TIME_SIZE);
-  memset(local_time_str, '\0', DEFAULT_DATE_TIME_SIZE);
-  memset(time_str, '\0', DEFAULT_DATE_TIME_SIZE);
-
-  memcpy(date_str, "09/12/25#", strlen("09/12/25#"));
-  memcpy(local_time_str, "12:12:15#", strlen("12:12:15#"));
-  memcpy(time_str, "12:12:15#", strlen("12:12:15#"));
+  overrides.init();
 
   for (int i = 0; i < 5; i++) {
     blink_pin(50);
@@ -153,88 +139,20 @@ Get Longitude (for current site)	:Gg#	Reply: DDD*MM#
 */
 boolean check_override(char *bufferIn) {
 
-  boolean override = false;
-
-  if (bufferIn == NULL) {
-    return override;
-  }
-
   char buffer[20];
-  memset(buffer, '\0', sizeof(buffer));
-  int bufferInLen = strlen(bufferIn);
 
-  if (bufferInLen == 0) {
-    return override;
-  }
-
-  // commands to skip
-  // date and time commands
-  // latitude and lingitude commands and offset
-  if (compare(bufferIn, ":Gt#")) {
-    override = true;
-    Serial.write(latitude);
-  } else if (compare(bufferIn, ":St")) {
-    override = true;
-    substring(bufferIn, 3, bufferInLen - 4, latitude);
-    Serial.write("0");
-  } else if (compare(bufferIn, ":Gg#")) {
-    override = true;
-    Serial.write(longitude);
-  } else if (compare(bufferIn, ":Sg")) {
-    override = true;
-    substring(bufferIn, 3, bufferInLen - 4, longitude);
-    Serial.write("0");
-  } else if (compare(bufferIn, ":GG#")) {
-    override = true;
-    char offsetBuff[5];
-    memset(offsetBuff, '\0', 5);
-    sprintf(offsetBuff, "%d", utcoffset);
-    Serial.write(offsetBuff);
-  } else if (compare(bufferIn, ":SG")) {
-    override = true;
-    substring(bufferIn, 3, bufferInLen - 4, buffer);
-    utcoffset = atoi(buffer);
-    Serial.write("0");
-    // date functions
-  } else if (compare(bufferIn, ":GC#")) {
-    override = true;
-    Serial.write(date_str);
-  } else if (compare(bufferIn, ":SC")) {
-    override = true;
-    substring(bufferIn, 3, bufferInLen - 4, date_str);
-    Serial.write("0");
-    // local time functions
-  } else if (compare(bufferIn, ":Ga#")) {
-    override = true;
-    Serial.write(local_time_str);
-  } else if (compare(bufferIn, ":GL#")) {
-    override = true;
-    Serial.write(local_time_str);
-  } else if (compare(bufferIn, ":SL")) {
-    override = true;
-    substring(bufferIn, 3, bufferInLen - 4, local_time_str);
-    Serial.write("0");
-    // local time functions
-  } else if (compare(bufferIn, ":GS#")) {
-    override = true;
-    Serial.write(time_str);
-  } else if (compare(bufferIn, ":SS")) {
-    override = true;
-    substring(bufferIn, 3, bufferInLen - 4, time_str);
-    Serial.write("0");
+  boolean overridden = overrides.check_override(bufferIn, buffer, 20);
+  if (overridden) {
+    Serial.write(buffer);
+    Serial.flush();
   }
 
   print("Command ");
   print(bufferIn);
   print(" override ");
-  println(override);
+  println(overridden);
 
-  // we are overriding so we make sure to flush
-  if (override) {
-    Serial.flush();
-  }
-
-  return override;
+  return overridden;
 }
 
 uint16_t port = 9999;
