@@ -175,7 +175,7 @@ void write_out_usb_data(char *buffer) {
 }
 
 // generic function for reading data into bufferIn from USB port
-void read_in_usb_data(char usbBufferIn[], char usbBufferOut[]) {
+bool read_in_usb_data(char usbBufferIn[], char usbBufferOut[]) {
 
   memset(usbBufferIn, '\0', sizeof(usbBufferIn));
   memset(usbBufferOut, '\0', sizeof(usbBufferOut));
@@ -254,9 +254,9 @@ void use_wifi_client() {
   if (isCommandOverridden && strlen(usbBufferOut) > 0) {
     write_out_usb_data(usbBufferOut);
     print("Command ");
-    print(usbBufferIn);4
+    print(usbBufferIn);
     print(" override ");
-    println(overridden);
+    println(isCommandOverridden);
   } else {
     write_out_wifi_data(usbBufferIn);
 
