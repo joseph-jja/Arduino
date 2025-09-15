@@ -7,7 +7,7 @@
 //#define USB_DEBUG_ENABLED 1
 //#define USE_I2C_CHANNEL 1
 #define ESP32_I2C_ADDRESS 24
-#define WIFI_CLIENT_READ_TRIES 25
+#define WIFI_CLIENT_READ_TIMOUT 2500
 
 const char *ssid = STATION_ID;
 const char *password = STATION_PWD;
@@ -339,18 +339,19 @@ void read_in_wifi_data() {
   
   memset(bufferOut, '\0', sizeof(bufferOut));
   int j = 0;
-  int k = 0;
+  int start_time = millis();
   print("Checking data?");
   println(client.available());
-  while (client.available() && k < WIFI_CLIENT_READ_TRIES) {
-    char incomingByte = client.read();
-    print("WIFI data read in ");
-    println(incomingByte);
-    if (incomingByte != NULL && isprint(incomingByte)) {
-      bufferOut[j] = incomingByte;
-      j++;
+  while (millis() - start_time < WIFI_CLIENT_READ_TIMOUT) {
+    if (client.available()) {
+      char incomingByte = client.read();
+      print("WIFI data read in ");
+      println(incomingByte);
+      if (incomingByte != NULL && isprint(incomingByte)) {
+        bufferOut[j] = incomingByte;
+        j++;
+      }
     }
-    k++;
     delay(10);
   }
 
