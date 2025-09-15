@@ -279,6 +279,20 @@ void connect_client() {
   }
 }
 
+void reconnect_check() {
+  // Use WiFiClient class to create TCP connections
+  // so if there is no data to read on the port the client.connected() 
+  // returns false or closed, which is inaccurate
+  // status can be established which means we are connected
+  boolean isConnected = client.connected();
+  boolean isEstablishedConnection = (client.status() == ESTABLISHED);
+  if (!isConnected) {
+    client.stop();
+    connect_client();
+    delay(10);
+  }
+}
+
 char bufferIn[128];
 char bufferOut[128];
 
@@ -367,20 +381,6 @@ void read_in_wire_data(boolean isCommandOverridden) {
     Serial.flush();
     print("We responded with ");
     println(bufferOut);
-  }
-}
-
-void reconnect_check() {
-  // Use WiFiClient class to create TCP connections
-  // so if there is no data to read on the port the client.connected() 
-  // returns false or closed, which is inaccurate
-  // status can be established which means we are connected
-  boolean isConnected = client.connected();
-  boolean isEstablishedConnection = (client.status() == ESTABLISHED);
-  if (!isConnected) {
-    client.stop();
-    connect_client();
-    delay(10);
   }
 }
 
