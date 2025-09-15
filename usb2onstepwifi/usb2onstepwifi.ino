@@ -333,11 +333,28 @@ boolean read_in_usb_data() {
   return check_override(bufferIn);
 }
 
-void read_in_wifi_data() {
+boolean has_reply(char *messageIn) {
+
+  boolean hasResponse = false;
+  if (compare(messageIn, ":S") || compare(messageIn, ":G")) {
+    hasResponse = true;
+  }
+
+  return hasResponse;
+}
+
+void read_in_wifi_data(char *messageIn) {
 
   reconnect_check();
-  
+
+  // check if we should be getting a response
+  boolean hasResponse = has_reply(messageIn);
+  if (!hasResponse) {
+    return;
+  }
+
   memset(bufferOut, '\0', sizeof(bufferOut));
+
   int j = 0;
   int start_time = millis();
   print("Checking data?");
@@ -400,7 +417,7 @@ void use_wifi_client() {
 
     // try a few times to read in data
     // a sort of polling
-    read_in_wifi_data();
+    read_in_wifi_data(bufferIn);
   }
 }
 
