@@ -33,7 +33,7 @@ static char COMMANDS_WITH_NO_REPLY[NUMBER_OF_STRINGS][MAX_STRING_LENGTH] = {
   ":CS#",
   ":LB#", 
   ":LN#", 
-  ":LCn", 
+  ":LC", 
   ":LD#",
   ":LL#", 
   ":L!#", 
