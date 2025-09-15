@@ -278,7 +278,7 @@ void use_wifi_client() {
 
 void read_in_wire_data(boolean isCommandOverridden) {
 
-  memset(bufferOut, '\0', sizeof(bufferOut));
+  /*memset(bufferOut, '\0', sizeof(bufferOut));
   int j = 0;
   while (Wire.available()) {
     char incomingByte = Wire.requestFrom(ESP32_I2C_ADDRESS, 1);
@@ -293,17 +293,17 @@ void read_in_wire_data(boolean isCommandOverridden) {
     Serial.flush();
     print("We responded with ");
     println(bufferOut);
-  }
+  }*/
 }
 
 void use_wire_client() {
   // read in the data from USB port
-  boolean isCommandOverridden = read_in_usb_data();
+  /*boolean isCommandOverridden = read_in_usb_data();
   if (!isCommandOverridden) {
     Wire.write(bufferIn);
   }
 
-  read_in_wire_data(isCommandOverridden);
+  read_in_wire_data(isCommandOverridden);*/
 }
 
 void loop() {
