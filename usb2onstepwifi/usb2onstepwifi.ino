@@ -268,6 +268,8 @@ void use_wifi_client() {
       if (!hasResponse) {
           print("Message in has no reply data ");
           println(usbBufferIn);
+          delay(10);
+          client.stop();
           return;
       }
       // try a few times to read in data
@@ -276,9 +278,9 @@ void use_wifi_client() {
       if (strlen(wifiBufferOut) > 0) {
           write_out_usb_data(wifiBufferOut);
       }
+      delay(10);
+      client.stop();
     }
-    delay(10);
-    client.stop();
   }
 }
 
