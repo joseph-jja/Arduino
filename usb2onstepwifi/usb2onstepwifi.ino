@@ -251,7 +251,6 @@ void use_wifi_client() {
 
   char usbBufferIn[128];
   char usbBufferOut[128];
-  char wifiBufferIn[128];
   char wifiBufferOut[128];
 
   // read in the data from USB port
@@ -274,7 +273,7 @@ void use_wifi_client() {
     }
     // try a few times to read in data
     // a sort of polling
-    read_in_wifi_data(wifiBufferOut);
+    read_in_wifi_data(wifiBufferOut, usbBufferIn);
     if (strlen(wifiBufferOut) > 0) {
         write_out_usb_data(wifiBufferOut);
     }
