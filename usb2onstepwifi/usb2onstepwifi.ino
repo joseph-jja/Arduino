@@ -7,6 +7,8 @@
 #include "string_functions.h"
 #include "Overrides.h"
 
+#define BUFFER_SIZE 128
+
 const char *ssid = STATION_ID;
 const char *password = STATION_PWD;
 
@@ -122,54 +124,40 @@ void setup() {
 }
 
 uint16_t port = 9999;
-void connect_client() {
+bool connect_client() {
 
   String host_str = gateway.toString();
   const char *host = host_str.c_str();
 
-  print("connecting to ");
-  print(host_str);
-  print(" ");
-  print(host);
-  print(":");
-  println(port);
-
-  if (!client.connect(host, port)) {
-    println("connection failed");
-    blink_pin(10);
-    if (port >= 9996) {
-      port--;
-    } else {
-      port = 9999;
+  int i = 0;
+  bool isConnected = false;
+  while (!isConnected && i < 10) {
+    isConnected = client.connect(host, port);
+    if (!isConnected) {
+      println("Cnnection failed");
+      digitalWrite(LED_BUILTIN, LOW);
+      if (port > 9996) {
+        port--;
+      } else {
+        port = 9999;
+      }
     }
-    return;
-  } else {
-    println("connected!!");
-    client.keepAlive(86400, 100, 10000);
-    client.setTimeout(86400);
-    client.setNoDelay(true);
-    blink_pin(10);
+    i++;
   }
-}
-
-void reconnect_check() {
-  // Use WiFiClient class to create TCP connections
-  // so if there is no data to read on the port the client.connected()
-  // returns false or closed, which is inaccurate
-  // status can be established which means we are connected
-  boolean isConnected = client.connected();
-  boolean isEstablishedConnection = (client.status() == ESTABLISHED);
-  if (!isConnected) {
-    client.stop();
-    connect_client();
-    delay(10);
-  }
+  print("Connected? ");
+  print(isConnected);
+  print(" to ");
+  print(host_str);
+  print(" on port ");
+  println(port);
 }
 
 void write_out_usb_data(char *buffer) {
 
     Serial.write(buffer);
+    delay(10);
     Serial.flush();
+    Serial.println("");
     print("We responded with ");
     println(buffer);
 }
@@ -177,8 +165,8 @@ void write_out_usb_data(char *buffer) {
 // generic function for reading data into bufferIn from USB port
 bool read_in_usb_data(char usbBufferIn[], char usbBufferOut[]) {
 
-  memset(usbBufferIn, '\0', sizeof(usbBufferIn));
-  memset(usbBufferOut, '\0', sizeof(usbBufferOut));
+  memset(usbBufferIn, '\0', BUFFER_SIZE);
+  memset(usbBufferOut, '\0', BUFFER_SIZE);
 
   int i = 0;
   /*
@@ -206,12 +194,13 @@ bool read_in_usb_data(char usbBufferIn[], char usbBufferOut[]) {
     }
   }
 
-  return overrides.check_override(usbBufferIn, usbBufferOut, 128);
+  return overrides.check_override(usbBufferIn, usbBufferOut, BUFFER_SIZE);
 }
 
 void write_out_wifi_data(char *buffer) {
 
     client.write(buffer);
+    delay(10);
     client.flush();
     print("Sending focuser the command ");
     println(buffer);
@@ -219,7 +208,7 @@ void write_out_wifi_data(char *buffer) {
 
 void read_in_wifi_data(char wifiBufferOut[], char usbBufferIn[]) {
 
-  memset(wifiBufferOut, '\0', sizeof(wifiBufferOut));
+  memset(wifiBufferOut, '\0', BUFFER_SIZE);
 
   bool isBinaryReply = boolean_reply(usbBufferIn);
   
@@ -229,36 +218,36 @@ void read_in_wifi_data(char wifiBufferOut[], char usbBufferIn[]) {
   int j = 0;
   int start_time = millis();
   bool foundEnd = false;
-  print("Checking data?");
-  println(client.available());
-  reconnect_check();
-  while ((millis() - start_time) < WIFI_CLIENT_READ_TIMOUT) {
+  println("Trying to read in data!");
+  while ((millis() - start_time) < WIFI_CLIENT_READ_TIMOUT && !foundEnd) {
     if (client.available()) {
       char incomingByte = client.read();
       print("WIFI data read in ");
       println(incomingByte);
       if (incomingByte != NULL && isprint(incomingByte)) {
         wifiBufferOut[j] = incomingByte;
+          // then before delay
+          if (isBinaryReply && (incomingByte == '0' || incomingByte == '1')) {
+            foundEnd = true;
+          } else if (endings != NULL && endings[0] == incomingByte) {
+            foundEnd = true;
+          }
         j++;
       }
-      // then before delay
-      if (isBinaryReply && (wifiBufferOut[j] == '0' || wifiBufferOut[j] == '1')) {
-        foundEnd = true;
-      } else if (endings != NULL && endings[0] == wifiBufferOut[j]) {
-        foundEnd = true;
-      }
     }
-    delay(10);
+    delay(25);
   }
+  print("Read time took");
+  println(millis() - start_time);
+  println(wifiBufferOut);
+  println(endings);
 }
 
 void use_wifi_client() {
 
-  reconnect_check();
-
-  char usbBufferIn[128];
-  char usbBufferOut[128];
-  char wifiBufferOut[128];
+  char usbBufferIn[BUFFER_SIZE];
+  char usbBufferOut[BUFFER_SIZE];
+  char wifiBufferOut[BUFFER_SIZE];
 
   // read in the data from USB port
   boolean isCommandOverridden = read_in_usb_data(usbBufferIn, usbBufferOut);
@@ -269,27 +258,33 @@ void use_wifi_client() {
     print(" override ");
     println(isCommandOverridden);
   } else {
-    write_out_wifi_data(usbBufferIn);
+    bool isConnected = connect_client();
+    if (isConnected) {
+      delay(10);
+      write_out_wifi_data(usbBufferIn);
 
-    // check if we should be getting a response
-    boolean hasResponse = has_reply(usbBufferIn);
-    if (!hasResponse) {
-        print("Message in has no reply data ");
-        println(usbBufferIn);
-        return;
+      // check if we should be getting a response
+      boolean hasResponse = has_reply(usbBufferIn);
+      if (!hasResponse) {
+          print("Message in has no reply data ");
+          println(usbBufferIn);
+          return;
+      }
+      // try a few times to read in data
+      // a sort of polling
+      read_in_wifi_data(wifiBufferOut, usbBufferIn);
+      if (strlen(wifiBufferOut) > 0) {
+          write_out_usb_data(wifiBufferOut);
+      }
     }
-    // try a few times to read in data
-    // a sort of polling
-    read_in_wifi_data(wifiBufferOut, usbBufferIn);
-    if (strlen(wifiBufferOut) > 0) {
-        write_out_usb_data(wifiBufferOut);
-    }
+    delay(10);
+    client.stop();
   }
 }
 
 void read_in_wire_data(boolean isCommandOverridden) {
 
-  /*memset(bufferOut, '\0', sizeof(bufferOut));
+  /*memset(bufferOut, '\0', BUFFER_SIZE);
   int j = 0;
   while (Wire.available()) {
     char incomingByte = Wire.requestFrom(ESP32_I2C_ADDRESS, 1);
@@ -323,8 +318,5 @@ void loop() {
   use_wire_client();
 #else
   use_wifi_client();
-  // to flush or not to flush
-  Serial.flush();
-  client.flush();
 #endif
 }
