@@ -217,9 +217,14 @@ void write_out_wifi_data(char *buffer) {
     println(buffer);
 }
 
-void read_in_wifi_data(char wifiBufferOut[]) {
+void read_in_wifi_data(char wifiBufferOut[], char usbBufferIn[]) {
 
   memset(wifiBufferOut, '\0', sizeof(wifiBufferOut));
+
+  bool isBinaryReply = boolean_reply(usbBufferIn);
+  
+  char endings[2];
+  ends_with(usbBufferIn, endings);
 
   int j = 0;
   int start_time = millis();
