@@ -35,7 +35,7 @@ bool has_reply(char *messageIn) {
 }
 
 bool boolean_reply(char *commandIn) {
-    bool has_0_or_1_reply = compare(messageIn, ":S");
+    bool has_0_or_1_reply = compare(commandIn, ":S");
 
     if (!has_0_or_1_reply) {
         int i = 0;
