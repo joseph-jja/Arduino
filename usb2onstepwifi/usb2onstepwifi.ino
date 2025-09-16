@@ -228,6 +228,7 @@ void read_in_wifi_data(char wifiBufferOut[], char usbBufferIn[]) {
 
   int j = 0;
   int start_time = millis();
+  bool foundEnd = false;
   print("Checking data?");
   println(client.available());
   reconnect_check();
@@ -239,6 +240,12 @@ void read_in_wifi_data(char wifiBufferOut[], char usbBufferIn[]) {
       if (incomingByte != NULL && isprint(incomingByte)) {
         wifiBufferOut[j] = incomingByte;
         j++;
+      }
+      // then before delay
+      if (isBinaryReply && (wifiBufferOut[j] == '0' || wifiBufferOut[j] == '1')) {
+        foundEnd = true;
+      } else if (endings != NULL && endings[0] == wifiBufferOut[j]) {
+        foundEnd = true;
       }
     }
     delay(10);
