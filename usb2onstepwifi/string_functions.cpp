@@ -55,14 +55,14 @@ void ends_with(char *messageIn, char return_buffer[]) {
     if (compare(messageIn, ":Gd#") || compare(messageIn, ":GR#") 
         || compare(messageIn, ":GD#") || compare(messageIn, ":GZ#") 
         || compare(messageIn, ":GA#")) {
-            rerturn_buffer[0] = '*'; 
-    } else if (compare(messageIn, ":G") || ompare(messageIn, ":F")) {
-            rerturn_buffer[0] = '#'; 
+            return_buffer[0] = '*'; 
+    } else if (compare(messageIn, ":G") || compare(messageIn, ":F")) {
+            return_buffer[0] = '#'; 
     } else if (!compare(messageIn, ":MS#") 
         && !compare(messageIn, ":MA#")
         && !compare(messageIn, ":A2#")
         && !compare(messageIn, ":ERESET#")
         && !compare(messageIn, ":ENVRESET#")) {
-            rerturn_buffer[0] = '#'; 
+            return_buffer[0] = '#'; 
     }
 }
