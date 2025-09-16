@@ -48,3 +48,21 @@ bool boolean_reply(char *commandIn) {
     }
    return has_0_or_1_reply;
 }
+
+void ends_with(char *messageIn, char return_buffer[]) {  
+
+    memset(return_buffer, '\0', 2);
+    if (compare(messageIn, ":Gd#") || compare(messageIn, ":GR#") 
+        || compare(messageIn, ":GD#") || compare(messageIn, ":GZ#") 
+        || compare(messageIn, ":GA#")) {
+            rerturn_buffer[0] = '*'; 
+    } else if (compare(messageIn, ":G") || ompare(messageIn, ":F")) {
+            rerturn_buffer[0] = '#'; 
+    } else if (!compare(messageIn, ":MS#") 
+        && !compare(messageIn, ":MA#")
+        && !compare(messageIn, ":A2#")
+        && !compare(messageIn, ":ERESET#")
+        && !compare(messageIn, ":ENVRESET#")) {
+            rerturn_buffer[0] = '#'; 
+    }
+}
