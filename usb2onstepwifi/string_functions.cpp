@@ -33,3 +33,18 @@ bool has_reply(char *messageIn) {
 
   return hasResponse;
 }
+
+bool boolean_reply(char *commandIn) {
+    bool has_0_or_1_reply = compare(messageIn, ":S");
+
+    if (!has_0_or_1_reply) {
+        int i = 0;
+        while (i < NUMBER_OF_0_or_1_STRINGS && !has_0_or_1_reply) {
+            if (compare(commandIn, COMMANDS_WITH_0_or_1_REPLY[i])) {
+                has_0_or_1_reply = true;
+            }
+            i++;
+        }
+    }
+   return has_0_or_1_reply;
+}
