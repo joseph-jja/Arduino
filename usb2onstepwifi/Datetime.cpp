@@ -1,14 +1,20 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 #include "Datetime.h"
 
 #define DATE_TIME_SIZE 10
+#define ONE_DAY 84000
+
+static int DAYS_IN_MONTH[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
 void Datetime::init(unsigned long ms) {
 
   start_time = ms;
   delta_time = start_time;
+  days_changed = 0;  // add in to header file
 }
 
 bool validate_string(char buffer[], char v) {
@@ -20,9 +26,10 @@ bool validate_string(char buffer[], char v) {
   if (buffer[2] != v || buffer[5] != v) {
     return false;
   }
+  return true;
 }
 
-long copy_buffer(char str_in[], long m1, long m2, long m3) {
+long convert_buffer(char str_in[], long m1, long m2, long m3) {
 
   char buffer[DATE_TIME_SIZE];
 
@@ -34,7 +41,7 @@ long copy_buffer(char str_in[], long m1, long m2, long m3) {
 
   memset(buffer, '\0', DATE_TIME_SIZE);
   buffer[0] = str_in[3];
-  buffer[0] = str_in[4];
+  buffer[1] = str_in[4];
   value += (atol(buffer) * m2);
 
   memset(buffer, '\0', DATE_TIME_SIZE);
@@ -52,35 +59,90 @@ bool Datetime::set_date(char date_str[]) {
     return false;
   }
 
-  // TODO fix me to use correct
-  date_part = copy_buffer(date_str, 1, 1, 1);
+  // more normal format of date
+  // YYYYMMDD
+  date_part = convert_buffer(date_str, 100, 1, 10000) + 20000000;
 
   return true;
 }
 
-bool Datetime::set_time(char time_str[]) {
+// time is always set as 24 hour time
+bool Datetime::set_local_time(char time_str[]) {
 
   if (!validate_string(time_str, ':')) {
     return false;
   }
 
   // convert time string to actual number
-  time_part = copy_buffer(time_str, 3600, 60, 1);
+  local_time_part = convert_buffer(time_str, 3600, 60, 1);
+
+  return true;
+}
+
+// time is always set as 24 hour time
+bool Datetime::set_sidereal_time(char time_str[]) {
+
+  if (!validate_string(time_str, ':')) {
+    return false;
+  }
+
+  // convert time string to actual number
+  sidereal_time_part = convert_buffer(time_str, 3600, 60, 1);
 
   return true;
 }
 
 void Datetime::get_date(char date[], unsigned long ms) {
 
-  long current_time = ((date_part * 1000000) + time_part) * 1000;  //milliseconds
+  // 2 digit year
+  long year = (date_part / 10000) - 2000;
+  long month = (date_part - ((2000 + year) * 10000)) / 100;
+  long day = (date_part - ((2000 + year) * 10000)) - (month * 100);
 
-  /*  delta_time = ms - start_time;
-  start_time = ms;
-  current_time += delta_time;
-  return current_time;*/
+  sprintf(date, "%02ld/%02ld/%02ld#", month, day, year);
 }
 
-void Datetime::get_time(char time[], unsigned long ms) {
+long Datetime::update_time(unsigned long ms) {
 
-  long current_time = ((date_part * 1000000) + time_part) * 1000;  //milliseconds
+  delta_time = ms - start_time;
+  start_time = ms;
+
+  long delta_time_now = ceil(delta_time / 1000);  //seconds
+
+  return delta_time_now;
+}
+
+void Datetime::get_local_time(char time[], unsigned long ms, bool is_twenty_four_hour) {
+
+  // update time
+  local_time_part += update_time(ms);
+
+  int i = -1;  // 0 day
+  long value = local_time_part;
+  while (value > 0) {
+    value -= ONE_DAY;
+    i++;
+  }
+  days_changed = i;
+
+  // value would be negative now
+  // so now we add back one day
+  // to make positive and this is our new time
+  // in seconds
+  local_time_part = value + ONE_DAY;
+
+  // convert time_part to hh:mm:ss
+  long mod_time = local_time_part % 3600;
+  long hours = local_time_part / 3600;
+  long minutes = mod_time / 60;
+  long seconds = mod_time % 60;
+  if (is_twenty_four_hour && hours > 12) {
+    hours -= 12;
+    sprintf(time, "%02ld:%02ld:%02ld#", hours, minutes, seconds);
+    return;
+  }
+  sprintf(time, "%02ld:%02ld:%02ld#", hours, minutes, seconds);
+}
+
+void Datetime::get_sidereal_time(char time[], unsigned long ms) {
 }
