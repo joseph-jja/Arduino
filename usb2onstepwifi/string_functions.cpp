@@ -19,7 +19,7 @@ void replace_char(char *source, char *search_chr, char replace_chr) {
     char *tmp = strstr(source, search_chr);
     if (tmp != NULL) {
       int tlen = strlen(tmp);
-      memset(source + tlen, replace_chr, 1);
+      memcpy(source + tlen - 1, &replace_chr, 1);
     }
 }
 
