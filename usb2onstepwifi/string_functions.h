@@ -1,4 +1,4 @@
-#pragma once 
+#pragma once
 
 bool compare(char *commandIn, char *commandStr);
 

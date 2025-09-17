@@ -35,34 +35,34 @@ bool has_reply(char *messageIn) {
 }
 
 bool boolean_reply(char *commandIn) {
-    bool has_0_or_1_reply = compare(commandIn, ":S");
+  bool has_0_or_1_reply = compare(commandIn, ":S");
 
-    if (!has_0_or_1_reply) {
-        int i = 0;
-        while (i < NUMBER_OF_0_or_1_STRINGS && !has_0_or_1_reply) {
-            if (compare(commandIn, COMMANDS_WITH_0_or_1_REPLY[i])) {
-                has_0_or_1_reply = true;
-            }
-            i++;
-        }
+  if (!has_0_or_1_reply) {
+    int i = 0;
+    while (i < NUMBER_OF_0_or_1_STRINGS && !has_0_or_1_reply) {
+      if (compare(commandIn, COMMANDS_WITH_0_or_1_REPLY[i])) {
+        has_0_or_1_reply = true;
+      }
+      i++;
     }
-   return has_0_or_1_reply;
+  }
+  return has_0_or_1_reply;
 }
 
-void ends_with(char *messageIn, char return_buffer[]) {  
+void ends_with(char *messageIn, char return_buffer[]) {
 
-    memset(return_buffer, '\0', 2);
-    if (compare(messageIn, ":Gd#") || compare(messageIn, ":GR#") 
-        || compare(messageIn, ":GD#") || compare(messageIn, ":GZ#") 
-        || compare(messageIn, ":GA#")) {
-            return_buffer[0] = '*'; 
-    } else if (compare(messageIn, ":G") || compare(messageIn, ":F")) {
-            return_buffer[0] = '#'; 
-    } else if (!compare(messageIn, ":MS#") 
-        && !compare(messageIn, ":MA#")
-        && !compare(messageIn, ":A2#")
-        && !compare(messageIn, ":ERESET#")
-        && !compare(messageIn, ":ENVRESET#")) {
-            return_buffer[0] = '#'; 
-    }
+  memset(return_buffer, '\0', 2);
+  if (compare(messageIn, ":Gd#") || compare(messageIn, ":GR#")
+      || compare(messageIn, ":GD#") || compare(messageIn, ":GZ#")
+      || compare(messageIn, ":GA#")) {
+    return_buffer[0] = '*';
+  } else if (compare(messageIn, ":G") || compare(messageIn, ":F")) {
+    return_buffer[0] = '#';
+  } else if (!compare(messageIn, ":MS#")
+             && !compare(messageIn, ":MA#")
+             && !compare(messageIn, ":A2#")
+             && !compare(messageIn, ":ERESET#")
+             && !compare(messageIn, ":ENVRESET#")) {
+    return_buffer[0] = '#';
+  }
 }
