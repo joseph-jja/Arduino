@@ -70,6 +70,7 @@ bool Overrides::check_override(char *bufferIn, char buffer[], int buffer_size, u
   } else if (compare(bufferIn, ":St")) {
     // set latitude
     override = true;
+    memset(latitude, '\0', DEFAULT_LOCATION_SIZE);
     substring(bufferIn, 3, bufferInLen - 4, latitude);
     replace_char(latitude, ".", ':');
     memcpy(buffer, "1", strlen("1"));
@@ -80,6 +81,7 @@ bool Overrides::check_override(char *bufferIn, char buffer[], int buffer_size, u
   } else if (compare(bufferIn, ":Sg")) {
     // set longitude
     override = true;
+    memset(longitude, '\0', DEFAULT_LOCATION_SIZE);
     substring(bufferIn, 3, bufferInLen - 4, longitude);
     replace_char(longitude, ".", ':');
     memcpy(buffer, "1", strlen("1"));
