@@ -14,6 +14,14 @@ void substring(char *source, int start_index, int length, char *destination) {
   strncpy(destination, source + start_index, length);
 }
 
+void replace_char(char *source, char search_str, char replace_str) {
+
+    char *n = strstr(source, &search_str);
+    if (n != NULL) {
+        
+    }
+}
+
 bool has_reply(char *messageIn) {
 
   bool hasResponse = true;
