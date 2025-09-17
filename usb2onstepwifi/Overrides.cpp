@@ -7,6 +7,8 @@
 #include "string_functions.h"
 #include "Datetime.h"
 
+const char compile_time[] = __TIME__;
+
 void Overrides::init() {
 
   memset(latitude, '\0', DEFAULT_LOCATION_SIZE);
@@ -15,13 +17,15 @@ void Overrides::init() {
   memcpy(latitude, DEFAULT_LATITUDE, strlen(DEFAULT_LATITUDE));
   memcpy(longitude, DEFAULT_LONGITUDE, strlen(DEFAULT_LONGITUDE));
 
+  utcoffset = DEFAULT_UTC_OFFSET;
+
   memset(date_str, '\0', DEFAULT_DATE_TIME_SIZE);
   memset(local_time_str, '\0', DEFAULT_DATE_TIME_SIZE);
   memset(time_str, '\0', DEFAULT_DATE_TIME_SIZE);
 
-  memcpy(date_str, "09/12/25#", strlen("09/12/25#"));
-  memcpy(local_time_str, "12:12:15#", strlen("12:12:15#"));
-  memcpy(time_str, "12:12:15#", strlen("12:12:15#"));
+  memcpy(date_str, "09/12/25#", strlen("09/16/25#"));
+  sprintf(local_time_str, "%s#", compile_time);
+  sprintf(time_str, "%s#", compile_time);
 };
 
 /*
@@ -61,26 +65,33 @@ bool Overrides::check_override(char *bufferIn, char buffer[], int buffer_size) {
   // date and time commands
   // latitude and lingitude commands and offset
   if (compare(bufferIn, ":Gt#")) {
+    // get latitude
     override = true;
     memcpy(buffer, latitude, strlen(latitude));
   } else if (compare(bufferIn, ":St")) {
+    // set latitude
     override = true;
     substring(bufferIn, 3, bufferInLen - 4, latitude);
     memcpy(buffer, "1", strlen("1"));
   } else if (compare(bufferIn, ":Gg#")) {
+    // get longitude
     override = true;
     memcpy(buffer, longitude, strlen(longitude));
   } else if (compare(bufferIn, ":Sg")) {
+    // set longitude
     override = true;
     substring(bufferIn, 3, bufferInLen - 4, longitude);
     memcpy(buffer, "1", strlen("1"));
   } else if (compare(bufferIn, ":GG#")) {
+    // get utc offset
     override = true;
     sprintf(buffer, "%d", utcoffset);
   } else if (compare(bufferIn, ":SG")) {
+    // set utc offset
     override = true;
     substring(bufferIn, 3, bufferInLen - 4, buffer);
     utcoffset = atoi(buffer);
+    memset(buffer, '\0', buffer_size);
     memcpy(buffer, "1", strlen("1"));
     // date functions
   } else if (compare(bufferIn, ":GC#")) {
