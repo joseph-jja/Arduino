@@ -71,6 +71,7 @@ bool Overrides::check_override(char *bufferIn, char buffer[], int buffer_size, u
     // set latitude
     override = true;
     substring(bufferIn, 3, bufferInLen - 4, latitude);
+    replace_char(latitude, '.', ':');
     memcpy(buffer, "1", strlen("1"));
   } else if (compare(bufferIn, ":Gg#")) {
     // get longitude
@@ -80,6 +81,7 @@ bool Overrides::check_override(char *bufferIn, char buffer[], int buffer_size, u
     // set longitude
     override = true;
     substring(bufferIn, 3, bufferInLen - 4, longitude);
+    replace_char(longitude, '.', ':');
     memcpy(buffer, "1", strlen("1"));
   } else if (compare(bufferIn, ":GG#")) {
     // get utc offset
