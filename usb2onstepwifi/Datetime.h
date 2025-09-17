@@ -1,7 +1,5 @@
 #pragma once
 
-#define DATE_TIME_SIZE 10
-
 class Datetime {
 public:
   // Public members (accessible from outside the class)
@@ -17,8 +15,8 @@ private:
   long delta_time;
 
   // date and time stuff
-  char date_str[DATE_TIME_SIZE];
-  char time_str[DATE_TIME_SIZE];
+  long date_part;
+  long time_part;
 };
 
 extern Datetime datetime;
