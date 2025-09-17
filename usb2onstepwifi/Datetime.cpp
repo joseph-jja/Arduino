@@ -5,17 +5,12 @@
 
 #include "Datetime.h"
 
-#define DATE_TIME_SIZE 10
 #define ONE_DAY 84000
+#define DEFAULT_DATE 20250918
+
+static char compile_time[] = __TIME__;
 
 static int DAYS_IN_MONTH[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-
-void Datetime::init(unsigned long ms) {
-
-  start_time = ms;
-  delta_time = start_time;
-  days_changed = 0;  // add in to header file
-}
 
 bool validate_string(char buffer[], char v) {
   int len = strlen(buffer);
@@ -50,6 +45,17 @@ long convert_buffer(char str_in[], long m1, long m2, long m3) {
   value += (atol(buffer) * m3);
 
   return value;
+}
+
+void Datetime::init(unsigned long ms) {
+
+  start_time = ms;
+  delta_time = start_time;
+  days_changed = 0;  // add in to header file
+
+  date_part = DEFAULT_DATE;
+  local_time_part = convert_buffer(compile_time, 3600, 60, 1);
+  sidereal_time_part = convert_buffer(compile_time, 3600, 60, 1);
 }
 
 // mm/dd/yy
@@ -95,7 +101,7 @@ bool Datetime::set_sidereal_time(char time_str[]) {
 void Datetime::get_date(char date[], unsigned long ms) {
 
   // 2 digit year
-  long year = (date_part / 10000) - 2000;
+  long year = floor(date_part / 10000) - 2000;
   long month = (date_part - ((2000 + year) * 10000)) / 100;
   long day = (date_part - ((2000 + year) * 10000)) - (month * 100);
 
@@ -136,7 +142,7 @@ void Datetime::get_local_time(char time[], unsigned long ms, bool is_twenty_four
   long hours = local_time_part / 3600;
   long minutes = mod_time / 60;
   long seconds = mod_time % 60;
-  if (is_twenty_four_hour && hours > 12) {
+  if (!is_twenty_four_hour && hours > 12) {
     hours -= 12;
     sprintf(time, "%02ld:%02ld:%02ld#", hours, minutes, seconds);
     return;
@@ -145,4 +151,29 @@ void Datetime::get_local_time(char time[], unsigned long ms, bool is_twenty_four
 }
 
 void Datetime::get_sidereal_time(char time[], unsigned long ms) {
+  // update time
+  sidereal_time_part += update_time(ms);
+
+  int i = -1;  // 0 day
+  long value = sidereal_time_part;
+  while (value > 0) {
+    value -= ONE_DAY;
+    i++;
+  }
+  days_changed = i;
+
+  // value would be negative now
+  // so now we add back one day
+  // to make positive and this is our new time
+  // in seconds
+  sidereal_time_part = value + ONE_DAY;
+
+  // convert time_part to hh:mm:ss
+  long mod_time = sidereal_time_part % 3600;
+  long hours = sidereal_time_part / 3600;
+  long minutes = mod_time / 60;
+  long seconds = mod_time % 60;
+  sprintf(time, "%02ld:%02ld:%02ld#", hours, minutes, seconds);
 }
+
+Datetime datetime;

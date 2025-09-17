@@ -9,7 +9,7 @@
 
 const char compile_time[] = __TIME__;
 
-void Overrides::init() {
+void Overrides::init(unsigned long ms) {
 
   memset(latitude, '\0', DEFAULT_LOCATION_SIZE);
   memset(longitude, '\0', DEFAULT_LOCATION_SIZE);
@@ -19,13 +19,7 @@ void Overrides::init() {
 
   utcoffset = DEFAULT_UTC_OFFSET;
 
-  memset(date_str, '\0', DEFAULT_DATE_TIME_SIZE);
-  memset(local_time_str, '\0', DEFAULT_DATE_TIME_SIZE);
-  memset(time_str, '\0', DEFAULT_DATE_TIME_SIZE);
-
-  memcpy(date_str, "09/12/25#", strlen("09/16/25#"));
-  sprintf(local_time_str, "%s#", compile_time);
-  sprintf(time_str, "%s#", compile_time);
+  datetime.init(ms);
 };
 
 /*
@@ -46,7 +40,7 @@ Get Latitude (for current site) :Gt#  Reply: sDD*MM#
 Set Longitude (for current site)  :SgDDD*MM#  Reply: 0 or 1
 Get Longitude (for current site)  :Gg#  Reply: DDD*MM#
 */
-bool Overrides::check_override(char *bufferIn, char buffer[], int buffer_size) {
+bool Overrides::check_override(char *bufferIn, char buffer[], int buffer_size, unsigned long ms) {
 
   bool override = false;
 
@@ -60,6 +54,11 @@ bool Overrides::check_override(char *bufferIn, char buffer[], int buffer_size) {
   if (bufferInLen == 0 || bufferInLen > buffer_size - 1) {
     return override;
   }
+
+  char date_time_buffer[DATE_TIME_SIZE];
+  memset(date_time_buffer, '\0', DATE_TIME_SIZE);
+
+  // TODO lat and long should have . replaced with : if we get a .
 
   // commands to skip
   // date and time commands
@@ -93,33 +92,44 @@ bool Overrides::check_override(char *bufferIn, char buffer[], int buffer_size) {
     utcoffset = atoi(buffer);
     memset(buffer, '\0', buffer_size);
     memcpy(buffer, "1", strlen("1"));
-    // date functions
   } else if (compare(bufferIn, ":GC#")) {
+    // get date
     override = true;
-    memcpy(buffer, date_str, strlen(date_str));
+    datetime.get_date(date_time_buffer, ms);
+    sprintf(buffer, "%s", date_time_buffer);
   } else if (compare(bufferIn, ":SC")) {
+    // set date
     override = true;
-    substring(bufferIn, 3, bufferInLen - 3, date_str);
-    memcpy(buffer, "1", strlen("1"));
-    // local time functions
+    substring(bufferIn, 3, bufferInLen - 3, date_time_buffer);
+    bool success = datetime.set_date(date_time_buffer);
+    sprintf(buffer, "%d", success);
   } else if (compare(bufferIn, ":Ga#")) {
+    // get local time in 12 hour format
     override = true;
-    memcpy(buffer, local_time_str, strlen(local_time_str));
+    datetime.get_local_time(date_time_buffer, ms, false);
+    sprintf(buffer, "%s", date_time_buffer);
   } else if (compare(bufferIn, ":GL#")) {
+    // get local time in 24 hour format
     override = true;
-    memcpy(buffer, local_time_str, strlen(local_time_str));
+    datetime.get_local_time(date_time_buffer, ms, true);
+    sprintf(buffer, "%s", date_time_buffer);
   } else if (compare(bufferIn, ":SL")) {
+    // set local time, in 24 hour format
     override = true;
-    substring(bufferIn, 3, bufferInLen - 3, local_time_str);
-    memcpy(buffer, "1", strlen("1"));
-    // local time functions
+    substring(bufferIn, 3, bufferInLen - 3, date_time_buffer);
+    bool success = datetime.set_local_time(date_time_buffer);
+    sprintf(buffer, "%d", success);
   } else if (compare(bufferIn, ":GS#")) {
+    // get sidereal time
     override = true;
-    memcpy(buffer, time_str, strlen(local_time_str));
+    datetime.get_sidereal_time(date_time_buffer, ms);
+    sprintf(buffer, "%s", date_time_buffer);
   } else if (compare(bufferIn, ":SS")) {
+    // set sidereal time
     override = true;
-    substring(bufferIn, 3, bufferInLen - 3, time_str);
-    memcpy(buffer, "1", strlen("1"));
+    substring(bufferIn, 3, bufferInLen - 3, date_time_buffer);
+    bool success = datetime.set_sidereal_time(date_time_buffer);
+    sprintf(buffer, "%d", success);
   }
 
   return override;

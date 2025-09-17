@@ -1,13 +1,12 @@
 #pragma once
 
 #define DEFAULT_LOCATION_SIZE 20
-#define DEFAULT_DATE_TIME_SIZE 10
 
 class Overrides {
 public:
   // Public members (accessible from outside the class)
-  void init();  // Constructor
-  bool check_override(char *bufferIn, char returnOut[], int buffer_size);
+  void init(unsigned long ms);  // Constructor
+  bool check_override(char *bufferIn, char returnOut[], int buffer_size, unsigned long ms);
 
 private:
 
@@ -17,10 +16,6 @@ private:
   char longitude[DEFAULT_LOCATION_SIZE];
   // offset
   int utcoffset;
-  // date and time stuff
-  char date_str[DEFAULT_DATE_TIME_SIZE];
-  char local_time_str[DEFAULT_DATE_TIME_SIZE];
-  char time_str[DEFAULT_DATE_TIME_SIZE];
 };
 
 extern Overrides overrides;

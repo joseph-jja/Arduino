@@ -1,5 +1,7 @@
 #pragma once
 
+#define DATE_TIME_SIZE 10
+
 class Datetime {
 public:
   // Public members (accessible from outside the class)
@@ -18,12 +20,12 @@ private:
 
   long start_time;
   long delta_time;
-  long days_changed = 0;
+  long days_changed;
 
   // date and time stuff
-  long date_part = 0;
-  long local_time_part = 0;
-  long sidereal_time_part = 0;
+  long date_part;
+  long local_time_part;
+  long sidereal_time_part;
 };
 
 extern Datetime datetime;

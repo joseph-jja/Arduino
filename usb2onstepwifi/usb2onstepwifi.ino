@@ -21,11 +21,6 @@ char latitude[DEFAULT_LOCATION_SIZE];
 char longitude[DEFAULT_LOCATION_SIZE];
 int utcoffset = 5;
 
-// date and time stuff
-char date_str[DEFAULT_DATE_TIME_SIZE];
-char local_time_str[DEFAULT_DATE_TIME_SIZE];
-char time_str[DEFAULT_DATE_TIME_SIZE];
-
 template<typename T>
 void print(T line) {
 #ifdef USB_DEBUG_ENABLED
@@ -113,7 +108,7 @@ void setup() {
   print("gateway address: ");
   println(gateway.toString());
 
-  overrides.init();
+  overrides.init(millis());
 
   for (int i = 0; i < 5; i++) {
     blink_pin(50);
@@ -194,7 +189,7 @@ bool read_in_usb_data(char usbBufferIn[], char usbBufferOut[]) {
     }
   }
 
-  return overrides.check_override(usbBufferIn, usbBufferOut, BUFFER_SIZE);
+  return overrides.check_override(usbBufferIn, usbBufferOut, BUFFER_SIZE, millis());
 }
 
 void write_out_wifi_data(char *buffer) {
