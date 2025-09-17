@@ -65,14 +65,14 @@ bool Overrides::check_override(char *bufferIn, char buffer[], int buffer_size) {
   } else if (compare(bufferIn, ":St")) {
     override = true;
     substring(bufferIn, 3, bufferInLen - 4, latitude);
-    memcpy(buffer, "0", strlen("0"));
+    memcpy(buffer, "1", strlen("1"));
   } else if (compare(bufferIn, ":Gg#")) {
     override = true;
     memcpy(buffer, longitude, strlen(longitude));
   } else if (compare(bufferIn, ":Sg")) {
     override = true;
     substring(bufferIn, 3, bufferInLen - 4, longitude);
-    memcpy(buffer, "0", strlen("0"));
+    memcpy(buffer, "1", strlen("1"));
   } else if (compare(bufferIn, ":GG#")) {
     override = true;
     sprintf(buffer, "%d", utcoffset);
@@ -80,7 +80,7 @@ bool Overrides::check_override(char *bufferIn, char buffer[], int buffer_size) {
     override = true;
     substring(bufferIn, 3, bufferInLen - 4, buffer);
     utcoffset = atoi(buffer);
-    memcpy(buffer, "0", strlen("0"));
+    memcpy(buffer, "1", strlen("1"));
     // date functions
   } else if (compare(bufferIn, ":GC#")) {
     override = true;
@@ -88,7 +88,7 @@ bool Overrides::check_override(char *bufferIn, char buffer[], int buffer_size) {
   } else if (compare(bufferIn, ":SC")) {
     override = true;
     substring(bufferIn, 3, bufferInLen - 4, date_str);
-    memcpy(buffer, "0", strlen("0"));
+    memcpy(buffer, "1", strlen("1"));
     // local time functions
   } else if (compare(bufferIn, ":Ga#")) {
     override = true;
@@ -99,7 +99,7 @@ bool Overrides::check_override(char *bufferIn, char buffer[], int buffer_size) {
   } else if (compare(bufferIn, ":SL")) {
     override = true;
     substring(bufferIn, 3, bufferInLen - 4, local_time_str);
-    memcpy(buffer, "0", strlen("0"));
+    memcpy(buffer, "1", strlen("1"));
     // local time functions
   } else if (compare(bufferIn, ":GS#")) {
     override = true;
@@ -107,7 +107,7 @@ bool Overrides::check_override(char *bufferIn, char buffer[], int buffer_size) {
   } else if (compare(bufferIn, ":SS")) {
     override = true;
     substring(bufferIn, 3, bufferInLen - 4, time_str);
-    memcpy(buffer, "0", strlen("0"));
+    memcpy(buffer, "1", strlen("1"));
   }
 
   return override;
