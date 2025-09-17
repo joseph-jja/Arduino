@@ -6,8 +6,8 @@ public:
   void init(unsigned long ms);  // Constructor
   bool set_date(char date[]);
   bool set_time(char time[]);
-  void get_date(char date[]);
-  void get_time(char time[]);
+  void get_date(char date[], unsigned long ms);
+  void get_time(char time[], unsigned long ms);
 
 private:
 
@@ -15,8 +15,8 @@ private:
   long delta_time;
 
   // date and time stuff
-  long date_part;
-  long time_part;
+  long date_part = 0;
+  long time_part = 0;
 };
 
 extern Datetime datetime;
