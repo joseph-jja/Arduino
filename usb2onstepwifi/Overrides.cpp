@@ -87,7 +87,7 @@ bool Overrides::check_override(char *bufferIn, char buffer[], int buffer_size) {
     memcpy(buffer, date_str, strlen(date_str));
   } else if (compare(bufferIn, ":SC")) {
     override = true;
-    substring(bufferIn, 3, bufferInLen - 4, date_str);
+    substring(bufferIn, 3, bufferInLen - 3, date_str);
     memcpy(buffer, "1", strlen("1"));
     // local time functions
   } else if (compare(bufferIn, ":Ga#")) {
@@ -98,7 +98,7 @@ bool Overrides::check_override(char *bufferIn, char buffer[], int buffer_size) {
     memcpy(buffer, local_time_str, strlen(local_time_str));
   } else if (compare(bufferIn, ":SL")) {
     override = true;
-    substring(bufferIn, 3, bufferInLen - 4, local_time_str);
+    substring(bufferIn, 3, bufferInLen - 3, local_time_str);
     memcpy(buffer, "1", strlen("1"));
     // local time functions
   } else if (compare(bufferIn, ":GS#")) {
@@ -106,7 +106,7 @@ bool Overrides::check_override(char *bufferIn, char buffer[], int buffer_size) {
     memcpy(buffer, time_str, strlen(local_time_str));
   } else if (compare(bufferIn, ":SS")) {
     override = true;
-    substring(bufferIn, 3, bufferInLen - 4, time_str);
+    substring(bufferIn, 3, bufferInLen - 3, time_str);
     memcpy(buffer, "1", strlen("1"));
   }
 
