@@ -105,6 +105,21 @@ void Datetime::get_date(char date[], unsigned long ms) {
   long month = (date_part - ((2000 + year) * 10000)) / 100;
   long day = (date_part - ((2000 + year) * 10000)) - (month * 100);
 
+  if (days_changed > 0) {
+    day += days_changed;
+    long days_in_this_month = DAYS_IN_MONTH[month - 1];
+    if (day > days_in_this_month) {
+      day -= days_in_this_month;
+      month++;
+      if (month > 12) {
+        month = 1;
+        year++;
+      }
+    }
+    days_changed = 0;
+    date_part = (2000 + year) * 10000 + month * 100 + day;
+  }
+
   sprintf(date, "%02ld/%02ld/%02ld#", month, day, year);
 }
 
