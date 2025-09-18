@@ -118,13 +118,15 @@ long Datetime::update_time(unsigned long ms) {
   return delta_time_now;
 }
 
-void Datetime::get_local_time(char time[], unsigned long ms, bool is_twenty_four_hour) {
+long Datetime::update_time_value(char time[], unsigned long ms, long time_in, bool is_twenty_four_hour) {
+
+  long time_part = time_in;
 
   // update time
-  local_time_part += update_time(ms);
+  time_part += update_time(ms);
 
   int i = -1;  // 0 day
-  long value = local_time_part;
+  long value = time_part;
   while (value > 0) {
     value -= ONE_DAY;
     i++;
@@ -135,45 +137,32 @@ void Datetime::get_local_time(char time[], unsigned long ms, bool is_twenty_four
   // so now we add back one day
   // to make positive and this is our new time
   // in seconds
-  local_time_part = value + ONE_DAY;
+  time_part = value + ONE_DAY;
 
   // convert time_part to hh:mm:ss
-  long mod_time = local_time_part % 3600;
-  long hours = local_time_part / 3600;
+  long mod_time = time_part % 3600;
+  long hours = time_part / 3600;
   long minutes = mod_time / 60;
   long seconds = mod_time % 60;
   if (!is_twenty_four_hour && hours > 12) {
     hours -= 12;
     sprintf(time, "%02ld:%02ld:%02ld#", hours, minutes, seconds);
-    return;
+  } else {
+    sprintf(time, "%02ld:%02ld:%02ld#", hours, minutes, seconds);
   }
-  sprintf(time, "%02ld:%02ld:%02ld#", hours, minutes, seconds);
+
+  return time_part;
+}
+
+void Datetime::get_local_time(char time[], unsigned long ms, bool is_twenty_four_hour) {
+
+  local_time_part = update_time_value(time, ms, local_time_part, is_twenty_four_hour);
 }
 
 void Datetime::get_sidereal_time(char time[], unsigned long ms) {
+
   // update time
-  sidereal_time_part += update_time(ms);
-
-  int i = -1;  // 0 day
-  long value = sidereal_time_part;
-  while (value > 0) {
-    value -= ONE_DAY;
-    i++;
-  }
-  days_changed = i;
-
-  // value would be negative now
-  // so now we add back one day
-  // to make positive and this is our new time
-  // in seconds
-  sidereal_time_part = value + ONE_DAY;
-
-  // convert time_part to hh:mm:ss
-  long mod_time = sidereal_time_part % 3600;
-  long hours = sidereal_time_part / 3600;
-  long minutes = mod_time / 60;
-  long seconds = mod_time % 60;
-  sprintf(time, "%02ld:%02ld:%02ld#", hours, minutes, seconds);
+  sidereal_time_part = update_time_value(time, ms, sidereal_time_part, true);
 }
 
 Datetime datetime;

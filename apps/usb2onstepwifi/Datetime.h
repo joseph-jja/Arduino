@@ -17,6 +17,7 @@ public:
 private:
 
   long update_time(unsigned long ms);
+  long update_time_value(char time[], unsigned long ms, long time_in, bool is_twenty_four_hour);
 
   long start_time;
   long delta_time;
