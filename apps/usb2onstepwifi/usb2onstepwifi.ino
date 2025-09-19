@@ -149,7 +149,7 @@ bool connect_client() {
 
 void write_out_usb_data(char *buffer) {
 
-    Serial.println(buffer);
+    Serial.write(buffer);
     delay(10);
     Serial.flush();
     print("We responded with ");
