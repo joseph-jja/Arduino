@@ -1,5 +1,8 @@
 #pragma once
 
+#define USB_RESET_REPLY "USB Reset"
+#define USB_RESET_COMMAND ":USB_RESET#"
+
 #define DEFAULT_LOCATION_SIZE 20
 
 class Overrides {

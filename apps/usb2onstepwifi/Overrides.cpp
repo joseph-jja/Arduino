@@ -59,7 +59,10 @@ bool Overrides::check_override(char *bufferIn, char buffer[], int buffer_size, u
   memset(date_time_buffer, '\0', DATE_TIME_SIZE);
 
   // commands to skip
-  if (compare(bufferIn, ":Gt#")) {
+  if (compare(bufferIn, USB_RESET_COMMAND)) {
+    override = true;
+    sprintf(buffer, "%s#", USB_RESET_REPLY);
+  } else if (compare(bufferIn, ":Gt#")) {
     // get latitude
     override = true;
     sprintf(buffer, "%s#", latitude);
