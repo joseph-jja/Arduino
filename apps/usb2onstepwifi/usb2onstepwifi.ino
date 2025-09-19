@@ -254,6 +254,9 @@ void use_wifi_client() {
   // read in the data from USB port
   boolean isCommandOverridden = read_in_usb_data(usbBufferIn, usbBufferOut);
   if (isCommandOverridden && strlen(usbBufferOut) > 0) {
+    if (usbBufferOut == USB_RESET_REPLY) {
+      cbp = 0;
+    }
     write_out_usb_data(usbBufferOut);
     print("Command ");
     print(usbBufferIn);
