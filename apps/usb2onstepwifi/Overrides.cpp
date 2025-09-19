@@ -58,11 +58,7 @@ bool Overrides::check_override(char *bufferIn, char buffer[], int buffer_size, u
   char date_time_buffer[DATE_TIME_SIZE];
   memset(date_time_buffer, '\0', DATE_TIME_SIZE);
 
-  // TODO lat and long should have . replaced with : if we get a .
-
   // commands to skip
-  // date and time commands
-  // latitude and lingitude commands and offset
   if (compare(bufferIn, ":Gt#")) {
     // get latitude
     override = true;

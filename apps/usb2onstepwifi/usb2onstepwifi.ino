@@ -156,6 +156,8 @@ void write_out_usb_data(char *buffer) {
     println(buffer);
 }
 
+bool cbp = 0;
+
 // generic function for reading data into bufferIn from USB port
 bool read_in_usb_data(char usbBufferIn[], char usbBufferOut[]) {
 
@@ -174,6 +176,12 @@ bool read_in_usb_data(char usbBufferIn[], char usbBufferOut[]) {
     if (incomingByte != NULL && isprint(incomingByte)) {
       print("USB data being read ");
       println(incomingByte);
+      // special for lx200 protocol
+      if (cbp == 0 && incomingByte == '6') {
+        cbp = 2;
+        usbBufferIn[0] = 'A';
+        sentance = false;
+      }
       if (incomingByte == ':') {
         capture = true;
       }
@@ -251,6 +259,10 @@ void use_wifi_client() {
     print(usbBufferIn);
     print(" override ");
     println(isCommandOverridden);
+  } else if (cbp == 2) {
+    // special case for lx200 
+    cbp = 3;
+    write_out_usb_data(usbBufferOut);  
   } else {
     bool isConnected = connect_client();
     if (isConnected) {
