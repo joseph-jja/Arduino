@@ -153,7 +153,7 @@ void write_out_usb_data(char *buffer) {
     println(buffer);
 }
 
-bool cbp = 0;
+int ack_command_state = 0;
 
 // generic function for reading data into bufferIn from USB port
 bool read_in_usb_data(char usbBufferIn[], char usbBufferOut[]) {
@@ -172,14 +172,14 @@ bool read_in_usb_data(char usbBufferIn[], char usbBufferOut[]) {
     char incomingByte = Serial.read();
     if (incomingByte != NULL && isprint(incomingByte)) {
       print("USB data being read ");
-      //print(cbp);
+      //print(ack_command_state);
       //print(" ");
       //println(capture);
       //print(" ");
       println(incomingByte);
       // special for lx200 protocol
-      if (!capture && cbp == 0 && incomingByte == '6') {
-        cbp = 2;
+      if (!capture && ack_command_state == 0 && incomingByte == '6') {
+        ack_command_state = 2;
         sprintf(usbBufferIn, "%s", ACK_COMMAND_IN);
         sentance = false;
       }
@@ -197,7 +197,7 @@ bool read_in_usb_data(char usbBufferIn[], char usbBufferOut[]) {
     }
   }
   //print("usbBufferIn");
-  //print(cbp);
+  //print(ack_command_state);
   //print(" ");
   //print(usbBufferIn);
   return overrides.check_override(usbBufferIn, usbBufferOut, BUFFER_SIZE, millis());
@@ -261,18 +261,18 @@ void use_wifi_client() {
   // read in the data from USB port
   boolean isCommandOverridden = read_in_usb_data(usbBufferIn, usbBufferOut);
   if (isCommandOverridden && strlen(usbBufferOut) > 0) {
-    if (usbBufferOut == USB_RESET_REPLY) {
-      cbp = 0;
+    if (compare(usbBufferOut, USB_RESET_REPLY)) {
+      ack_command_state = 0;
+    } else if (ack_command_state == 2) {
+      ack_command_state = 0;
     }
     write_out_usb_data(usbBufferOut);
     print("Command ");
     print(usbBufferIn);
     print(" override ");
-    println(isCommandOverridden);
-  } else if (cbp == 2) {
-    // special case for lx200 
-    cbp = 3;
-    write_out_usb_data(usbBufferOut);  
+    print(isCommandOverridden);
+    print(" ACK Command state ");
+    println(ack_command_state);
   } else {
 #ifndef MOCK_CLIENT_ENABLED
     bool isConnected = connect_client();
