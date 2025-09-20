@@ -1,7 +1,7 @@
 #pragma once
 
 //#define USB_DEBUG_ENABLED 1
-//#define USE_I2C_CHANNEL 1
+//#define MOCK_CLIENT_ENABLED 1
 #define ESP32_I2C_ADDRESS 24
 #define WIFI_CLIENT_READ_TIMOUT 5000
 
