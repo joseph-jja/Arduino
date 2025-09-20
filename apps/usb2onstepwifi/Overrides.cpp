@@ -62,6 +62,10 @@ bool Overrides::check_override(char *bufferIn, char buffer[], int buffer_size, u
   if (compare(bufferIn, USB_RESET_COMMAND)) {
     override = true;
     sprintf(buffer, "%s#", USB_RESET_REPLY);
+  } else if (compare(bufferIn, ACK_COMMAND_IN)) {
+    // get latitude
+    override = true;
+    sprintf(buffer, "%s", ACK_COMMAND_OUT);
   } else if (compare(bufferIn, ":Gt#")) {
     // get latitude
     override = true;

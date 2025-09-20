@@ -3,6 +3,9 @@
 #define USB_RESET_REPLY "USB Reset"
 #define USB_RESET_COMMAND ":USB_RESET#"
 
+#define ACK_COMMAND_IN ":AA#"
+#define ACK_COMMAND_OUT "A"
+
 #define DEFAULT_LOCATION_SIZE 20
 
 class Overrides {
