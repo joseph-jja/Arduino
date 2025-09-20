@@ -177,7 +177,7 @@ bool read_in_usb_data(char usbBufferIn[], char usbBufferOut[]) {
       print("USB data being read ");
       println(incomingByte);
       // special for lx200 protocol
-      if (cbp == 0 && incomingByte == '6') {
+      if (!capture && cbp == 0 && incomingByte == '6') {
         cbp = 2;
         usbBufferIn[0] = 'A';
         sentance = false;
