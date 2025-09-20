@@ -11,8 +11,11 @@
 
 const char *ssid = STATION_ID;
 const char *password = STATION_PWD;
-
-IPAddress gateway;
+#ifndef MOCK_CLIENT_ENABLED
+  IPAddress gateway{192, 168, 0, 1};
+#else
+  IPAddress gateway;
+#endif
 WiFiClient client;
 
 // latitude and longitude defaults holder
@@ -69,6 +72,8 @@ void setup() {
 
   setup_builtin_pin();
 
+#ifndef MOCK_CLIENT_ENABLED
+
   println("");
   println("");
   print("Connecting to ");
@@ -98,6 +103,7 @@ void setup() {
   println(WiFi.localIP().toString());
   print("gateway address: ");
   println(gateway.toString());
+#endif
 
   overrides.init(millis());
 
@@ -190,6 +196,8 @@ bool read_in_usb_data(char usbBufferIn[], char usbBufferOut[]) {
   return overrides.check_override(usbBufferIn, usbBufferOut, BUFFER_SIZE, millis());
 }
 
+#ifndef MOCK_CLIENT_ENABLED
+
 void write_out_wifi_data(char *buffer) {
 
     client.write(buffer);
@@ -235,6 +243,7 @@ void read_in_wifi_data(char wifiBufferOut[], char usbBufferIn[]) {
   println(wifiBufferOut);
   println(endings);
 }
+#endif
 
 void use_wifi_client() {
 
@@ -258,6 +267,7 @@ void use_wifi_client() {
     cbp = 3;
     write_out_usb_data(usbBufferOut);  
   } else {
+#ifndef MOCK_CLIENT_ENABLED
     bool isConnected = connect_client();
     if (isConnected) {
       delay(10);
@@ -281,6 +291,7 @@ void use_wifi_client() {
       delay(10);
       client.stop();
     }
+#endif
   }
 }
 
