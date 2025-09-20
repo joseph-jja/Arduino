@@ -291,6 +291,11 @@ void use_wifi_client() {
       delay(10);
       client.stop();
     }
+#else 
+    if (strlen(usbBufferOut) <= 0) {
+      sprintf(usbBufferOut, "%s#", "Dummy");
+    }
+    write_out_usb_data(usbBufferOut);  
 #endif
   }
 }
