@@ -172,11 +172,15 @@ bool read_in_usb_data(char usbBufferIn[], char usbBufferOut[]) {
     char incomingByte = Serial.read();
     if (incomingByte != NULL && isprint(incomingByte)) {
       print("USB data being read ");
+      //print(cbp);
+      //print(" ");
+      //println(capture);
+      //print(" ");
       println(incomingByte);
       // special for lx200 protocol
       if (!capture && cbp == 0 && incomingByte == '6') {
         cbp = 2;
-        usbBufferIn[0] = 'A';
+        sprintf(usbBufferIn, "%s", ACK_COMMAND_IN);
         sentance = false;
       }
       if (incomingByte == ':') {
@@ -192,7 +196,10 @@ bool read_in_usb_data(char usbBufferIn[], char usbBufferOut[]) {
       }
     }
   }
-
+  //print("usbBufferIn");
+  //print(cbp);
+  //print(" ");
+  //print(usbBufferIn);
   return overrides.check_override(usbBufferIn, usbBufferOut, BUFFER_SIZE, millis());
 }
 
