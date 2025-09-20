@@ -6,6 +6,9 @@
 
 // compares 2 string
 bool compare(char *commandIn, char *commandStr) {
+  if (commandIn == NULL) {
+    return false;
+  }
   return (memcmp(commandIn, commandStr, strlen(commandStr)) == 0);
 }
 
