@@ -49,12 +49,6 @@ void blink_pin(int sleep_time) {
   digitalWrite(LED_BUILTIN, LOW);
 }
 
-void setup_i2c_wire() {
-#ifdef USE_I2C_CHANNEL
-  Wire.begin(ESP32_I2C_ADDRESS);
-#endif
-}
-
 // Define a callback function to handle the event
 void onWifiDisconnect(const WiFiEventStationModeDisconnected &event) {
   digitalWrite(LED_BUILTIN, LOW);
@@ -74,9 +68,6 @@ void setup() {
   Serial.begin(9600);
 
   setup_builtin_pin();
-
-  // called but depends on ifdef
-  setup_i2c_wire();
 
   println("");
   println("");
@@ -293,41 +284,6 @@ void use_wifi_client() {
   }
 }
 
-void read_in_wire_data(boolean isCommandOverridden) {
-
-  /*memset(bufferOut, '\0', BUFFER_SIZE);
-  int j = 0;
-  while (Wire.available()) {
-    char incomingByte = Wire.requestFrom(ESP32_I2C_ADDRESS, 1);
-    if (incomingByte != NULL && isprint(incomingByte)) {
-      bufferOut[j] = incomingByte;
-      j++;
-    }
-  }
-
-  if (strlen(bufferOut) > 0 && !isCommandOverridden) {
-    Serial.write(bufferOut);
-    Serial.flush();
-    print("We responded with ");
-    println(bufferOut);
-  }*/
-}
-
-void use_wire_client() {
-  // read in the data from USB port
-  /*boolean isCommandOverridden = read_in_usb_data();
-  if (!isCommandOverridden) {
-    Wire.write(bufferIn);
-  }
-
-  read_in_wire_data(isCommandOverridden);*/
-}
-
 void loop() {
-
-#ifdef USE_I2C_CHANNEL
-  use_wire_client();
-#else
   use_wifi_client();
-#endif
 }
