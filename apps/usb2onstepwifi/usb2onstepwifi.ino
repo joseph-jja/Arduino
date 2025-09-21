@@ -196,6 +196,9 @@ bool read_in_usb_data(char usbBufferIn[], char usbBufferOut[]) {
       }
     }
   }
+  if (usbBufferIn == NULL) { 
+    return false;
+  }
   //print("usbBufferIn");
   //print(ack_command_state);
   //print(" ");
@@ -273,7 +276,7 @@ void use_wifi_client() {
     print(isCommandOverridden);
     print(" ACK Command state ");
     println(ack_command_state);
-  } else {
+  } else if (usbBufferIn != NULL) { 
 #ifndef MOCK_CLIENT_ENABLED
     bool isConnected = connect_client();
     if (isConnected) {
