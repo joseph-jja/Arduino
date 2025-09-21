@@ -168,7 +168,7 @@ bool read_in_usb_data(char usbBufferIn[], char usbBufferOut[]) {
   */
   boolean sentance = true;
   boolean capture = false;
-  let start_time = millis();
+  int start_time = millis();
   while ((millis() - start_time) < USB_READ_TIMOUT && (Serial.available() || sentance)) {
     char incomingByte = Serial.read();
     if (incomingByte != NULL && isprint(incomingByte)) {
@@ -309,7 +309,7 @@ void use_wifi_client() {
     write_out_usb_data(usbBufferOut);  
 #endif
   } else {
-    delat(10);
+    delay(10);
   }
 }
 
