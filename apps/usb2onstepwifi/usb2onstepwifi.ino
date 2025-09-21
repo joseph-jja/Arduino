@@ -196,6 +196,7 @@ bool read_in_usb_data(char usbBufferIn[], char usbBufferOut[]) {
         sentance = false;
       }
     }
+    delay(10);
   }
   if (usbBufferIn == NULL) {
     return false;
