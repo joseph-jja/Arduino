@@ -307,6 +307,8 @@ void use_wifi_client() {
     }
     write_out_usb_data(usbBufferOut);  
 #endif
+  } else {
+    delat(10);
   }
 }
 
