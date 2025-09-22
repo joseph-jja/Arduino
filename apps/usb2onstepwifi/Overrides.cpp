@@ -44,7 +44,7 @@ bool Overrides::check_override(char *bufferIn, char buffer[], int buffer_size, u
 
   bool override = false;
 
-  if (bufferIn == NULL) {
+  if (isNull(bufferIn)) {
     return override;
   }
 

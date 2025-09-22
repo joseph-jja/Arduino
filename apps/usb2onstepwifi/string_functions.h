@@ -11,3 +11,5 @@ bool has_reply(char *messageIn);
 bool boolean_reply(char *commandIn);
 
 void ends_with(char *messageIn, char return_buffer[2]);
+
+bool isNull(char *buffer);

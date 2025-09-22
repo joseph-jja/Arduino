@@ -78,3 +78,8 @@ void ends_with(char *messageIn, char return_buffer[]) {
     return_buffer[0] = '#';
   }
 }
+
+bool isNull(char *buffer) {
+  return ((buffer == NULL || strlen(buffer) <= 0) ? true : false); 
+}
+
