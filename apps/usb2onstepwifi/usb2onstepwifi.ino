@@ -303,10 +303,12 @@ void use_wifi_client() {
       client.stop();
     }
 #else 
-    if (strlen(usbBufferOut) <= 0) {
-      sprintf(usbBufferOut, "%s#", "Dummy");
-    }
-    write_out_usb_data(usbBufferOut);  
+   if (strlen(usbBufferIn) > 0) {
+      if (strlen(usbBufferOut) <= 0) {
+        sprintf(usbBufferOut, "%s#", "Dummy");
+      }
+      write_out_usb_data(usbBufferOut);
+    }  
 #endif
   } else {
     delay(10);
