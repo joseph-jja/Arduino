@@ -12,9 +12,9 @@
 const char *ssid = STATION_ID;
 const char *password = STATION_PWD;
 #ifndef MOCK_CLIENT_ENABLED
-  IPAddress gateway{192, 168, 0, 1};
+IPAddress gateway{ 192, 168, 0, 1 };
 #else
-  IPAddress gateway;
+IPAddress gateway;
 #endif
 WiFiClient client;
 
@@ -146,11 +146,11 @@ bool connect_client() {
 
 void write_out_usb_data(char *buffer) {
 
-    Serial.write(buffer);
-    delay(10);
-    Serial.flush();
-    print("We responded with ");
-    println(buffer);
+  Serial.write(buffer);
+  delay(10);
+  Serial.flush();
+  print("We responded with ");
+  println(buffer);
 }
 
 int ack_command_state = 0;
@@ -197,7 +197,7 @@ bool read_in_usb_data(char usbBufferIn[], char usbBufferOut[]) {
       }
     }
   }
-  if (usbBufferIn == NULL) { 
+  if (usbBufferIn == NULL) {
     return false;
   }
   //print("usbBufferIn");
@@ -211,11 +211,11 @@ bool read_in_usb_data(char usbBufferIn[], char usbBufferOut[]) {
 
 void write_out_wifi_data(char *buffer) {
 
-    client.write(buffer);
-    delay(10);
-    client.flush();
-    print("Sending focuser the command ");
-    println(buffer);
+  client.write(buffer);
+  delay(10);
+  client.flush();
+  print("Sending focuser the command ");
+  println(buffer);
 }
 
 void read_in_wifi_data(char wifiBufferOut[], char usbBufferIn[]) {
@@ -223,7 +223,7 @@ void read_in_wifi_data(char wifiBufferOut[], char usbBufferIn[]) {
   memset(wifiBufferOut, '\0', BUFFER_SIZE);
 
   bool isBinaryReply = boolean_reply(usbBufferIn);
-  
+
   char endings[2];
   ends_with(usbBufferIn, endings);
 
@@ -238,12 +238,12 @@ void read_in_wifi_data(char wifiBufferOut[], char usbBufferIn[]) {
       println(incomingByte);
       if (incomingByte != NULL && isprint(incomingByte)) {
         wifiBufferOut[j] = incomingByte;
-          // then before delay
-          if (isBinaryReply && (incomingByte == '0' || incomingByte == '1')) {
-            foundEnd = true;
-          } else if (endings != NULL && endings[0] == incomingByte) {
-            foundEnd = true;
-          }
+        // then before delay
+        if (isBinaryReply && (incomingByte == '0' || incomingByte == '1')) {
+          foundEnd = true;
+        } else if (endings != NULL && endings[0] == incomingByte) {
+          foundEnd = true;
+        }
         j++;
       }
     }
@@ -277,7 +277,7 @@ void use_wifi_client() {
     print(isCommandOverridden);
     print(" ACK Command state ");
     println(ack_command_state);
-  } else if (usbBufferIn != NULL) { 
+  } else if (usbBufferIn != NULL && strlen(usbBufferIn) > 0) {
 #ifndef MOCK_CLIENT_ENABLED
     bool isConnected = connect_client();
     if (isConnected) {
@@ -287,28 +287,26 @@ void use_wifi_client() {
       // check if we should be getting a response
       boolean hasResponse = has_reply(usbBufferIn);
       if (!hasResponse) {
-          print("Message in has no reply data ");
-          println(usbBufferIn);
-          delay(10);
-          client.stop();
-          return;
+        print("Message in has no reply data ");
+        println(usbBufferIn);
+        delay(10);
+        client.stop();
+        return;
       }
       // try a few times to read in data
       // a sort of polling
       read_in_wifi_data(wifiBufferOut, usbBufferIn);
       if (strlen(wifiBufferOut) > 0) {
-          write_out_usb_data(wifiBufferOut);
+        write_out_usb_data(wifiBufferOut);
       }
       delay(10);
       client.stop();
     }
-#else 
-   if (strlen(usbBufferIn) > 0) {
-      if (strlen(usbBufferOut) <= 0) {
-        sprintf(usbBufferOut, "%s#", "Dummy");
-      }
-      write_out_usb_data(usbBufferOut);
-    }  
+#else
+    if (strlen(usbBufferOut) <= 0) {
+      sprintf(usbBufferOut, "%s#", "Dummy");
+    }
+    write_out_usb_data(usbBufferOut);
 #endif
   } else {
     delay(10);
