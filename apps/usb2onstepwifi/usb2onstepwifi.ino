@@ -165,11 +165,12 @@ bool read_in_usb_data(char usbBufferIn[], char usbBufferOut[]) {
   /*
     a sentace is a command starting with : and ending with #
     we need a whole sentance in order for the commands to be recognized
+    we need to wait to get an actual command
   */
   boolean sentance = true;
   boolean capture = false;
   int start_time = millis();
-  while ((millis() - start_time) < USB_READ_TIMOUT && (Serial.available() || sentance)) {
+  while (Serial.available() || sentance) {
     char incomingByte = Serial.read();
     if (incomingByte != NULL && isprint(incomingByte)) {
       print("USB data being read ");
@@ -197,6 +198,10 @@ bool read_in_usb_data(char usbBufferIn[], char usbBufferOut[]) {
       }
     }
     delay(10);
+    if((millis() - start_time) > USB_READ_TIMOUT) {
+      delay(25);
+      start_time = millis();
+    }
   }
   if (isNull(usbBufferIn)) {
     return false;
@@ -232,7 +237,7 @@ void read_in_wifi_data(char wifiBufferOut[], char usbBufferIn[]) {
   int start_time = millis();
   bool foundEnd = false;
   println("Trying to read in data!");
-  while ((millis() - start_time) < WIFI_CLIENT_READ_TIMOUT && !foundEnd) {
+  while (!foundEnd) {
     if (client.available()) {
       char incomingByte = client.read();
       print("WIFI data read in ");
@@ -248,7 +253,11 @@ void read_in_wifi_data(char wifiBufferOut[], char usbBufferIn[]) {
         j++;
       }
     }
-    delay(25);
+    delay(10);
+    if((millis() - start_time) > WIFI_CLIENT_READ_TIMOUT) {
+      delay(25);
+      start_time = millis();
+    }
   }
   print("Read time took");
   println(millis() - start_time);
