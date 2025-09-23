@@ -147,8 +147,8 @@ bool connect_client() {
 void write_out_usb_data(char *buffer) {
 
   Serial.write(buffer);
-  delay(10);
   Serial.flush();
+  delay(5);
   print("We responded with ");
   println(buffer);
 }
@@ -171,35 +171,35 @@ bool read_in_usb_data(char usbBufferIn[], char usbBufferOut[]) {
   boolean capture = false;
   int start_time = millis();
   while (Serial.available() || sentance) {
-    char incomingByte = Serial.read();
-    if (incomingByte != NULL && isprint(incomingByte)) {
-      print("USB data being read ");
-      //print(ack_command_state);
-      //print(" ");
-      //println(capture);
-      //print(" ");
-      println(incomingByte);
-      // special for lx200 protocol
-      if (!capture && ack_command_state == 0 && incomingByte == '6') {
-        ack_command_state = 2;
-        sprintf(usbBufferIn, "%s", ACK_COMMAND_IN);
-        sentance = false;
+    if ((millis() - start_time) < USB_READ_TIMOUT) {
+      char incomingByte = Serial.read();
+      if (incomingByte != NULL && isprint(incomingByte)) {
+        print("USB data being read ");
+        //print(ack_command_state);
+        //print(" ");
+        //println(capture);
+        //print(" ");
+        println(incomingByte);
+        // special for lx200 protocol
+        if (!capture && ack_command_state == 0 && incomingByte == '6') {
+          ack_command_state = 2;
+          sprintf(usbBufferIn, "%s", ACK_COMMAND_IN);
+          sentance = false;
+        }
+        if (incomingByte == ':') {
+          capture = true;
+        }
+        if (capture) {
+          usbBufferIn[i] = incomingByte;
+          i++;
+        }
+        if (incomingByte == '#') {
+          capture = false;
+          sentance = false;
+        }
       }
-      if (incomingByte == ':') {
-        capture = true;
-      }
-      if (capture) {
-        usbBufferIn[i] = incomingByte;
-        i++;
-      }
-      if (incomingByte == '#') {
-        capture = false;
-        sentance = false;
-      }
-    }
-    delay(10);
-    if((millis() - start_time) > USB_READ_TIMOUT) {
-      delay(25);
+    } else {
+      delay(5);
       start_time = millis();
     }
   }
@@ -238,24 +238,24 @@ void read_in_wifi_data(char wifiBufferOut[], char usbBufferIn[]) {
   bool foundEnd = false;
   println("Trying to read in data!");
   while (!foundEnd) {
-    if (client.available()) {
-      char incomingByte = client.read();
-      print("WIFI data read in ");
-      println(incomingByte);
-      if (incomingByte != NULL && isprint(incomingByte)) {
-        wifiBufferOut[j] = incomingByte;
-        // then before delay
-        if (isBinaryReply && (incomingByte == '0' || incomingByte == '1')) {
-          foundEnd = true;
-        } else if (!isNull(endings) && endings[0] == incomingByte) {
-          foundEnd = true;
+    if ((millis() - start_time) < WIFI_CLIENT_READ_TIMOUT) {
+      if (client.available()) {
+        char incomingByte = client.read();
+        print("WIFI data read in ");
+        println(incomingByte);
+        if (incomingByte != NULL && isprint(incomingByte)) {
+          wifiBufferOut[j] = incomingByte;
+          // then before delay
+          if (isBinaryReply && (incomingByte == '0' || incomingByte == '1')) {
+            foundEnd = true;
+          } else if (!isNull(endings) && endings[0] == incomingByte) {
+            foundEnd = true;
+          }
+          j++;
         }
-        j++;
       }
-    }
-    delay(10);
-    if((millis() - start_time) > WIFI_CLIENT_READ_TIMOUT) {
-      delay(25);
+    } else {
+      delay(5);
       start_time = millis();
     }
   }
@@ -323,6 +323,12 @@ void use_wifi_client() {
   }
 }
 
+long last_loop = millis();
 void loop() {
-  use_wifi_client();
+  //if (millis() - last_loop < 100) {
+    use_wifi_client();
+  /*} else {
+    delay(1);
+    last_loop = millis();
+  }*/
 }
