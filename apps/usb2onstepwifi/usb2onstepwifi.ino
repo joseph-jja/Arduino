@@ -173,15 +173,16 @@ bool read_in_usb_data(char usbBufferIn[], char usbBufferOut[]) {
   while (Serial.available() || sentance) {
     if ((millis() - start_time) < USB_READ_TIMOUT) {
       char incomingByte = Serial.read();
-      if (incomingByte != NULL && isprint(incomingByte)) {
+      if (incomingByte != NULL && ((int)incomingByte == 6 || isprint(incomingByte))) {
         print("USB data being read ");
         //print(ack_command_state);
         //print(" ");
         //println(capture);
         //print(" ");
         println(incomingByte);
+
         // special for lx200 protocol
-        if (!capture && ack_command_state == 0 && incomingByte == '6') {
+        if (!capture && ack_command_state == 0 && (int)incomingByte == 6) {
           ack_command_state = 2;
           sprintf(usbBufferIn, "%s", ACK_COMMAND_IN);
           sentance = false;
@@ -326,7 +327,7 @@ void use_wifi_client() {
 long last_loop = millis();
 void loop() {
   //if (millis() - last_loop < 100) {
-    use_wifi_client();
+  use_wifi_client();
   /*} else {
     delay(1);
     last_loop = millis();
