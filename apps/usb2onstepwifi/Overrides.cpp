@@ -65,7 +65,7 @@ bool Overrides::check_override(char *bufferIn, char buffer[], int buffer_size, u
   } else if (compare(bufferIn, ACK_COMMAND_IN)) {
     // get latitude
     override = true;
-    sprintf(buffer, "%s", ACK_COMMAND_OUT);
+    sprintf(buffer, "%s", MOUNT_MODE);
   } else if (compare(bufferIn, ":Gt#")) {
     // get latitude
     override = true;

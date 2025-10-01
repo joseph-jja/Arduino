@@ -167,22 +167,24 @@ bool read_in_usb_data(char usbBufferIn[], char usbBufferOut[]) {
     we need a whole sentance in order for the commands to be recognized
     we need to wait to get an actual command
   */
-  boolean sentance = true;
-  boolean capture = false;
+  bool sentance = true;
+  bool capture = false;
+
   int start_time = millis();
   while (Serial.available() || sentance) {
     if ((millis() - start_time) < USB_READ_TIMOUT) {
       char incomingByte = Serial.read();
-      if (incomingByte != NULL && ((int)incomingByte == 6 || isprint(incomingByte))) {
+      if (incomingByte != NULL && (incomingByte == (char)6 || isprint(incomingByte))) {
+
         print("USB data being read ");
-        //print(ack_command_state);
-        //print(" ");
-        //println(capture);
-        //print(" ");
+        print(ack_command_state);
+        print(" ");
+        print((int)incomingByte);
+        print(" ");
         println(incomingByte);
 
         // special for lx200 protocol
-        if (!capture && ack_command_state == 0 && (int)incomingByte == 6) {
+        if (!capture && ack_command_state == 0 && incomingByte == (char)6) {
           ack_command_state = 2;
           sprintf(usbBufferIn, "%s", ACK_COMMAND_IN);
           sentance = false;
@@ -267,7 +269,8 @@ void read_in_wifi_data(char wifiBufferOut[], char usbBufferIn[]) {
 }
 #endif
 
-void use_wifi_client() {
+long last_loop = millis();
+void loop() {
 
   char usbBufferIn[BUFFER_SIZE];
   char usbBufferOut[BUFFER_SIZE];
@@ -322,14 +325,4 @@ void use_wifi_client() {
   } else {
     delay(10);
   }
-}
-
-long last_loop = millis();
-void loop() {
-  //if (millis() - last_loop < 100) {
-  use_wifi_client();
-  /*} else {
-    delay(1);
-    last_loop = millis();
-  }*/
 }

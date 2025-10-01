@@ -3,8 +3,7 @@
 #define USB_RESET_REPLY "USB Reset"
 #define USB_RESET_COMMAND ":USB_RESET#"
 
-#define ACK_COMMAND_IN ":AA#"
-#define ACK_COMMAND_OUT "P"
+#define ACK_COMMAND_IN ":ACK#"
 
 #define DEFAULT_LOCATION_SIZE 20
 
