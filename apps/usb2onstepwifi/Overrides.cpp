@@ -22,6 +22,20 @@ void Overrides::init(unsigned long ms) {
   datetime.init(ms);
 };
 
+/* TODO fix these errors
+2025-10-01T20:55:24: [ERROR] Error setting site longitude coordinates 
+2025-10-01T20:55:19: [ERROR] Error setting UTC Offset. 
+2025-10-01T20:55:14: [ERROR] Error setting site longitude coordinates 
+2025-10-01T20:55:09: [WARNING] Error on response to rotator check (:GX98#) CHECK CONNECTION 
+2025-10-01T20:55:09: [WARNING] Error: -4 
+2025-10-01T20:55:09: [INFO] OnStep/OnStepX version could not be detected 
+2025-10-01T20:54:49: [WARNING] Could not process mount date and time: T00:00:00 
+2025-10-01T20:54:34: [WARNING] Failed to get site latitude from device. 
+Failed to get tracking frequency from device. 
+2025-10-01T20:54:24: [ERROR] Failed to get site name from device 
+2025-10-01T20:54:19: [ERROR] Failed to retrieve time format from device. 
+2025-10-01T20:54:03: [INFO] OnStepX Focuser is online. 
+*/
 /*
 Set date    :SCMM/DD/YY#  Reply: 0 or 1
 Get date  :GC#  Reply: MM/DD/YY#
