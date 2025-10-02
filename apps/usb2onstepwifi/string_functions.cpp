@@ -17,12 +17,14 @@ void substring(char *source, int start_index, int length, char *destination) {
   strncpy(destination, source + start_index, length);
 }
 
-void replace_char(char *source, char *search_chr, char replace_chr) {
+void replace_char(char *source, char search_chr, char replace_chr) {
 
-    char *tmp = strstr(source, search_chr);
-    if (tmp != NULL) {
-      int tlen = strlen(tmp);
-      memcpy(source + tlen, &replace_chr, 1);
+    int i = 0;
+    while (source[i] != '\0') {
+        if (source[i] == search_chr) {
+            source[i] = replace_chr;
+        }
+        i++;
     }
 }
 
