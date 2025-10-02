@@ -80,6 +80,9 @@ bool Overrides::check_override(char *bufferIn, char buffer[], int buffer_size, u
     // get mount type
     override = true;
     sprintf(buffer, "%s", MOUNT_MODE);
+  } else if (compare(bufferIn, ":GX98#")) {
+    override = true;
+    sprintf(buffer, "%s", "N#");
   } else if (compare(bufferIn, ":Gt#")) {
     // get latitude
     override = true;
