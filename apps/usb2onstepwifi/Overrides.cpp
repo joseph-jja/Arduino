@@ -77,7 +77,7 @@ bool Overrides::check_override(char *bufferIn, char buffer[], int buffer_size, u
     override = true;
     sprintf(buffer, "%s#", USB_RESET_REPLY);
   } else if (compare(bufferIn, ACK_COMMAND_IN)) {
-    // get latitude
+    // get mount type 
     override = true;
     sprintf(buffer, "%s", MOUNT_MODE);
   } else if (compare(bufferIn, ":Gt#")) {
@@ -90,6 +90,7 @@ bool Overrides::check_override(char *bufferIn, char buffer[], int buffer_size, u
     memset(latitude, '\0', DEFAULT_LOCATION_SIZE);
     substring(bufferIn, 3, bufferInLen - 4, latitude);
     replace_char(latitude, ".", ':');
+    replace_char(latitude, "*", ':');
     memcpy(buffer, "1", strlen("1"));
   } else if (compare(bufferIn, ":Gg#")) {
     // get longitude
@@ -101,6 +102,7 @@ bool Overrides::check_override(char *bufferIn, char buffer[], int buffer_size, u
     memset(longitude, '\0', DEFAULT_LOCATION_SIZE);
     substring(bufferIn, 3, bufferInLen - 4, longitude);
     replace_char(longitude, ".", ':');
+    replace_char(longitude, "*", ':');
     memcpy(buffer, "1", strlen("1"));
   } else if (compare(bufferIn, ":GG#")) {
     // get utc offset
