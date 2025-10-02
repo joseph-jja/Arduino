@@ -68,9 +68,10 @@ static char COMMANDS_WITH_NO_REPLY[NUMBER_OF_STRINGS][MAX_STRING_LENGTH] = {
   ":U#"
 };
 
-const int NUMBER_OF_0_or_1_STRINGS = 26;
+const int NUMBER_OF_0_or_1_STRINGS = 27;
 
 static char COMMANDS_WITH_0_or_1_REPLY[NUMBER_OF_0_or_1_STRINGS][MAX_STRING_LENGTH] = {
+  ":S",
   ":Te#",
   ":Td#",
   ":Tr#",
