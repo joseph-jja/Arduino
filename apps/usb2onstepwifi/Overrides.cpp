@@ -77,7 +77,7 @@ bool Overrides::check_override(char *bufferIn, char buffer[], int buffer_size, u
     override = true;
     sprintf(buffer, "%s#", USB_RESET_REPLY);
   } else if (compare(bufferIn, ACK_COMMAND_IN)) {
-    // get mount type 
+    // get mount type
     override = true;
     sprintf(buffer, "%s", MOUNT_MODE);
   } else if (compare(bufferIn, ":Gt#")) {
@@ -153,6 +153,8 @@ bool Overrides::check_override(char *bufferIn, char buffer[], int buffer_size, u
     substring(bufferIn, 3, bufferInLen - 3, date_time_buffer);
     bool success = datetime.set_sidereal_time(date_time_buffer);
     sprintf(buffer, "%d", success);
+  } else if (compare(bufferIn, ":GM#") || compare(bufferIn, ":GN#") || compare(bufferIn, ":GO#") || compare(bufferIn, ":GP#")) {
+    sprintf(buffer, "%s", "Site Home");
   }
 
   return override;
