@@ -13,4 +13,4 @@
 // D If scope is currently in the Downloader [Autostar II & Autostar]
 // L If scope in Land Mode
 // P If scope in Polar Mode
-#define MOUNT_MODE 'P'
+#define MOUNT_MODE "P"
