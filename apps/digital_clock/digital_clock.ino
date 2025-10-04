@@ -121,6 +121,27 @@ void handleUpdate() {
     server.send(200, "text/plain", "Thanks");
 }
 
+#define TIME_BUFFER_SIZE   30
+void handleTimeRequest() {
+
+    if (rtcInitialized) {
+        // gets the time from the RTC clock
+        DateTime rtnow = rtc.now();
+        char buffer[TIME_BUFFER_SIZE];
+        memset(buffer, '\0', TIME_BUFFER_SIZE);
+        int year = rtnow.year();
+        int month = rtnow.month();
+        int day = rtnow.day();
+        int hour = rtnow.hour();
+        int minutes = rtnow.minute();
+        int seconds = rtnow.second();
+        //sprintf(buffer, "%
+        server.send(200, "text/plain", "ERROR");
+    } else {
+        server.send(200, "text/plain", "ERROR");
+    }
+}
+
 bool rtcInitialized = false;
 void setup()
 {
