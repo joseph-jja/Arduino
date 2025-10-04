@@ -19,8 +19,8 @@
   #if defined(SERIAL_TMC_HARDWARE_UART)
     #define SERIAL_TMC          Serial1          // Use a single hardware serial port to up to four drivers
     #define SERIAL_TMC_BAUD     460800           // Baud rate
-    #define SERIAL_TMC_RX       39               // Recieving data
-    #define SERIAL_TMC_TX       23               // Transmit data
+    #define SERIAL_TMC_RX       8                // Recieving data
+    #define SERIAL_TMC_TX       6                // Transmit data
     #define SERIAL_TMC_ADDRESS_MAP(x) ((x==4)?2 : x) // Axis1(0) is 0, Axis2(1) is 1, Axis3(2) is 2, Axis4(3) is 3, Axis5(4) is 2
   #endif
 #endif
@@ -116,12 +116,14 @@
 #if !defined(SERIAL_TMC_HARDWARE_UART) && AXIS4_POWER_DOWN == ON
   #define AXIS4_ENABLE_PIN      AUX2_PIN
 #endif
-#define AXIS4_M0_PIN            OFF              // SPI MOSI
-#define AXIS4_M1_PIN            OFF              // SPI SCK
-#define AXIS4_M2_PIN            OFF              // SPI CS (UART TX)
-#define AXIS4_M3_PIN            OFF              // SPI MISO (UART RX)
-#define AXIS4_STEP_PIN          19
-#define AXIS4_DIR_PIN           15
+// For focuser1 stepper driver
+#define AXIS4_ENABLE_PIN                4
+#define AXIS4_M0_PIN                  OFF         // hardwired for TMC UART address 0
+#define AXIS4_M1_PIN                  OFF         // hardwired for TMC UART address 0
+#define AXIS4_M2_PIN                  OFF         // N/C
+#define AXIS4_M3_PIN                  OFF         // N/C
+#define AXIS4_STEP_PIN                 10
+#define AXIS4_DIR_PIN                  13
 
 // For focuser2 stepper driver
 #define AXIS5_ENABLE_PIN        OFF              // No enable pin control (always enabled)
