@@ -1,19 +1,18 @@
 // -------------------------------------------------------------------------------------------------
-// Pin map for OnStep MaxESP Version 3.x (ESP32S)
+// Pin map for OnStep Focuser Version 1.x (ESP32-S2 or ESP32-S2)
 #pragma once
 
 #if defined(ESP32)
 
-// Serial0: RX Pin GPIO3, TX Pin GPIO1 (to USB serial adapter)
-// Serial1: RX1 Pin GPIO10, TX1 Pin GPIO9 (on SPI Flash pins, must be moved to be used)
-// Serial2: RX2 Pin GPIO16, TX2 Pin GPIO17
+// Serial0: USB serial adapter
+// Serial1: Used to talk to focuser
 
 #if SERIAL_A_BAUD_DEFAULT != OFF
   #define SERIAL_A              Serial
 #endif
-#if SERIAL_B_BAUD_DEFAULT != OFF
-  #define SERIAL_B              Serial2
-#endif
+
+// we only support TMC driver
+#define DRIVER_TMC_STEPPER      
 
 // Use the following settings for any TMC UART driver (TMC2209) that may be present
 #if defined(STEP_DIR_TMC_UART_PRESENT) || defined(SERVO_TMC2209_PRESENT)
