@@ -40,6 +40,10 @@ bool rtcInitialized = false;
 // real time clock
 RTC_DS3231 rtc;
 
+static time_t rawtime;
+long currentHour,
+  currentMinute;
+
 #ifdef SERVER_MODE
 // Create AsyncWebServer object on port 80
 ESP8266WebServer server(80);
@@ -288,12 +292,12 @@ void updateClient() {
     client.stop();
     lastUpdate = millis();
   }
+
+  // TODO parse string
+  // update  rawtime struct
+  // update currentHour and currentMinute for display
 }
 #endif
-
-static time_t rawtime;
-long currentHour,
-  currentMinute;
 
 void get_time() {
 
@@ -334,6 +338,7 @@ void get_time() {
     now->tm_sec = rtnow.second();
     rawtime = mktime(now);
   }
+
 
   currentHour = now->tm_hour;
   currentMinute = now->tm_min;
@@ -393,9 +398,12 @@ void loop() {
   char buff[255];
 
 #ifdef CLIENT_MODE
-
+  updateClient();
 #endif
+
+#ifdef SERVER_MODE
   get_time();
+#endif
 
   writeString();
 
