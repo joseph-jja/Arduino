@@ -17,10 +17,8 @@
 
 #include "Config.h"
 
-#if defined(SERVER_MODE)
-    #if defined(CLIENT_MODE)
-        #error "ERROR: Only one option (SERVER_MODE or CLIENT_MODE) can be defined."
-    #endif
+#if defined(SERVER_MODE) && defined(CLIENT_MODE)
+    #error "ERROR: Only one option of SERVER_MODE or CLIENT_MODE can be defined."
 #endif
 
 #ifndef SERVER_MODE && CLIENT_MODE
