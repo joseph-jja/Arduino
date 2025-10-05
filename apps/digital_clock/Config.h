@@ -7,5 +7,5 @@ IPAddress subnet(255, 255, 255, 0);
 
 // define this to either SERVER_MODE or CLIENT_MODE
 // defining both results in error
-#define CLIENT_MODE 1
+//#define CLIENT_MODE 1
 #define SERVER_MODE 1
