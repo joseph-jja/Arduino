@@ -1,3 +1,5 @@
+#pragma once
+
 // wifi change these
 const char* ssid     = "****************";
 const char* password = "***********";
