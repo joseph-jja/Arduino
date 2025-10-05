@@ -210,7 +210,9 @@ void setup()
     // Routes for web server
     server.on("/", handleIndex);
     server.on("/update", handleUpdate);
+#ifdef SERVER_MODE
     server.on("/gettime", handleTimeRequest);
+#endif
 
     // Start server
     server.begin();
