@@ -135,8 +135,8 @@ void handleTimeRequest() {
         int hour = rtnow.hour();
         int minutes = rtnow.minute();
         int seconds = rtnow.second();
-        //sprintf(buffer, "%
-        server.send(200, "text/plain", "ERROR");
+        sprintf(buffer, "%d/%d/%d %d:%d%d", year, month, day, hour, minutes, seconds);
+        server.send(200, "text/plain", buffer);
     } else {
         server.send(200, "text/plain", "ERROR");
     }
@@ -199,6 +199,7 @@ void setup()
     // Routes for web server
     server.on("/", handleIndex);
     server.on("/update", handleUpdate);
+    server.on("/gettime", handleTimeRequest);
 
     // Start server
     server.begin();
