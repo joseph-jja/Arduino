@@ -24,7 +24,7 @@
 #endif
 
 #ifndef SERVER_MODE && CLIENT_MODE
-    #error "ERROR: Only one option (SERVER_MODE or CLIENT_MODE) can be defined."
+    #error "ERROR: Either SERVER_MODE or CLIENT_MODE must be defined."
 #endif
 
 Adafruit_AlphaNum4 alpha4 = Adafruit_AlphaNum4();
