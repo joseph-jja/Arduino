@@ -33,6 +33,8 @@ Adafruit_AlphaNum4 alpha4 = Adafruit_AlphaNum4();
 
 bool debug = false;
 
+bool rtcInitialized = false;
+
 // real time clock
 RTC_DS3231 rtc;
 
@@ -152,7 +154,6 @@ void handleTimeRequest() {
     }
 }
 
-bool rtcInitialized = false;
 void setup()
 {
     Serial.begin(SERIAL_BAUD);
