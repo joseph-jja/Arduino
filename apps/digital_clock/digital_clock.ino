@@ -123,13 +123,14 @@ void handleTimeRequest() {
     DateTime rtnow = rtc.now();
     char buffer[TIME_BUFFER_SIZE];
     memset(buffer, '\0', TIME_BUFFER_SIZE);
-    int year = rtnow.year();
-    int month = rtnow.month();
-    int day = rtnow.day();
+    //int year = rtnow.year();
+    //int month = rtnow.month();
+    //int day = rtnow.day();
     int hour = rtnow.hour();
     int minutes = rtnow.minute();
-    int seconds = rtnow.second();
-    sprintf(buffer, "%d/%d/%d %d:%d%d#", year, month, day, hour, minutes, seconds);
+    //int seconds = rtnow.second();
+    // client clock only needs time really
+    sprintf(buffer, "%d:%d#", hour, minutes);
     server.send(200, "text/plain", buffer);
   } else {
     server.send(200, "text/plain", "ERROR");
@@ -296,6 +297,31 @@ void updateClient() {
   // TODO parse string
   // update  rawtime struct
   // update currentHour and currentMinute for display
+  char hours[3];
+  char minutes[3];
+  bool isMinutes = false;
+  bool keepChar = true; 
+  int h = 0, m = 0;
+  if (time_buffer != NULL && strlen(time_buffer) > 3) {
+       for (int i = 0; i < strlen(time_buffer) - 1; i++ ) {
+            if (time_buffer[i] == ':' || time_buffer[i] == '#') {
+               isMinutes = true;
+               keepChar = false;
+            }
+            if (keepChar && isMinutes) {
+                minutes[m] = time_buffer[i];
+                m++;
+            } else if (keepChar) {
+                hours[h] = time_buffer[i];
+                h++;
+            }
+           keepChar = true;
+       }
+    Serial.print("Hours "
+      Serial.print(hours);
+    Serial.print("and minutes ");
+    Serial.println(minutes);
+  }
 }
 #endif
 
