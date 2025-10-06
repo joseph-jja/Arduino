@@ -317,8 +317,8 @@ void updateClient() {
       }
       keepChar = true;
     }
-    Serial.print("Hours "
-      Serial.print(hours);
+    Serial.print("Hours ");
+    Serial.print(hours);
     Serial.print("and minutes ");
     Serial.println(minutes);
   }
