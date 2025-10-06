@@ -300,23 +300,23 @@ void updateClient() {
   char hours[3];
   char minutes[3];
   bool isMinutes = false;
-  bool keepChar = true; 
+  bool keepChar = true;
   int h = 0, m = 0;
   if (time_buffer != NULL && strlen(time_buffer) > 3) {
-       for (int i = 0; i < strlen(time_buffer) - 1; i++ ) {
-            if (time_buffer[i] == ':' || time_buffer[i] == '#') {
-               isMinutes = true;
-               keepChar = false;
-            }
-            if (keepChar && isMinutes) {
-                minutes[m] = time_buffer[i];
-                m++;
-            } else if (keepChar) {
-                hours[h] = time_buffer[i];
-                h++;
-            }
-           keepChar = true;
-       }
+    for (int i = 0; i < strlen(time_buffer) - 1; i++) {
+      if (time_buffer[i] == ':' || time_buffer[i] == '#') {
+        isMinutes = true;
+        keepChar = false;
+      }
+      if (keepChar && isMinutes) {
+        minutes[m] = time_buffer[i];
+        m++;
+      } else if (keepChar) {
+        hours[h] = time_buffer[i];
+        h++;
+      }
+      keepChar = true;
+    }
     Serial.print("Hours "
       Serial.print(hours);
     Serial.print("and minutes ");
