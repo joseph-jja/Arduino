@@ -38,6 +38,7 @@
 #define AP_SSID             "ssid"         // set WiFi SSID name
 #define MDNS_NAME           "mdsn"         // set mDNS name
 #define PASSWORD_DEFAULT    "default password"  
+#define AP_PASSWORD         "add in password"
 #define AP_GW_ADDR          {192,168,0,1}
 
 // STATUS --------------------------------------------- see https://onstep.groups.io/g/main/wiki/Configuration_Controller#STATUS_LED
