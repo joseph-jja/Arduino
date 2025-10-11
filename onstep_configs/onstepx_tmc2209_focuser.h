@@ -15,10 +15,12 @@
 // =================================================================================================================================
 // CONTROLLER ======================================================================================================================
 
-#define CONFIG_NAME       "FC100 Focuser"
-#define AP_SSID           "FC100 Focuser"         // set WiFi SSID name
-#define MDNS_NAME         "FC100.Focuser"         // set mDNS name
+#define CONFIG_NAME       "xxxx"
+#define AP_SSID           "xxxx"         // set WiFi SSID name
+#define MDNS_NAME         "xxxx"         // set mDNS name
 #define SERIAL_RADIO WIFI_ACCESS_POINT
+#define PASSWORD_DEFAULT    "xxxx"  
+#define AP_PASSWORD         "xxxx"
 
 #define FOCUSER_TEMPERATURE_PIN         2         // ESP32-S2 GPIO2 ADC1
 #define THERMISTOR1_TNOM               25         // Nominal temperature (Celsius)
