@@ -29,9 +29,16 @@
 #define SERIAL_E_BAUD_DEFAULT OFF  //    OFF, n. Baud rate as above. See (src/pinmaps/) for Serial port assignments.   Infreq
 #define SERIAL_RADIO WIFI_ACCESS_POINT          //    OFF, Use BLUETOOTH or WIFI_ACCESS_POINT or WIFI_STATION (ESP32 only.)         Option
 
+// for webserver code update Plugins.config.h with 
+// #define PLUGIN1 
+// #include "website/Website.h"            
+// #define PLUGIN1_COMMAND_PROCESSING    OFF 
 // for wifi access point
-#define AP_SSID           "FC100 Focuser"         // set WiFi SSID name
-#define MDNS_NAME         "FC100.Focuser"         // set mDNS name
+#define AP_ENABLED          true
+#define AP_SSID             "ssid"         // set WiFi SSID name
+#define MDNS_NAME           "mdsn"         // set mDNS name
+#define PASSWORD_DEFAULT    "default password"  
+#define AP_GW_ADDR          {192,168,0,1}
 
 // STATUS --------------------------------------------- see https://onstep.groups.io/g/main/wiki/Configuration_Controller#STATUS_LED
 #define STATUS_LED ON //    OFF, Steady illumination if no error, blinks w/error code otherwise.          Option
