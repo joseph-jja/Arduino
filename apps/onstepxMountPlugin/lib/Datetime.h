@@ -4,23 +4,27 @@
 
 // store time in 12 hour format with AM/PM
 typedef struct {
-    int hour;
-    int minute;
-    int second;
+    long hour;
+    long minutes;
+    long seconds;
     char meridian[3]; // Stores "AM" or "PM"
-} TimeInfo;​
+} TimeInfo; 
 
 // store date split out
 typedef struct {
-    int year;
-    int month;
-    int day;
-} DateInfo;​
+    long year;
+    long month;
+    long day;
+} DateInfo;
 
 class Datetime {
 public:
   // Public members (accessible from outside the class)
-  void init(unsigned long ms);  // Constructor
+  void init();  // Constructor
+  
+  bool parse_date(char* dateStr, DateInfo* dateInfo);
+  bool parse_time(char* timeStr, TimeInfo* timeInfo);
+  
   //bool set_date(char date[]);
   //bool set_local_time(char time[]);     // always uses 24 hour format
   //bool set_sidereal_time(char time[]);  // always uses 24 hour format

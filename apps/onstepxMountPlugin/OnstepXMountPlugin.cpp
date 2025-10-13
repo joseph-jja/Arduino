@@ -7,12 +7,12 @@
 #include "lib/Location.h"
 #include "lib/Datetime.h"
 
-//#include "../../lib/commands/CommandErrors.h
 //#include "../../lib/tasks/OnTask.h"
 
 void OnStepXMountPlugin::init() {
   
   siteLocation.init();
+  datetime.init();
 }
 
 void OnStepXMountPlugin::loop() {
