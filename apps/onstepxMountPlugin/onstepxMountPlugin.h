@@ -20,7 +20,7 @@ private:
   char latitude[DEFAULT_LOCATION_SIZE];
   char longitude[DEFAULT_LOCATION_SIZE];
   // offset
-  int utcoffset;
+  char utcoffset[DEFAULT_LOCATION_SIZE];
 
 };
 
