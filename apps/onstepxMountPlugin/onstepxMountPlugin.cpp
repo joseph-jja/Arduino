@@ -30,12 +30,14 @@ void OnStepXMountPlugin::loop() {
 void OnStepXMountPlugin::bool command(char reply[], char command[], char parameter[], bool *supressFrame, bool *numericReply, CommandError *commandError) {
 
     if(command[0] == 'G') {
+       *numericReply = false;
        if (command[1] == 't') {
          sprintf(reply, latitude);
        } else if (command[1] == 'g') {
          sprintf(reply, longitude);
        }
     } else if(command[0] == 'S') {
+       *numericReply = true;
        if (command[1] == 't') {
          //parameter
        } else if (command[1] == 'g') {
