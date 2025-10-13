@@ -5,6 +5,7 @@
 #include "Config.h"
 #include "OnstepXMountPlugin.h"
 #include "lib/Location.h"
+#include "lib/Datetime.h"
 
 //#include "../../lib/commands/CommandErrors.h
 //#include "../../lib/tasks/OnTask.h"
@@ -18,21 +19,21 @@ void OnStepXMountPlugin::loop() {
 
 }
 
-void OnStepXMountPlugin::command(char reply[], char command[], char parameter[], bool *supressFrame, bool *numericReply, CommandError *commandError) {
+bool OnStepXMountPlugin::command(char reply[], char command[], char parameter[], bool *supressFrame, bool *numericReply, CommandError *commandError) {
 
     if(command[0] == 'G') {
        if (command[1] == 't') {
          *numericReply = false;
-         siteLocation.location_toString(&siteLocation.latitude, siteLocation.location_buffer, DEFAULT_LOCATION_SIZE);
+         siteLocation.location_toString(siteLocation.latitude, siteLocation.location_buffer, DEFAULT_LOCATION_SIZE);
          sprintf(reply, siteLocation.location_buffer);
        } else if (command[1] == 'g') {
          *numericReply = false;
-         siteLocation.location_toString(&siteLocation.longitude, siteLocation.location_buffer, DEFAULT_LOCATION_SIZE);
+         siteLocation.location_toString(siteLocation.longitude, siteLocation.location_buffer, DEFAULT_LOCATION_SIZE);
          sprintf(reply, siteLocation.location_buffer);
          return true;
        } else if (command[1] == 'G') {
          *numericReply = false;
-         siteLocation.offset_toString(&siteLocation.utc_offset, siteLocation.location_buffer, DEFAULT_LOCATION_SIZE);
+         siteLocation.offset_toString(siteLocation.utc_offset, siteLocation.location_buffer, DEFAULT_LOCATION_SIZE);
          sprintf(reply, siteLocation.location_buffer);
          return true;
        }

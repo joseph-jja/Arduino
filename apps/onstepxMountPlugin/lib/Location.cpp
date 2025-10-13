@@ -98,4 +98,5 @@ void SiteLocation::offset_toString(Offset offset, char buffer[], int bufferSize)
     sprintf(buffer, "%cld", offset.sign, offset.hours);
 }
 
+SiteLocation siteLocation;
 
