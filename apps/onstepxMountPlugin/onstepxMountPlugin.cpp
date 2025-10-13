@@ -6,17 +6,12 @@
 #include "onstepxMountPlugin.h"
 #include "lib/Location.h"
 
-#include "../../Common.h"
-#include "../../lib/tasks/OnTask.h"
-
-#include "../../lib/ethernet/webServer/WebServer.h"
-#include "../../lib/wifi/webServer/WebServer.h"
+//#include "../../Common.h"
+//#include "../../lib/tasks/OnTask.h"
 
 void OnStepXMountPlugin::init() {
   
   siteLocation.init();
-  
-  
 }
 
 void OnStepXMountPlugin::loop() {
@@ -38,13 +33,17 @@ void OnStepXMountPlugin::bool command(char reply[], char command[], char paramet
        }
     } else if(command[0] == 'S') {
        if (command[1] == 't') {
-        *numericReply = true;
+         *numericReply = true;
+         siteLocation.parse_location(parameter, &siteLocation.latitude);
          return true;
        } else if (command[1] == 'g') {
-        *numericReply = true;
-        return true;
+         *numericReply = true;
+         siteLocation.parse_location(parameter, &siteLocation.longitude);
+         return true;
        }
     }
       
     return false;
 }
+
+OnStepXMountPlugin onstepxMountPlugin;
