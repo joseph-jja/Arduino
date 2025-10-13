@@ -30,6 +30,11 @@ void OnStepXMountPlugin::bool command(char reply[], char command[], char paramet
          siteLocation.location_toString(&siteLocation.longitude, siteLocation.location_buffer, DEFAULT_LOCATION_SIZE);
          sprintf(reply, siteLocation.location_buffer);
          return true;
+       } else if (command[1] == 'G') {
+         *numericReply = false;
+         siteLocation.offset_toString(&siteLocation.utc_offset, siteLocation.location_buffer, DEFAULT_LOCATION_SIZE);
+         sprintf(reply, siteLocation.location_buffer);
+         return true;
        }
     } else if(command[0] == 'S') {
        if (command[1] == 't') {
@@ -39,6 +44,10 @@ void OnStepXMountPlugin::bool command(char reply[], char command[], char paramet
        } else if (command[1] == 'g') {
          *numericReply = true;
          siteLocation.parse_location(parameter, &siteLocation.longitude);
+         return true;
+       } else if (command[1] == 'G') {
+         *numericReply = true;
+         siteLocation.parse_offset(parameter, &siteLocation.utc_offset);
          return true;
        }
     }
