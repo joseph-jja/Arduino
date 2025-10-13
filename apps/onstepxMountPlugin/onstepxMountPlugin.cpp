@@ -1,4 +1,8 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 
+#include "Config.h"
 #include "onstepxMountPlugin.h"
 
 #include "../../Common.h"
@@ -7,8 +11,15 @@
 #include "../../lib/ethernet/webServer/WebServer.h"
 #include "../../lib/wifi/webServer/WebServer.h"
 
-
 void OnStepXMountPlugin::init() {
+    
+  memset(latitude, '\0', DEFAULT_LOCATION_SIZE);
+  memset(longitude, '\0', DEFAULT_LOCATION_SIZE);
+
+  memcpy(latitude, DEFAULT_LATITUDE, strlen(DEFAULT_LATITUDE));
+  memcpy(longitude, DEFAULT_LONGITUDE, strlen(DEFAULT_LONGITUDE));
+
+  utcoffset = DEFAULT_UTC_OFFSET;
 
 }
 
@@ -18,6 +29,19 @@ void OnStepXMountPlugin::loop() {
 
 void OnStepXMountPlugin::bool command(char reply[], char command[], char parameter[], bool *supressFrame, bool *numericReply, CommandError *commandError) {
 
+    if(command[0] == 'G') {
+       if (command[1] == 't') {
 
+       } else if (command[1] == 'g') {
+
+       }
+    } else if(command[0] == 'S') {
+       if (command[1] == 't') {
+         //parameter
+       } else if (command[1] == 'g') {
+         //parameter
+       }
+    }
+      
     return false;
 }
