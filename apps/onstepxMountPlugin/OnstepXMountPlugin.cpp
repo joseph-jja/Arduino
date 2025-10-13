@@ -18,7 +18,7 @@ void OnStepXMountPlugin::loop() {
 
 }
 
-void OnStepXMountPlugin::bool command(char reply[], char command[], char parameter[], bool *supressFrame, bool *numericReply, CommandError *commandError) {
+void OnStepXMountPlugin::command(char reply[], char command[], char parameter[], bool *supressFrame, bool *numericReply, CommandError *commandError) {
 
     if(command[0] == 'G') {
        if (command[1] == 't') {
