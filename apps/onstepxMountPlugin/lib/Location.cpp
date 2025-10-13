@@ -85,7 +85,7 @@ bool SiteLocation::parse_offset(const char* offsetStr, Offset* offset) {
     
     char hoursStr[3] = {0};
     for ( int i  = 1; i < strlen(offsetStr); i++ ) {
-        hours[i - 1] = offsetStr[i];
+        offset->hours[i - 1] = offsetStr[i];
     }
     offset->hours = strtol(hoursStr, nullptr, 10);
     
