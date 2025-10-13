@@ -3,10 +3,10 @@
 #include <stdlib.h>
 
 #include "Config.h"
-#include "onstepxMountPlugin.h"
+#include "OnstepXMountPlugin.h"
 #include "lib/Location.h"
 
-//#include "../../Common.h"
+//#include "../../lib/commands/CommandErrors.h
 //#include "../../lib/tasks/OnTask.h"
 
 void OnStepXMountPlugin::init() {

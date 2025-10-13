@@ -1,6 +1,8 @@
 // USB2I2C plugin
 #pragma once
 
+#include "../../lib/commands/CommandErrors.h"
+
 #define DEFAULT_LOCATION_SIZE 20
 
 class OnStepXMountPlugin {
