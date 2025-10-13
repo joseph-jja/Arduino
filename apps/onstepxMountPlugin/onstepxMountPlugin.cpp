@@ -13,11 +13,10 @@
 #include "../../lib/wifi/webServer/WebServer.h"
 
 void OnStepXMountPlugin::init() {
-
+  
   siteLocation.init();
-
-  // TODO incorporate date stuff and other special commands
-  // can we handle the ACK here?
+  
+  
 }
 
 void OnStepXMountPlugin::loop() {
@@ -29,24 +28,21 @@ void OnStepXMountPlugin::bool command(char reply[], char command[], char paramet
     if(command[0] == 'G') {
        if (command[1] == 't') {
          *numericReply = false;
-         siteLocation.location_toString(siteLocation.latitude, location_buffer, DEFAULT_LOCATION_SIZE);
-         sprintf(reply, location_buffer);
-         return true;
+         siteLocation.location_toString(&siteLocation.latitude, siteLocation.location_buffer, DEFAULT_LOCATION_SIZE);
+         sprintf(reply, siteLocation.location_buffer);
        } else if (command[1] == 'g') {
          *numericReply = false;
-         siteLocation.location_toString(siteLocation.longitude, location_buffer, DEFAULT_LOCATION_SIZE);
-         sprintf(reply, location_buffer);
+         siteLocation.location_toString(&siteLocation.longitude, siteLocation.location_buffer, DEFAULT_LOCATION_SIZE);
+         sprintf(reply, siteLocation.location_buffer);
          return true;
        }
     } else if(command[0] == 'S') {
        if (command[1] == 't') {
-         *numericReply = true;
-         siteLocation.parse_location(&siteLocation.latitude, parameter, strlen(parameter);
+        *numericReply = true;
          return true;
        } else if (command[1] == 'g') {
-         *numericReply = true;
-         siteLocation.parse_location(&siteLocation.longitude, parameter, strlen(parameter);
-         return true;
+        *numericReply = true;
+        return true;
        }
     }
       

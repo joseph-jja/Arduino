@@ -15,13 +15,6 @@ public:
 
 private:
 
-  // latitude and longitude defaults holder
-  // +xx:yyy and +zzz:abc
-  char latitude[DEFAULT_LOCATION_SIZE];
-  char longitude[DEFAULT_LOCATION_SIZE];
-  // offset
-  char utcoffset[DEFAULT_LOCATION_SIZE];
-
 };
 
 extern OnStepXMountPlugin onstepxMountPlugin;
