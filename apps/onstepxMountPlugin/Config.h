@@ -14,3 +14,5 @@
 // L If scope in Land Mode
 // P If scope in Polar Mode
 #define MOUNT_MODE "P"
+
+#define FULL_CENTURY 2000
