@@ -33,15 +33,19 @@ void OnStepXMountPlugin::bool command(char reply[], char command[], char paramet
        *numericReply = false;
        if (command[1] == 't') {
          sprintf(reply, latitude);
+         return true;
        } else if (command[1] == 'g') {
          sprintf(reply, longitude);
+         return true;
        }
     } else if(command[0] == 'S') {
        *numericReply = true;
        if (command[1] == 't') {
          //parameter
+         return true;
        } else if (command[1] == 'g') {
          //parameter
+         return true;
        }
     }
       
