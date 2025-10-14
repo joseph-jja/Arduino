@@ -23,16 +23,16 @@ bool OnStepXMountPlugin::command(char reply[], char command[], char parameter[],
 
     if(command[0] == 'G') {
        if (command[1] == 't') {
-         *numericReply = false;
+         //*numericReply = false;
          siteLocation.location_toString(siteLocation.latitude, siteLocation.location_buffer, DEFAULT_LOCATION_SIZE);
          sprintf(reply, siteLocation.location_buffer);
        } else if (command[1] == 'g') {
-         *numericReply = false;
+         //*numericReply = false;
          siteLocation.location_toString(siteLocation.longitude, siteLocation.location_buffer, DEFAULT_LOCATION_SIZE);
          sprintf(reply, siteLocation.location_buffer);
          return true;
        } else if (command[1] == 'G') {
-         *numericReply = false;
+         //*numericReply = false;
          siteLocation.offset_toString(siteLocation.utc_offset, siteLocation.location_buffer, DEFAULT_LOCATION_SIZE);
          sprintf(reply, siteLocation.location_buffer);
          return true;
