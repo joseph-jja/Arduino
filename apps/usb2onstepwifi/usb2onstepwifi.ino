@@ -239,8 +239,9 @@ void read_in_wifi_data(char wifiBufferOut[], char usbBufferIn[]) {
   int j = 0;
   int start_time = millis();
   bool foundEnd = false;
+  bool timedOut = false;
   println("Trying to read in data!");
-  while (!foundEnd) {
+  while (!foundEnd && !timedOut) {
     if ((millis() - start_time) < WIFI_CLIENT_READ_TIMOUT) {
       if (client.available()) {
         char incomingByte = client.read();
@@ -258,8 +259,7 @@ void read_in_wifi_data(char wifiBufferOut[], char usbBufferIn[]) {
         }
       }
     } else {
-      delay(5);
-      start_time = millis();
+      bool timedOut = true;
     }
   }
   print("Read time took");
