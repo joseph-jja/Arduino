@@ -169,9 +169,10 @@ bool read_in_usb_data(char usbBufferIn[], char usbBufferOut[]) {
   */
   bool sentance = true;
   bool capture = false;
+  bool timedOut = false;
 
   int start_time = millis();
-  while (Serial.available() || sentance) {
+  while (!timedOut && (Serial.available() || sentance)) {
     if ((millis() - start_time) < USB_READ_TIMOUT) {
       char incomingByte = Serial.read();
       if (incomingByte != NULL && (incomingByte == (char)6 || isprint(incomingByte))) {
@@ -203,7 +204,7 @@ bool read_in_usb_data(char usbBufferIn[], char usbBufferOut[]) {
       }
     } else {
       delay(5);
-      start_time = millis();
+      timedOut = true;
     }
   }
   if (isNull(usbBufferIn)) {
