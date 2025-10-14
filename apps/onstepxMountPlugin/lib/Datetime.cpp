@@ -3,6 +3,7 @@
 #include <stdlib.h>
 
 #include "Datetime.h"
+#include "string_functions.h"
 
 #define ONE_DAY 84000
 #define DEFAULT_DATE "25/09/18"
@@ -19,30 +20,14 @@ void Datetime::init() { // Constructor
     parse_time(DEFAULT_TIME, &sidereal_time_part);
 };
 
-long search_string(char* dateStr, char search_for, int start_index) {
+long search_string(char* dateStr, int start_index, int length) {
 
     char buffer[3];
     memset(buffer, '\0', 3);
-    int j = 0;
-    int i = start_index;
-    bool found = false;
 
-    // year
-    while (!found && i < strlen(dateStr)) {
-       if (dateStr[i] == '/') {
-           found = true;
-       } 
-       if (!found) {
-           buffer[j] = dateStr[i]; 
-           i++;
-           j++;
-       }
-    }
-    
-    if (found) {
-        return strtol(buffer, nullptr, 10);
-    }
-    return -1;
+    substring(dateStr, start_index, length, buffer);
+        
+    return strtol(buffer, nullptr, 10);
 }
 
 bool Datetime::parse_date(char* dateStr, DateInfo* dateInfo) {
@@ -52,9 +37,9 @@ bool Datetime::parse_date(char* dateStr, DateInfo* dateInfo) {
         return false;
     }
     
-    dateInfo->year = search_string(dateStr, '/', 0);
-    dateInfo->month = search_string(dateStr, '/', 2);
-    dateInfo->day = search_string(dateStr, '/', 5);
+    dateInfo->month = search_string(dateStr, 0, 2);
+    dateInfo->day = search_string(dateStr, 3, 2);
+    dateInfo->year = search_string(dateStr, 6, 2);
     
     return true;
 };  
@@ -66,9 +51,9 @@ bool Datetime::parse_time(char* timeStr, TimeInfo* timeInfo) {
         return false;
     }
 
-    timeInfo->hour = search_string(timeStr, ':', 0);
-    timeInfo->minutes = search_string(timeStr, ':', 2);
-    timeInfo->seconds = search_string(timeStr, ':', 5);
+    timeInfo->hour = search_string(timeStr, 0, 2);
+    timeInfo->minutes = search_string(timeStr, 3, 2);
+    timeInfo->seconds = search_string(timeStr, 6, 2);
     
     if (timeInfo->hour >= 12) {
         sprintf(timeInfo->meridian, "PM");

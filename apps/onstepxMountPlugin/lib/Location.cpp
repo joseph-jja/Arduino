@@ -23,7 +23,7 @@ void SiteLocation::set_location(Location* loc, char sign, long hours, long minut
 
 void SiteLocation::location_toString(Location loc, char buffer[], int bufferSize) {
     memset(buffer, '\0', bufferSize);
-    sprintf(buffer, "%c%ld:%02ld", loc.sign, loc.hours, loc.minutes);
+    sprintf(buffer, "%c%ld*%02ld", loc.sign, loc.hours, loc.minutes);
 }
 
 bool SiteLocation::parse_location(const char* locStr, Location* loc, int max) {
@@ -77,7 +77,7 @@ bool SiteLocation::parse_location(const char* locStr, Location* loc, int max) {
 bool SiteLocation::parse_offset(const char* offsetStr, Offset* offset) {
 
     // Basic validation
-    if (offsetStr == nullptr || strlen(offsetStr) < 2) {
+    if (offsetStr == nullptr || strlen(offsetStr) < 1) {
         return false;
     }
 
@@ -95,7 +95,7 @@ bool SiteLocation::parse_offset(const char* offsetStr, Offset* offset) {
     int j = 0;
     for ( int i  = index; i < strlen(offsetStr); i++ ) {
         hoursStr[j] = offsetStr[i];
-        j++:
+        j++;
     }
     offset->hours = strtol(hoursStr, nullptr, 10);
     
