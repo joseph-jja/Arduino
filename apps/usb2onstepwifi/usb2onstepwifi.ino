@@ -18,12 +18,6 @@ IPAddress gateway;
 #endif
 WiFiClient client;
 
-// latitude and longitude defaults holder
-// +xx:yyy and +zzz:abc
-char latitude[DEFAULT_LOCATION_SIZE];
-char longitude[DEFAULT_LOCATION_SIZE];
-int utcoffset = 5;
-
 template<typename T>
 void print(T line) {
 #ifdef USB_DEBUG_ENABLED
