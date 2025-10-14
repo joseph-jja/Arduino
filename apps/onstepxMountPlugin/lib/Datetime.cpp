@@ -66,7 +66,7 @@ bool Datetime::parse_time(char* timeStr, TimeInfo* timeInfo) {
 
 void Datetime::date_toString(DateInfo dateInfo, char buffer[], int bufferSize) {
     memset(buffer, '\0', bufferSize);
-    sprintf(buffer, "%02ld/%02ld/%02ld", dateInfo.year, dateInfo.month, dateInfo.day);
+    sprintf(buffer, "%02ld/%02ld/%02ld", dateInfo.month, dateInfo.day, dateInfo.year);
 };
 
 void Datetime::time_12h_toString(TimeInfo timeInfo, char buffer[], int bufferSize) {
