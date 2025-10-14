@@ -79,4 +79,25 @@ bool Datetime::parse_time(char* timeStr, TimeInfo* timeInfo) {
     return true;
 };  
 
+void Datetime::date_toString(DateInfo dateInfo, char buffer[], int bufferSize) {
+    memset(buffer, '\0', bufferSize);
+    sprintf(buffer, "%02ld/%02ld/%02ld", dateInfo.year, dateInfo.month, dateInfo.day);
+};
+
+void Datetime::time_12h_toString(TimeInfo timeInfo, char buffer[], int bufferSize) {
+    memset(buffer, '\0', bufferSize);
+    sprintf(buffer, "%02ld:%02ld:%02ld", timeInfo.hour, timeInfo.minutes, timeInfo.seconds);
+};
+
+void Datetime::time_24h_toString(TimeInfo timeInfo, char buffer[], int bufferSize) {
+    memset(buffer, '\0', bufferSize);
+    long hour = timeInfo.hour;
+    if (strcmp(timeInfo.meridian, "PM") == 0 && timeInfo.hour < 12) {
+        hour += 12;
+    } else if (strcmp(timeInfo.meridian, "AM") == 0 && timeInfo.hour == 12) {
+        hour = 0;
+    }
+    sprintf(buffer, "%02ld:%02ld:%02ld", hour, timeInfo.minutes, timeInfo.seconds);
+};
+
 Datetime datetime;

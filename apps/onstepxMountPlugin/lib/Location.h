@@ -35,8 +35,6 @@ public:
     Location latitude;
     Location longitude;
     Offset utc_offset;
-
-    char location_buffer[DEFAULT_LOCATION_SIZE];
 };
 
 extern SiteLocation siteLocation;
