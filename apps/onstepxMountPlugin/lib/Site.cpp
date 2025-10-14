@@ -29,12 +29,12 @@ bool Site::addSite(char* siteName, char* latitude, char* longitude, char* utcOff
     siteInfo[siteNumber].sitename[sizeof(siteInfo[siteNumber].sitename) - 1] = '\0'; // Ensure null-termination
 
     // Parse and set latitude
-    if (!siteLocation.parse_location(latitude, &siteInfo[siteNumber].siteLocation.latitude)) {
+    if (!siteLocation.parse_location(latitude, &siteInfo[siteNumber].siteLocation.latitude, MAX_LATITUDE)) {
         return false; // Invalid latitude format
     }
 
     // Parse and set longitude
-    if (!siteLocation.parse_location(longitude, &siteInfo[siteNumber].siteLocation.longitude)) {
+    if (!siteLocation.parse_location(longitude, &siteInfo[siteNumber].siteLocation.longitude, MAX_LONGITUDE)) {
         return false; // Invalid longitude format
     }
 

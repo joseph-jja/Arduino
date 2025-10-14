@@ -105,12 +105,12 @@ bool OnStepXMountPlugin::command(char reply[], char command[], char parameter[],
        *commandError = CommandError::CE_NONE;
        if (command[1] == 't') {
          override = true;
-         if (!siteLocation.parse_location(parameter, &siteLocation.latitude)) {
+         if (!siteLocation.parse_location(parameter, &siteLocation.latitude, MAX_LATITUDE)) {
               *commandError = CommandError::CE_PARAM_FORM;
          }
        } else if (command[1] == 'g') {
          override = true;
-         if (!siteLocation.parse_location(parameter, &siteLocation.longitude)) {
+         if (!siteLocation.parse_location(parameter, &siteLocation.longitude, MAX_LONGITUDE)) {
               *commandError = CommandError::CE_PARAM_FORM;
           }
        } else if (command[1] == 'G') {

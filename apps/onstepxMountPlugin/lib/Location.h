@@ -2,6 +2,9 @@
 
 #define DEFAULT_LOCATION_SIZE 10
 
+#define MAX_LATITUDE 90
+#define MAX_LONGITUDE 180
+
 typedef struct {
     char sign; // '+' or '-'
     long hours;
@@ -25,7 +28,7 @@ public:
     void location_toString(Location loc, char buffer[], int bufferSize);
 
     // parses location string into structure
-    bool parse_location(const char* locStr, Location* loc);
+    bool parse_location(const char* locStr, Location* loc, int max);
 
     bool parse_offset(const char* offsetStr, Offset* offset);
 

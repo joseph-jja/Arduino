@@ -9,8 +9,8 @@
 
 void SiteLocation::init() {
 
-    parse_location(DEFAULT_LATITUDE, &latitude);
-    parse_location(DEFAULT_LONGITUDE, &longitude);
+    parse_location(DEFAULT_LATITUDE, &latitude, MAX_LATITUDE);
+    parse_location(DEFAULT_LONGITUDE, &longitude, MAX_LONGITUDE);
     utc_offset.sign = DEFAULT_UTC_OFFSET[0];
     utc_offset.hours = strtol(&DEFAULT_UTC_OFFSET[1], nullptr, 10);
 }
@@ -26,18 +26,21 @@ void SiteLocation::location_toString(Location loc, char buffer[], int bufferSize
     sprintf(buffer, "%c%ld:%02ld", loc.sign, loc.hours, loc.minutes);
 }
 
-bool SiteLocation::parse_location(const char* locStr, Location* loc) {
+bool SiteLocation::parse_location(const char* locStr, Location* loc, int max) {
     // Basic validation
     if (locStr == nullptr || strlen(locStr) < 4) {
         return false;
     }
 
     // Check sign
+    bool hasSign = false;
     if (locStr[0] != '+' && locStr[0] != '-') {
-        return false;
+        loc->sign = '+';
+    } else {
+        loc->sign = locStr[0];
+        hasSign = true;
     }
-    loc->sign = locStr[0];
-
+    
     // in the event we get a 38.44 or 38*44 format, convert to 38:44
     replace_char((char*)locStr, '.', ':');
     replace_char((char*)locStr, '*', ':');
@@ -50,11 +53,12 @@ bool SiteLocation::parse_location(const char* locStr, Location* loc) {
 
     // Extract hours
     char hoursStr[4] = {0}; // Max 3 digits for hours + null terminator
-    size_t hoursLen = colonPos - (locStr + 1);
+    int index = hasSign ? 1 : 0;
+    size_t hoursLen = colonPos - (locStr + index);
     if (hoursLen == 0 || hoursLen >= sizeof(hoursStr)) {
         return false;
     }
-    strncpy(hoursStr, locStr + 1, hoursLen);
+    strncpy(hoursStr, locStr + index, hoursLen);
     loc->hours = strtol(hoursStr, nullptr, 10);
 
     // Extract minutes
@@ -63,7 +67,7 @@ bool SiteLocation::parse_location(const char* locStr, Location* loc) {
     loc->minutes = strtol(minutesStr, nullptr, 10);
 
     // Validate ranges
-    if (loc->hours < 0 || loc->hours > 90 || loc->minutes < 0 || loc->minutes >= 60) {
+    if (loc->hours < 0 || loc->hours > max || loc->minutes < 0 || loc->minutes >= 60) {
         return false;
     }
 
@@ -78,14 +82,20 @@ bool SiteLocation::parse_offset(const char* offsetStr, Offset* offset) {
     }
 
     // Check sign
+    bool hasSign = false;
     if (offsetStr[0] != '+' && offsetStr[0] != '-') {
-        return false;
+        offset->sign = '+';
+    } else {
+        offset->sign = offsetStr[0];
+        hasSign = true;
     }
-    offset->sign = offsetStr[0];
     
     char hoursStr[3] = {0};
-    for ( int i  = 1; i < strlen(offsetStr); i++ ) {
-        hoursStr[i - 1] = offsetStr[i];
+    int index = hasSign ? 1 : 0;
+    int j = 0;
+    for ( int i  = index; i < strlen(offsetStr); i++ ) {
+        hoursStr[j] = offsetStr[i];
+        j++:
     }
     offset->hours = strtol(hoursStr, nullptr, 10);
     
