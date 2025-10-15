@@ -5,17 +5,12 @@
 #include "Config.h"
 #include "Constants.h"
 #include "string_functions.h"
-#include "Overrides.h"
 
 #define BUFFER_SIZE 128
 
 const char *ssid = STATION_ID;
 const char *password = STATION_PWD;
-#ifndef MOCK_CLIENT_ENABLED
-IPAddress gateway{ 192, 168, 0, 1 };
-#else
 IPAddress gateway;
-#endif
 WiFiClient client;
 
 template<typename T>
@@ -66,8 +61,6 @@ void setup() {
 
   setup_builtin_pin();
 
-#ifndef MOCK_CLIENT_ENABLED
-
   println("");
   println("");
   print("Connecting to ");
@@ -97,7 +90,6 @@ void setup() {
   println(WiFi.localIP().toString());
   print("gateway address: ");
   println(gateway.toString());
-#endif
 
   for (int i = 0; i < 5; i++) {
     blink_pin(50);
@@ -148,12 +140,10 @@ void write_out_usb_data(char *buffer) {
 int ack_command_state = 0;
 
 // generic function for reading data into bufferIn from USB port
-bool read_in_usb_data(char usbBufferIn[], char usbBufferOut[]) {
+void read_in_usb_data(char usbBufferIn[]) {
 
   memset(usbBufferIn, '\0', BUFFER_SIZE);
-  memset(usbBufferOut, '\0', BUFFER_SIZE);
 
-  int i = 0;
   /*
     a sentace is a command starting with : and ending with #
     we need a whole sentance in order for the commands to be recognized
@@ -164,8 +154,8 @@ bool read_in_usb_data(char usbBufferIn[], char usbBufferOut[]) {
   bool timedOut = false;
 
   int start_time = millis();
+  int i = 0;
   while (!timedOut && (Serial.available() || sentance)) {
-    if ((millis() - start_time) < USB_READ_TIMOUT) {
       char incomingByte = Serial.read();
       if (incomingByte != NULL && (incomingByte == (char)6 || isprint(incomingByte))) {
 
@@ -179,7 +169,7 @@ bool read_in_usb_data(char usbBufferIn[], char usbBufferOut[]) {
         // special for lx200 protocol
         if (!capture && ack_command_state == 0 && incomingByte == (char)6) {
           ack_command_state = 2;
-          sprintf(usbBufferIn, "%s", ACK_COMMAND_IN);
+          usbBufferIn[0] = incomingByte;
           sentance = false;
         }
         if (incomingByte == ':') {
@@ -194,38 +184,27 @@ bool read_in_usb_data(char usbBufferIn[], char usbBufferOut[]) {
           sentance = false;
         }
       }
-    } else {
-      delay(5);
-      timedOut = true;
-    }
+      timedOut = ((millis() - start_time) > USB_READ_TIMOUT);
   }
-  if (isNull(usbBufferIn)) {
-    return false;
-  }
-  //print("usbBufferIn");
-  //print(ack_command_state);
-  //print(" ");
-  //print(usbBufferIn);
-  return overrides.check_override(usbBufferIn, usbBufferOut, BUFFER_SIZE, millis());
 }
-
-#ifndef MOCK_CLIENT_ENABLED
 
 void write_out_wifi_data(char *buffer) {
 
   client.write(buffer);
-  delay(10);
   client.flush();
   print("Sending focuser the command ");
   println(buffer);
+  delay(5);   // git a smmidge of time to send
 }
 
 void read_in_wifi_data(char wifiBufferOut[], char usbBufferIn[]) {
 
   memset(wifiBufferOut, '\0', BUFFER_SIZE);
 
+  // check if we are expecting a binary reply
   bool isBinaryReply = boolean_reply(usbBufferIn);
 
+  // check if the command ends with # or *
   char endings[2];
   ends_with(usbBufferIn, endings);
 
@@ -235,7 +214,6 @@ void read_in_wifi_data(char wifiBufferOut[], char usbBufferIn[]) {
   bool timedOut = false;
   println("Trying to read in data!");
   while (!foundEnd && !timedOut) {
-    if ((millis() - start_time) < WIFI_CLIENT_READ_TIMOUT) {
       if (client.available()) {
         char incomingByte = client.read();
         print("WIFI data read in ");
@@ -251,70 +229,50 @@ void read_in_wifi_data(char wifiBufferOut[], char usbBufferIn[]) {
           j++;
         }
       }
-    } else {
-      bool timedOut = true;
-    }
+      timedOut = ((millis() - start_time) > WIFI_CLIENT_READ_TIMOUT);
   }
   print("Read time took");
   println(millis() - start_time);
   println(wifiBufferOut);
   println(endings);
 }
-#endif
 
 long last_loop = millis();
 void loop() {
 
   char usbBufferIn[BUFFER_SIZE];
-  char usbBufferOut[BUFFER_SIZE];
   char wifiBufferOut[BUFFER_SIZE];
 
   // read in the data from USB port
-  boolean isCommandOverridden = read_in_usb_data(usbBufferIn, usbBufferOut);
-  if (isCommandOverridden && strlen(usbBufferOut) > 0) {
-    if (compare(usbBufferOut, USB_RESET_REPLY)) {
-      ack_command_state = 0;
-    } else if (ack_command_state == 2) {
-      ack_command_state = 0;
-    }
-    write_out_usb_data(usbBufferOut);
-    print("Command ");
-    print(usbBufferIn);
-    print(" override ");
-    print(isCommandOverridden);
-    print(" ACK Command state ");
-    println(ack_command_state);
+  read_in_usb_data(usbBufferIn);
+
+  if (ack_command_state == 2 && !isNull(usbBufferIn)
+    && usbBufferIn[0] == (char)6) {
+    ack_command_state = 0;
+    write_out_usb_data(MOUNT_MODE);
   } else if (!isNull(usbBufferIn)) {
-#ifndef MOCK_CLIENT_ENABLED
+    // got data in the buffer
     bool isConnected = connect_client();
     if (isConnected) {
-      delay(10);
+      delay(5);
       write_out_wifi_data(usbBufferIn);
 
       // check if we should be getting a response
       boolean hasResponse = has_reply(usbBufferIn);
-      if (!hasResponse) {
+      if (hasResponse) {
+        // try a few times to read in data
+        // a sort of polling
+        read_in_wifi_data(wifiBufferOut, usbBufferIn);
+        if (!isNull(wifiBufferOut)) {
+          write_out_usb_data(wifiBufferOut);
+        }
+      } else {
         print("Message in has no reply data ");
         println(usbBufferIn);
-        delay(10);
-        client.stop();
-        return;
       }
-      // try a few times to read in data
-      // a sort of polling
-      read_in_wifi_data(wifiBufferOut, usbBufferIn);
-      if (!isNull(wifiBufferOut)) {
-        write_out_usb_data(wifiBufferOut);
-      }
-      delay(10);
+      delay(5);
       client.stop();
     }
-#else
-    if (isNull(usbBufferOut)) {
-      sprintf(usbBufferOut, "%s#", "Dummy");
-    }
-    write_out_usb_data(usbBufferOut);
-#endif
   } else {
     delay(10);
   }

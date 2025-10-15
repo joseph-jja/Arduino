@@ -1,14 +1,18 @@
 #pragma once
 
 //#define USB_DEBUG_ENABLED 1
-//#define MOCK_CLIENT_ENABLED 
-#define WIFI_CLIENT_READ_TIMOUT 10000
-#define USB_READ_TIMOUT 5000
+#define WIFI_CLIENT_READ_TIMOUT 5000 // 5 seconds
+#define USB_READ_TIMOUT 2500. // 2.5 seconds
 
-const int NUMBER_OF_STRINGS = 56;
+const int NUMBER_OF_STRINGS = 60;
 const int MAX_STRING_LENGTH = 10;
 
 static char COMMANDS_WITH_NO_REPLY[NUMBER_OF_STRINGS][MAX_STRING_LENGTH] = {
+  ":AL#",
+  ":AP#",
+  ":AA#",
+  ":$BA",
+  ":$BZ",
   ":W0#",
   ":W1#",
   ":W2#",
@@ -62,14 +66,14 @@ static char COMMANDS_WITH_NO_REPLY[NUMBER_OF_STRINGS][MAX_STRING_LENGTH] = {
   ":FZ#",
   ":FH#",
   ":Fh#",
-  ":B+#",
-  ":B-#",
+  ":B",
   ":U#"
 };
 
-const int NUMBER_OF_0_or_1_STRINGS = 27;
+const int NUMBER_OF_0_or_1_STRINGS = 28;
 
 static char COMMANDS_WITH_0_or_1_REPLY[NUMBER_OF_0_or_1_STRINGS][MAX_STRING_LENGTH] = {
+  ":Aa#",
   ":S",
   ":Te#",
   ":Td#",
