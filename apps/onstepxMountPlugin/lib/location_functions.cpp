@@ -5,7 +5,7 @@
 #include <stdlib.h>
 
 #include "../Config.h"
-#include "Location.h"
+#include "location_functions.h"
 #include "string_functions.h"
 
 void set_location(Location* loc, char sign, long hours, long minutes) {
