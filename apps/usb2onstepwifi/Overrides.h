@@ -8,7 +8,6 @@
 class Overrides {
 public:
   // Public members (accessible from outside the class)
-  void init(unsigned long ms);  // Constructor
   bool check_override(char *bufferIn, char returnOut[], int buffer_size, unsigned long ms);
 };
 
