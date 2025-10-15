@@ -21,10 +21,12 @@ public:
 
 private:
 
-     Site site;
-     Location location;
-     Datetime datetime;
-    
+     SiteInfo   siteInfo[4];
+     Location   latitude;
+     Location   longitude;
+     Offset     offset;
+     DateInfo   dateInfo;
+     TimeInfo   timeInfo;
 };
 
 extern OnStepXMountPlugin onstepxMountPlugin;

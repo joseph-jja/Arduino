@@ -1,4 +1,3 @@
-
 // clang-format off
 #include <stdio.h>
 #include <string.h>
