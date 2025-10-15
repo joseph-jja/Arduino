@@ -2,7 +2,7 @@
 #include "string.h"
 #include "stdio.h"
 
-#include "Site.h"
+#include "site_functions.h"
 
 bool addSite(char* siteName, char* latitude, char* longitude, char* utcOffset, int siteNumber) {
     if (siteNumber < 0 || siteNumber >= 4) {
