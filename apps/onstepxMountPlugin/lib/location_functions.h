@@ -1,3 +1,5 @@
+#pragma once
+
 #define DEFAULT_LOCATION_SIZE 10
 
 #define MAX_LATITUDE 90

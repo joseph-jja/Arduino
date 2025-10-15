@@ -7,7 +7,7 @@
 
 #include "../../lib/commands/CommandErrors.h"
 
-#define DEFAULT_LOCATION_SIZE 20
+#define RESPONSE_BUFFER_SIZE 50
 
 class OnStepXMountPlugin {
 
@@ -21,12 +21,15 @@ public:
 
 private:
 
+     char response_buffer[RESPONSE_BUFFER_SIZE];
+
      SiteInfo   siteInfo[4];
      Location   latitude;
      Location   longitude;
-     Offset     offset;
+     Offset     utc_offset;
      DateInfo   dateInfo;
      TimeInfo   timeInfo;
+     TimeInfo   siderealTimeInfo;
 };
 
 extern OnStepXMountPlugin onstepxMountPlugin;
