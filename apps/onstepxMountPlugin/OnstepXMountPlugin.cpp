@@ -4,9 +4,6 @@
 
 #include "Config.h"
 #include "OnstepXMountPlugin.h"
-#include "lib/Location.h"
-#include "lib/Datetime.h"
-#include "lib/Site.h"
 
 //#include "../../lib/tasks/OnTask.h"
 
