@@ -8,9 +8,6 @@
 
 #define DEFAULT_BUFFER_SIZE 128
 
-void Overrides::init(unsigned long ms) {
-};
-
 /* TODO fix these errors
 2025-10-01T20:55:24: [ERROR] Error setting site longitude coordinates 
 2025-10-01T20:55:19: [ERROR] Error setting UTC Offset. 
