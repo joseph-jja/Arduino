@@ -99,8 +99,6 @@ void setup() {
   println(gateway.toString());
 #endif
 
-  overrides.init(millis());
-
   for (int i = 0; i < 5; i++) {
     blink_pin(50);
     delay(25);
