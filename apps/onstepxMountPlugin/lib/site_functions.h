@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Location.h"
+#include "location_functions.h"
 
 typedef struct {
     char sitename[128]; 
