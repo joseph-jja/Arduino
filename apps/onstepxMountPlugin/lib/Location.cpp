@@ -4,7 +4,7 @@
 #include <stdlib.h>
 
 #include "../Config.h"
-#include "Location.h"
+#include "location_functions.h"
 #include "string_functions.h"
 
 void SiteLocation::init() {
