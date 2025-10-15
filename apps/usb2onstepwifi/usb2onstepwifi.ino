@@ -132,7 +132,6 @@ void write_out_usb_data(char *buffer) {
 
   Serial.write(buffer);
   Serial.flush();
-  delay(5);
   print("We responded with ");
   println(buffer);
 }
@@ -155,7 +154,8 @@ void read_in_usb_data(char usbBufferIn[]) {
 
   int start_time = millis();
   int i = 0;
-  while (!timedOut && (Serial.available() || sentance)) {
+  while (!timedOut && sentance) {
+    if (Serial.available()) {
       char incomingByte = Serial.read();
       if (incomingByte != NULL && (incomingByte == (char)6 || isprint(incomingByte))) {
 
@@ -184,8 +184,10 @@ void read_in_usb_data(char usbBufferIn[]) {
           sentance = false;
         }
       }
-      timedOut = ((millis() - start_time) > USB_READ_TIMOUT);
+    }
+    timedOut = ((millis() - start_time) > USB_READ_TIMOUT);
   }
+  delay(25);
 }
 
 void write_out_wifi_data(char *buffer) {
@@ -194,7 +196,7 @@ void write_out_wifi_data(char *buffer) {
   client.flush();
   print("Sending focuser the command ");
   println(buffer);
-  delay(5);   // git a smmidge of time to send
+  delay(50);
 }
 
 void read_in_wifi_data(char wifiBufferOut[], char usbBufferIn[]) {
@@ -235,6 +237,7 @@ void read_in_wifi_data(char wifiBufferOut[], char usbBufferIn[]) {
   println(millis() - start_time);
   println(wifiBufferOut);
   println(endings);
+  delay(10);
 }
 
 long last_loop = millis();
@@ -254,7 +257,6 @@ void loop() {
     // got data in the buffer
     bool isConnected = connect_client();
     if (isConnected) {
-      delay(5);
       write_out_wifi_data(usbBufferIn);
 
       // check if we should be getting a response
@@ -270,10 +272,8 @@ void loop() {
         print("Message in has no reply data ");
         println(usbBufferIn);
       }
-      delay(5);
       client.stop();
     }
-  } else {
-    delay(10);
   }
+  delay(50);
 }
