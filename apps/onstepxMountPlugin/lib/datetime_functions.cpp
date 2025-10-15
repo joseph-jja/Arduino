@@ -21,7 +21,7 @@ long search_string(char* dateStr, int start_index, int length) {
     substring(dateStr, start_index, length, buffer);
         
     return strtol(buffer, nullptr, 10);
-}
+};
 
 bool parse_date(char* dateStr, DateInfo* dateInfo) {
 
@@ -78,4 +78,3 @@ void time_24h_toString(TimeInfo timeInfo, char buffer[], int bufferSize) {
     sprintf(buffer, "%02ld:%02ld:%02ld", hour, timeInfo.minutes, timeInfo.seconds);
 };
 
-Datetime datetime;
