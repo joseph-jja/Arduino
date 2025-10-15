@@ -49,6 +49,15 @@ void OnStepXMountPlugin::loop() {
 */
 bool OnStepXMountPlugin::command(char reply[], char command[], char parameter[], bool *supressFrame, bool *numericReply, CommandError *commandError) {
 
+   // this is the ACK command
+   // not handled here
+   /*if (command[0] == (char)6) {
+      *numericReply = false;
+      *supressFrame = false;
+      sprintf(reply, MOUNT_MODE);
+      return true;
+   }*/
+
     if(command[0] == 'G') {
       memset(response_buffer, '\0', RESPONSE_BUFFER_SIZE);
       bool override = false;
