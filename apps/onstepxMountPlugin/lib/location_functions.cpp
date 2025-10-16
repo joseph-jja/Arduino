@@ -97,6 +97,6 @@ bool parse_offset(const char* offsetStr, Offset* offset) {
 void offset_toString(Offset offset, char buffer[], int bufferSize) {
 
     memset(buffer, '\0', bufferSize);
-    sprintf(buffer, "%c%ld", offset.sign, offset.hours);
+    sprintf(buffer, "%c%02ld:00", offset.sign, offset.hours);
 };
 

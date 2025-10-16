@@ -11,6 +11,8 @@ void OnStepXMountPlugin::init() {
 
     for ( int i = 0; i < MAX_SITES; i++) {
         memset(siteInfo[i].sitename, '\0', SITE_NAME_LENGTH);
+        int j = i + 1;
+        sprintf(siteInfo[i].sitename, "Site %d", j);
         siteInfo[i].latitude.sign = '+';
         siteInfo[i].latitude.hours = -1;
         siteInfo[i].latitude.minutes = -1;
@@ -59,7 +61,23 @@ bool OnStepXMountPlugin::command(char reply[], char command[], char parameter[],
     if(command[0] == 'G') {
       memset(response_buffer, '\0', RESPONSE_BUFFER_SIZE);
       bool override = false;
-       if (command[1] == 't') {
+       if (command[1] == 'U') {
+         override = true;
+         sprintf(response_buffer, "NHp");
+       } else if (command[1] == 'm') {
+         override = true;
+         sprintf(response_buffer, "N");
+       } else if (command[1] == 'r' || command[1] == 'R') {
+          *numericReply = false;
+          *supressFrame = true;
+          sprintf(reply, "37:00:00#*");
+          return true;
+       } else if (command[1] == 'd' || command[1] == 'D') {
+          *numericReply = false;
+          *supressFrame = true;
+          sprintf(reply, "+90:00:00#*");
+          return true;
+       } else if (command[1] == 't') {
          override = true;
          location_toString(latitude, response_buffer, RESPONSE_BUFFER_SIZE);
        } else if (command[1] == 'g') {
