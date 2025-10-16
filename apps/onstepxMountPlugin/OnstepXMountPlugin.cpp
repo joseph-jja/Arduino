@@ -77,6 +77,11 @@ bool OnStepXMountPlugin::command(char reply[], char command[], char parameter[],
           *supressFrame = true;
           sprintf(reply, "+90:00:00#*");
           return true;
+       } else if (command[1] == '%BR') {
+          *numericReply = true;
+          *supressFrame = false;
+          *commandError = CommandError::CE_NONE;
+          return true;
        } else if (command[1] == 't') {
          override = true;
          location_toString(latitude, response_buffer, RESPONSE_BUFFER_SIZE);
