@@ -70,7 +70,7 @@ bool OnStepXMountPlugin::command(char reply[], char command[], char parameter[],
        } else if (command[1] == 'r' || command[1] == 'R') {
           *numericReply = false;
           *supressFrame = true;
-          sprintf(reply, "37:00:00#*");
+          sprintf(reply, "13:00:00#*");
           return true;
        } else if (command[1] == 'd' || command[1] == 'D') {
           *numericReply = false;
