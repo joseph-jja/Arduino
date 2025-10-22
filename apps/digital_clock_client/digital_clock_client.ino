@@ -7,6 +7,7 @@
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
 #include <Hash.h>
+#include <MD_MAX72xx.h>
 
 #include "Config.h"
 
@@ -96,6 +97,10 @@ bool connect_client() {
 long lastUpdate = 0;
 char time_buffer[TIME_BUFFER_SIZE];
 
+void writeString(char hours[], char minutes[]) {
+  
+}
+
 void updateClient() {
   if (lastUpdate == 0) {
     lastUpdate = millis();
@@ -157,9 +162,12 @@ void updateClient() {
     Serial.print(hours);
     Serial.print("and minutes ");
     Serial.println(minutes);
+    writeString(hours, minutes);
   }
 }
 
 void loop() {
 
+  updateClient();
+  delay(500);
 }
