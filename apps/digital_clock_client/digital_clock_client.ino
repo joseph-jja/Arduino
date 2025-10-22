@@ -8,29 +8,47 @@
 #include <ESP8266WiFi.h>
 #include <Hash.h>
 
+#include "Config.h"
+
+#define TIME_BUFFER_SIZE 30
+
 IPAddress gateway;
 WiFiClient client;
 
-Serial.begin(9600);
+void setup_builtin_pin() {
+  pinMode(LED_BUILTIN, OUTPUT);
+  Serial.println("Pin enabled");
+  digitalWrite(LED_BUILTIN, LOW);
+}
+
+void blink_pin(int sleep_time) {
+  digitalWrite(LED_BUILTIN, HIGH);
+  delay(sleep_time);
+  digitalWrite(LED_BUILTIN, LOW);
+}
+
+void setup() {
+
+  Serial.begin(9600);
 
   setup_builtin_pin();
 
-  println("");
-  println("");
-  print("Connecting to ");
-  println(ssid);
+  Serial.println("");
+  Serial.println("");
+  Serial.print("Connecting to ");
+  Serial.println(ssid);
 
   /* Explicitly set the ESP8266 to be a WiFi-client, otherwise, it by default,
      would try to act as both a client and an access-point and could cause
      network-issues with your other WiFi-devices on your WiFi-network. */
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
-  WiFi.onStationModeDisconnected(onWifiDisconnect);
-  WiFi.onStationModeConnected(onWifiConnect);
+  //WiFi.onStationModeDisconnected(onWifiDisconnect);
+  //WiFi.onStationModeConnected(onWifiConnect);
 
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
-    print(".");
+    Serial.print(".");
   }
 
   WiFi.setAutoReconnect(true);
@@ -38,12 +56,12 @@ Serial.begin(9600);
   WiFi.setSleepMode(WIFI_NONE_SLEEP);
 
   gateway = WiFi.gatewayIP();
-  println("");
-  println("WiFi connected");
-  print("IP address: ");
-  println(WiFi.localIP().toString());
-  print("gateway address: ");
-  println(gateway.toString());
+  Serial.println("");
+  Serial.println("WiFi connected");
+  Serial.print("IP address: ");
+  Serial.println(WiFi.localIP().toString());
+  Serial.print("gateway address: ");
+  Serial.println(gateway.toString());
 
   for (int i = 0; i < 5; i++) {
     blink_pin(50);
