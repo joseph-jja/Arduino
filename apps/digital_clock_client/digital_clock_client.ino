@@ -111,9 +111,27 @@ char time_buffer[TIME_BUFFER_SIZE];
 
 void writeString(char hours[], char minutes[]) {
   
+  mx.clear();
+
+  if (strlen(hours) == 1) {
+    mx.setChar(0, '0'); 
+    mx.setChar(1, hours[0]); 
+  }else {
+    mx.setChar(0, hours[0]); 
+    mx.setChar(1, hours[1]); 
+  }
+
+  if (strlen(minutes) == 1) {
+    mx.setChar(2, '0'); 
+    mx.setChar(3, minutes[0]); 
+  }else {
+    mx.setChar(2, minutes[0]); 
+    mx.setChar(3, minutes[1]); 
+  }
 }
 
-void updateClient() {
+void fetch_data() {
+
   if (lastUpdate == 0) {
     lastUpdate = millis();
   }
@@ -146,7 +164,10 @@ void updateClient() {
     client.stop();
     lastUpdate = millis();
   }
+}
 
+void updateClient() {
+  
   // TODO parse string
   // update  rawtime struct
   // update currentHour and currentMinute for display
@@ -180,6 +201,7 @@ void updateClient() {
 
 void loop() {
 
+  fetch_data();
   updateClient();
   delay(500);
 }
