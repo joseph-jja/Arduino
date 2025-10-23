@@ -11,10 +11,18 @@
 
 #include "Config.h"
 
+// TODO figure out which board type devices and pin
+#define HARDWARE_TYPE MD_MAX72XX::FC16_HW // Example: FC16_HW for common 8x8 modules
+#define MAX_DEVICES 1                     // Number of 8x8 matrix modules chained together
+#define CS_PIN 10                         // CS pin connected to the MAX7219
+
 #define TIME_BUFFER_SIZE 30
 
 IPAddress gateway;
 WiFiClient client;
+
+// Create an instance of the MD_MAX72xx class
+MD_MAX72xx mx = MD_MAX72xx(HARDWARE_TYPE, CS_PIN, MAX_DEVICES);
 
 void setup_builtin_pin() {
   pinMode(LED_BUILTIN, OUTPUT);
@@ -69,7 +77,10 @@ void setup() {
     delay(25);
   }
 
-  Serial.flush();
+  // Initialize the LED matrix
+  mx.begin();
+  mx.setIntensity(0); // Set brightness (0-15)
+  mx.clear();  
 }
 bool connect_client() {
 
