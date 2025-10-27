@@ -4,7 +4,7 @@
 
 // compares 2 string
 bool compare(char *commandIn, char *commandStr) {
-  if (commandIn == NULL || commandStr == NULL) {
+  if (commandIn == nullptr || commandStr == nullptr) {
     return false;
   }
   if (strlen(commandIn) > strlen(commandStr)) {
@@ -15,14 +15,14 @@ bool compare(char *commandIn, char *commandStr) {
 
 // copies part of a string from source to destination
 void substring(char *source, int start_index, int length, char *destination) {
-  if (source == NULL || destination == NULL) {
+  if (source == nullptr || destination == nullptr) {
     return;
   }
   strncpy(destination, source + start_index, length);
 }
 
 void replace_char(char *source, char search_chr, char replace_chr) {
-    if (source == NULL) {
+    if (source == nullptr) {
         return;
     }
   
@@ -36,6 +36,6 @@ void replace_char(char *source, char search_chr, char replace_chr) {
 }
 
 bool isNull(char *buffer) {
-  return ((buffer == NULL || strlen(buffer) <= 0) ? true : false); 
+  return ((buffer == nullptr || strlen(buffer) <= 0) ? true : false); 
 }
 

@@ -6,7 +6,7 @@
 
 bool addSite(SiteInfo* siteInfo, char* siteName, char* latitude, char* longitude, char* utcOffset, int siteNumber) {
 
-    if (siteName == NULL || latitude == NULL || longitude == NULL || utcOffset == NULL) {
+    if (siteName == nullptr || latitude == nullptr || longitude == nullptr || utcOffset == nullptr) {
         return false;
     }
     
