@@ -56,10 +56,18 @@ bool parse_time(char* timeStr, TimeInfo* timeInfo) {
         return false;
     }
 
-    timeInfo->hour = search_string(timeStr, 0, 2);
-    timeInfo->minutes = search_string(timeStr, 3, 2);
-    timeInfo->seconds = search_string(timeStr, 6, 2);
-    
+    long hour = search_string(timeStr, 0, 2);
+    long minutes = search_string(timeStr, 3, 2);
+    long seconds = search_string(timeStr, 6, 2);
+
+    if (hour == -1 || minutes == -1 || seconds == -1) {
+        return false;
+    }
+
+    timeInfo->hour = hour;
+    timeInfo->minutes = minutes;
+    timeInfo->seconds = seconds;
+
     if (timeInfo->hour >= 12) {
         sprintf(timeInfo->meridian, "PM");
     } else {
