@@ -77,11 +77,6 @@ bool OnStepXMountPlugin::command(char reply[], char command[], char parameter[],
           *supressFrame = true;
           sprintf(reply, "+90:00:00#*");
           return true;
-       } else if (command[1] == '%BR') {
-          *numericReply = true;
-          *supressFrame = false;
-          *commandError = CommandError::CE_NONE;
-          return true;
        } else if (command[1] == 't') {
          override = true;
          location_toString(latitude, response_buffer, RESPONSE_BUFFER_SIZE);
@@ -140,7 +135,7 @@ bool OnStepXMountPlugin::command(char reply[], char command[], char parameter[],
           return true;
        }
 
-    } else if(command[0] == 'S') {
+    } else if (command[0] == 'S') {
        bool override = false;
        *commandError = CommandError::CE_NONE;
        if (command[1] == 't') {
@@ -185,6 +180,14 @@ bool OnStepXMountPlugin::command(char reply[], char command[], char parameter[],
           *supressFrame = true;
           return true;
        }
+    } else if (command[0] == '%' || command[0] == '$') {
+      // handle BR or BD
+      if (command[1] == 'B' && (command[2] == 'R' || command[2] == 'R')) {
+          *numericReply = true;
+          *supressFrame = true;
+          *commandError = CommandError::CE_NONE;
+          return true;
+      }
     }
       
     return false;
