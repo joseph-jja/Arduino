@@ -15,6 +15,10 @@ static int DAYS_IN_MONTH[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
 long search_string(char* dateStr, int start_index, int length) {
 
+    if (dateStr == nullptr ){
+        return -1;
+    }
+    
     char buffer[3];
     memset(buffer, '\0', 3);
 
@@ -29,10 +33,18 @@ bool parse_date(char* dateStr, DateInfo* dateInfo) {
     if (dateStr == nullptr || strlen(dateStr) < 8) {
         return false;
     }
+
+    long month = search_string(dateStr, 0, 2);
+    long day = search_string(dateStr, 3, 2);
+    long year = search_string(dateStr, 6, 2);
+
+    if (month == -1 || day == -1 || year == -1) {
+        return false;
+    }
     
-    dateInfo->month = search_string(dateStr, 0, 2);
-    dateInfo->day = search_string(dateStr, 3, 2);
-    dateInfo->year = search_string(dateStr, 6, 2);
+    dateInfo->month = month;
+    dateInfo->day = day;
+    dateInfo->year = year;
     
     return true;
 };  
