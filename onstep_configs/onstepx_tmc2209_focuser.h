@@ -16,11 +16,20 @@
 // CONTROLLER ======================================================================================================================
 
 #define CONFIG_NAME       "xxxx"
-#define AP_SSID           "xxxx"         // set WiFi SSID name
-#define MDNS_NAME         "xxxx"         // set mDNS name
-#define SERIAL_RADIO WIFI_ACCESS_POINT
-#define PASSWORD_DEFAULT    "xxxx"  
-#define AP_PASSWORD         "xxxx"
+//#define AP_SSID           "xxxx"         // set WiFi SSID name
+//#define MDNS_NAME         "xxxx"         // set mDNS name
+//#define SERIAL_RADIO WIFI_ACCESS_POINT
+//#define PASSWORD_DEFAULT    "xxxx"  
+//#define AP_PASSWORD         "xxxx"
+
+#define STA_AP_FALLBACK         false
+#define STA_ENABLED            true
+#define STA_AUTO_RECONNECT            true
+#define STA_DHCP_ENABLED          true
+#define STA_SSID           "ssid to be client"         // set WiFi SSID name
+#define SERIAL_RADIO       WIFI_STATION
+#define PASSWORD_DEFAULT    "password for focuser"  
+#define STA_PASSWORD         "ssid for ap"
 
 #define FOCUSER_TEMPERATURE_PIN         2         // ESP32-S2 GPIO2 ADC1
 #define THERMISTOR1_TNOM               25         // Nominal temperature (Celsius)
