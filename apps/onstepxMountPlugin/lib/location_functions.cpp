@@ -8,19 +8,25 @@
 #include "string_functions.h"
 
 void set_location(Location* loc, char sign, long hours, long minutes) {
+    if (sign == NULL) {
+        return;
+    }
     loc->sign = sign;
     loc->hours = hours;
     loc->minutes = minutes;
 };
 
 void location_toString(Location loc, char buffer[], int bufferSize) {
+    if (buffer == NULL) {
+        return;
+    }
     memset(buffer, '\0', bufferSize);
     sprintf(buffer, "%c%ld*%02ld", loc.sign, loc.hours, loc.minutes);
 };
 
 bool parse_location(const char* locStr, Location* loc, int max) {
     // Basic validation
-    if (locStr == nullptr || strlen(locStr) < 4) {
+    if (locStr == NULL || strlen(locStr) < 4) {
         return false;
     }
 
