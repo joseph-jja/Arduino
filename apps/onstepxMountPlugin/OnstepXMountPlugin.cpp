@@ -9,30 +9,30 @@
 
 void OnStepXMountPlugin::init() {
 
-    for ( int i = 0; i < MAX_SITES; i++) {
-        memset(siteInfo[i].sitename, '\0', SITE_NAME_LENGTH);
-        int j = i + 1;
-        sprintf(siteInfo[i].sitename, "Site %d", j);
-        siteInfo[i].latitude.sign = '+';
-        siteInfo[i].latitude.hours = -1;
-        siteInfo[i].latitude.minutes = -1;
-        siteInfo[i].longitude.sign = '+';
-        siteInfo[i].longitude.hours = -1;
-        siteInfo[i].longitude.minutes = -1;
-        siteInfo[i].utc_offset.sign = '+';
-        siteInfo[i].utc_offset.hours = 0;
-    }
+  for (int i = 0; i < MAX_SITES; i++) {
+    memset(siteInfo[i].sitename, '\0', SITE_NAME_LENGTH);
+    int j = i + 1;
+    sprintf(siteInfo[i].sitename, "Site %d", j);
+    siteInfo[i].latitude.sign = '+';
+    siteInfo[i].latitude.hours = -1;
+    siteInfo[i].latitude.minutes = -1;
+    siteInfo[i].longitude.sign = '+';
+    siteInfo[i].longitude.hours = -1;
+    siteInfo[i].longitude.minutes = -1;
+    siteInfo[i].utc_offset.sign = '+';
+    siteInfo[i].utc_offset.hours = 0;
+  }
 
-    parse_location(DEFAULT_LATITUDE, &latitude, MAX_LATITUDE);
-    parse_location(DEFAULT_LONGITUDE, &longitude, MAX_LONGITUDE);
+  parse_location(DEFAULT_LATITUDE, &latitude, MAX_LATITUDE);
+  parse_location(DEFAULT_LONGITUDE, &longitude, MAX_LONGITUDE);
 
-    parse_offset(DEFAULT_UTC_OFFSET, &utc_offset);
+  parse_offset(DEFAULT_UTC_OFFSET, &utc_offset);
 
-    parse_date(DEFAULT_DATE, &dateInfo);
-    parse_time(DEFAULT_TIME, &timeInfo);
+  parse_date(DEFAULT_DATE, &dateInfo);
+  parse_time(DEFAULT_TIME, &timeInfo);
 };
 
-void OnStepXMountPlugin::loop() {
+void OnStepXMountPlugin::loop(){
 
 };
 
@@ -51,146 +51,149 @@ void OnStepXMountPlugin::loop() {
 */
 bool OnStepXMountPlugin::command(char reply[], char command[], char parameter[], bool *supressFrame, bool *numericReply, CommandError *commandError) {
 
-    if (command[0] == (char)6) {
-        *numericReply = false;
-        *supressFrame = true;
-        sprintf(reply, MOUNT_MODE);
-        return true;
+  if (command[0] == (char)6) {
+    *numericReply = false;
+    *supressFrame = true;
+    sprintf(reply, MOUNT_MODE);
+    return true;
+  }
+
+  if (command[0] == 'G') {
+    memset(response_buffer, '\0', RESPONSE_BUFFER_SIZE);
+    bool override = false;
+    if (command[1] == 'U') {
+      override = true;
+      sprintf(response_buffer, "NHp");
+    } else if (command[1] == 'm') {
+      override = true;
+      sprintf(response_buffer, "N");
+    } else if (command[1] == 'r' || command[1] == 'R') {
+      *numericReply = false;
+      *supressFrame = true;
+      sprintf(reply, "13:00:00#*");
+      return true;
+    } else if (command[1] == 'd' || command[1] == 'D') {
+      *numericReply = false;
+      *supressFrame = true;
+      sprintf(reply, "+90:00:00#*");
+      return true;
+    } else if (command[1] == 't') {
+      override = true;
+      location_toString(latitude, response_buffer, RESPONSE_BUFFER_SIZE);
+    } else if (command[1] == 'g') {
+      override = true;
+      location_toString(longitude, response_buffer, RESPONSE_BUFFER_SIZE);
+    } else if (command[1] == 'G') {
+      override = true;
+      offset_toString(utc_offset, response_buffer, RESPONSE_BUFFER_SIZE);
+    } else if (command[1] == 'X' && parameter[0] == '9' && parameter[1] == '8') {
+      override = true;
+      sprintf(response_buffer, "N");
+    } else if (command[1] == 'C') {
+      // GC get date
+      override = true;
+      date_toString(dateInfo, response_buffer, RESPONSE_BUFFER_SIZE);
+    } else if (command[1] == 'L') {
+      // get local time in 24h format
+      override = true;
+      time_24h_toString(timeInfo, response_buffer, RESPONSE_BUFFER_SIZE);
+    } else if (command[1] == 'a') {
+      // get local time in 12h format
+      override = true;
+      time_12h_toString(timeInfo, response_buffer, RESPONSE_BUFFER_SIZE);
+    } else if (command[1] == 'S') {
+      // get sidereal time
+      override = true;
+      time_24h_toString(siderealTimeInfo, response_buffer, RESPONSE_BUFFER_SIZE);
+    } else if (command[1] == 'M') {
+      // GM get site name
+      override = true;
+      sprintf(response_buffer, "%s", siteInfo[0].sitename);
+    } else if (command[1] == 'N') {
+      // GM get site name
+      override = true;
+      sprintf(response_buffer, "%s", siteInfo[1].sitename);
+    } else if (command[1] == 'O') {
+      // GM get site name
+      override = true;
+      sprintf(response_buffer, "%s", siteInfo[2].sitename);
+    } else if (command[1] == 'P') {
+      // GM get site name
+      override = true;
+      sprintf(response_buffer, "%s", siteInfo[3].sitename);
+    } else if (command[1] == 'T') {
+      // tracking rate
+      override = true;
+      sprintf(response_buffer, "60.164");
     }
 
-    if(command[0] == 'G') {
-      memset(response_buffer, '\0', RESPONSE_BUFFER_SIZE);
-      bool override = false;
-       if (command[1] == 'U') {
-         override = true;
-         sprintf(response_buffer, "NHp");
-       } else if (command[1] == 'm') {
-         override = true;
-         sprintf(response_buffer, "N");
-       } else if (command[1] == 'r' || command[1] == 'R') {
-          *numericReply = false;
-          *supressFrame = true;
-          sprintf(reply, "13:00:00#*");
-          return true;
-       } else if (command[1] == 'd' || command[1] == 'D') {
-          *numericReply = false;
-          *supressFrame = true;
-          sprintf(reply, "+90:00:00#*");
-          return true;
-       } else if (command[1] == 't') {
-         override = true;
-         location_toString(latitude, response_buffer, RESPONSE_BUFFER_SIZE);
-       } else if (command[1] == 'g') {
-         override = true;
-         location_toString(longitude, response_buffer, RESPONSE_BUFFER_SIZE);
-       } else if (command[1] == 'G') {
-         override = true;
-         offset_toString(utc_offset, response_buffer, RESPONSE_BUFFER_SIZE);
-       } else if (command[1] == 'X' && parameter[0] == '9' && parameter[1] == '8') {
-          override = true;
-          sprintf(response_buffer, "N");
-       } else if (command[1] == 'C') {
-          // GC get date
-           override = true;
-          date_toString(dateInfo, response_buffer, RESPONSE_BUFFER_SIZE);
-       } else if (command[1] == 'L') {
-          // get local time in 24h format
-          override = true;
-          time_24h_toString(timeInfo, response_buffer, RESPONSE_BUFFER_SIZE);
-       } else if (command[1] == 'a') {
-          // get local time in 12h format
-          override = true;
-          time_12h_toString(timeInfo, response_buffer, RESPONSE_BUFFER_SIZE);
-       } else if (command[1] == 'S') {
-          // get sidereal time
-          override = true;
-          time_24h_toString(siderealTimeInfo, response_buffer, RESPONSE_BUFFER_SIZE);
-       } else if (command[1] == 'M') {
-          // GM get site name
-          override = true;
-          sprintf(response_buffer, "%s", siteInfo[0].sitename);
-       } else if (command[1] == 'N') {
-          // GM get site name
-          override = true;
-          sprintf(response_buffer, "%s", siteInfo[1].sitename);
-       } else if (command[1] == 'O') {
-          // GM get site name
-          override = true;
-          sprintf(response_buffer, "%s", siteInfo[2].sitename);
-       } else if (command[1] == 'P') {
-          // GM get site name
-          override = true;
-          sprintf(response_buffer, "%s", siteInfo[3].sitename);
-       } else if (command[1] == 'T') {
-          // tracking rate
-          override = true;
-          sprintf(response_buffer, "60.164");
-       }
+    // if we have a valid override command, return the response
+    if (override) {
+      *numericReply = false;
+      *supressFrame = false;
+      sprintf(reply, response_buffer);
+      return true;
+    }
 
-       // if we have a valid override command, return the response
-       if (override) {
-          *numericReply = false;
-          *supressFrame = false;
-          sprintf(reply, response_buffer);
-          return true;
-       }
-
-    } else if (command[0] == 'S') {
-       bool override = false;
-       *commandError = CommandError::CE_NONE;
-       if (command[1] == 't') {
-         override = true;
-         if (!parse_location(parameter, &latitude, MAX_LATITUDE)) {
-              *commandError = CommandError::CE_PARAM_FORM;
-         }
-       } else if (command[1] == 'g') {
-         override = true;
-         if (!parse_location(parameter, &longitude, MAX_LONGITUDE)) {
-              *commandError = CommandError::CE_PARAM_FORM;
-          }
-       } else if (command[1] == 'G') {
-         override = true;
-         if (!parse_offset(parameter, &utc_offset)) {
-              *commandError = CommandError::CE_PARAM_FORM;
-          }
-       } else if (command[1] == 'C') {
-          // SC set date
-          override = true;
-          if (!parse_date(parameter, &dateInfo)) {
-              *commandError = CommandError::CE_PARAM_FORM;
-          }
-       } else if (command[1] == 'L') {
-          // set local time
-          override = true;
-          if (!parse_time(parameter, &timeInfo)) {
-              *commandError = CommandError::CE_PARAM_FORM;
-          }
-       } else if (command[1] == 'S') {
-          // set sidereal time
-          override = true;
-          if (!parse_time(parameter, &siderealTimeInfo)) {
-              *commandError = CommandError::CE_PARAM_FORM;
-          }
-       }
-       // TODO handle setting sites M, N, O, P based on current lat, long, utc offset
-
-       // if we have a valid override command, return the response
-       if (override) {
-          *numericReply = true;
-          *supressFrame = true;
-          return true;
-       }
-    } else if (command[0] == '%' || command[0] == '$') {
-      // handle BR or BD
-      if (command[1] == 'B' && (command[2] == 'R' || command[2] == 'R')) {
-          *numericReply = true;
-          *supressFrame = true;
-          *commandError = CommandError::CE_NONE;
-          return true;
+  } else if (command[0] == 'S') {
+    bool override = false;
+    *commandError = CommandError::CE_NONE;
+    if (command[1] == 't') {
+      override = true;
+      if (!parse_location(parameter, &latitude, MAX_LATITUDE)) {
+        *commandError = CommandError::CE_PARAM_FORM;
+      }
+    } else if (command[1] == 'g') {
+      override = true;
+      if (!parse_location(parameter, &longitude, MAX_LONGITUDE)) {
+        *commandError = CommandError::CE_PARAM_FORM;
+      }
+    } else if (command[1] == 'G') {
+      override = true;
+      if (!parse_offset(parameter, &utc_offset)) {
+        *commandError = CommandError::CE_PARAM_FORM;
+      }
+    } else if (command[1] == 'C') {
+      // SC set date
+      override = true;
+      if (!parse_date(parameter, &dateInfo)) {
+        *commandError = CommandError::CE_PARAM_FORM;
+      }
+    } else if (command[1] == 'L') {
+      // set local time
+      override = true;
+      if (!parse_time(parameter, &timeInfo)) {
+        *commandError = CommandError::CE_PARAM_FORM;
+      }
+    } else if (command[1] == 'S') {
+      // set sidereal time
+      override = true;
+      if (!parse_time(parameter, &siderealTimeInfo)) {
+        *commandError = CommandError::CE_PARAM_FORM;
       }
     }
-      
-    return false;
+    // TODO handle setting sites M, N, O, P based on current lat, long, utc offset
+
+    // if we have a valid override command, return the response
+    if (override) {
+      *numericReply = true;
+      *supressFrame = true;
+      return true;
+    }
+  } else if (command[0] == '%' || command[0] == '$') {
+    // handle BR or BD
+    if (command[1] == 'B') &&
+         (command[2] == 'R' || command[2] == 'D') ||
+         command[2] == 'A' || command[2] == 'Z'))
+    {
+        *numericReply = false;
+        *supressFrame = true;
+        *commandError = CommandError::CE_NONE;
+        return true;
+    }
+  }
+
+  return false;
 };
 
 OnStepXMountPlugin onstepxMountPlugin;
