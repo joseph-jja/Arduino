@@ -25,7 +25,7 @@ IPAddress gateway;
 WiFiClient client;
 
 // Create an instance of the MD_MAX72xx class
-MD_MAX72XX mx = MD_MAX72XX(HARDWARE_TYPE, CS_PIN, MAX_DEVICES);
+MD_MAX72XX mx = MD_MAX72XX(HARDWARE_TYPE, DATA_PIN, CLK_PIN, CS_PIN, MAX_DEVICES);
 
 void setup_builtin_pin() {
   pinMode(LED_BUILTIN, OUTPUT);
