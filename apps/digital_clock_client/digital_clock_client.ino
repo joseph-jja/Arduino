@@ -15,7 +15,7 @@
 // TODO figure out which board type devices and pin
 #define HARDWARE_TYPE MD_MAX72XX::FC16_HW // Example: FC16_HW for common 8x8 modules
 #define MAX_DEVICES 4                     // Number of 8x8 matrix modules chained together
-#define CS_PIN 10                         // CS pin connected to the MAX7219
+#define CS_PIN 8                         // CS pin connected to the MAX7219
 
 #define TIME_BUFFER_SIZE 30
 
