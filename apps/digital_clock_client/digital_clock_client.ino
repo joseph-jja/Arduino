@@ -9,15 +9,16 @@
 #include <Hash.h>
 #include <MD_MAX72xx.h>
 #include <SPI.h>
+#include <ESP8266HTTPClient.h>
 
 #include "Config.h"
 
-// TODO figure out which board type devices and pin
-#define HARDWARE_TYPE MD_MAX72XX::FC16_HW // Example: FC16_HW for common 8x8 modules
-#define MAX_DEVICES 4                     // Number of 8x8 matrix modules chained together
-#define CS_PIN 8                         // CS pin connected to the MAX7219
-#define CLK_PIN 5
-#define DATA_PIN 7
+// You'll need to figure out which board type devices and pin
+#define HARDWARE_TYPE MD_MAX72XX::FC16_HW  //.1818583410 // Example: FC16_HW for common 8x8 modules
+#define MAX_DEVICES 4                      // Number of 8x8 matrix modules chained together
+#define CS_PIN D8                          // CS pin connected to the MAX7219
+#define CLK_PIN D5                         // CLK pin connected to the MAX7219
+#define DATA_PIN D7                        // Data pin connected to the MAX7219
 
 #define TIME_BUFFER_SIZE 30
 
@@ -42,6 +43,7 @@ void blink_pin(int sleep_time) {
 void setup() {
 
   Serial.begin(9600);
+  delay(25);
 
   setup_builtin_pin();
 
@@ -71,7 +73,7 @@ void setup() {
   Serial.println("");
   Serial.println("WiFi connected");
   Serial.print("IP address: ");
-  Serial.println(WiFi.localIP().toString());
+  Serial.println();
   Serial.print("gateway address: ");
   Serial.println(gateway.toString());
 
@@ -83,102 +85,89 @@ void setup() {
   // Initialize the LED matrix
   mx.begin();
   //mx.setIntensity(0); // Set brightness (0-15)
-  mx.clear();  
-}
-bool connect_client() {
-
-  String host_str = gateway.toString();
-  const char *host = host_str.c_str();
-  int port = 80;
-
-  int i = 0;
-  bool isConnected = false;
-  while (!isConnected && i < 10) {
-    isConnected = client.connect(host, port);
-    if (!isConnected) {
-      Serial.println("Cnnection failed");
-    }
-    i++;
-  }
-  Serial.print("Connected? ");
-  Serial.print(isConnected);
-  Serial.print(" to ");
-  Serial.print(host_str);
-  Serial.print(" on port ");
-  Serial.println(port);
+  mx.clear();
 }
 
 long lastUpdate = 0;
 char time_buffer[TIME_BUFFER_SIZE];
 
 void writeString(char hours[], char minutes[]) {
-  
+
   mx.clear();
 
   if (strlen(hours) == 1) {
-    mx.setChar(0, '0'); 
-    mx.setChar(1, hours[0]); 
-  }else {
-    mx.setChar(0, hours[0]); 
-    mx.setChar(1, hours[1]); 
+    mx.setChar(0, '0');
+    mx.setChar(1, hours[0]);
+  } else {
+    mx.setChar(0, hours[0]);
+    mx.setChar(1, hours[1]);
   }
 
   if (strlen(minutes) == 1) {
-    mx.setChar(2, '0'); 
-    mx.setChar(3, minutes[0]); 
-  }else {
-    mx.setChar(2, minutes[0]); 
-    mx.setChar(3, minutes[1]); 
+    mx.setChar(2, '0');
+    mx.setChar(3, minutes[0]);
+  } else {
+    mx.setChar(2, minutes[0]);
+    mx.setChar(3, minutes[1]);
   }
 }
 
+bool firstTime = true;
 void fetch_data() {
 
   if (lastUpdate == 0) {
     lastUpdate = millis();
   }
 
-  int i = 0;
-  memset(time_buffer, '\0', TIME_BUFFER_SIZE);
-  if ((millis() - lastUpdate) > UPDATE_INTERVAL) {
-    bool isConnected = connect_client();
-    long start_time = millis();
-    bool foundEnd = false;
-    while (!foundEnd) {
-      if ((millis() - start_time) < UPDATE_INTERVAL) {
-        if (client.available()) {
-          char incomingByte = client.read();
-          Serial.print("WIFI data read in ");
-          Serial.println(incomingByte);
-          if (incomingByte != NULL && isprint(incomingByte)) {
-            time_buffer[i] = incomingByte;
-            i++;
-          }
-          if (incomingByte == '#') {
-            foundEnd = true;
-          }
+  //Serial.println("Attempting to fetch data from remote clock");
+  if ((millis() - lastUpdate) > UPDATE_INTERVAL || firstTime) {
+    memset(time_buffer, '\0', TIME_BUFFER_SIZE);
+    if (WiFi.status() == WL_CONNECTED) {
+      firstTime = false;
+      char url[128];
+      // \r\n\r\n
+      sprintf(url, "http://%s/gettime", gateway.toString().c_str());
+      Serial.print("Attempting to connect to: ");
+      Serial.println(url);
+
+      HTTPClient http;
+      http.begin(client, url);
+      int httpCode = http.GET();
+
+      if (httpCode == 200) {
+        Serial.print("Got success code: ");
+        Serial.println(httpCode);
+        String payload = http.getString();
+        Serial.print("And got: ");
+        Serial.println(payload);
+        if (payload.length() < 20) { 
+          sprintf(time_buffer, payload.c_str());
         }
       } else {
-        delay(5);
-        start_time = millis();
+        Serial.print("Error response code: ");
+        Serial.println(httpCode);
       }
+
+      http.end();
+
+      Serial.println("Request made!");
     }
-    client.stop();
     lastUpdate = millis();
   }
+  //Serial.print("Got data?");
 }
 
 void updateClient() {
-  
+
   // TODO parse string
   // update  rawtime struct
   // update currentHour and currentMinute for display
-  char hours[3];
-  char minutes[3];
+  char hours[3] = {0};
+  char minutes[3] = {0};
   bool isMinutes = false;
   bool keepChar = true;
   int h = 0, m = 0;
-  if (time_buffer != NULL && strlen(time_buffer) > 3) {
+  if (time_buffer != nullptr && strlen(time_buffer) > 3) {
     for (int i = 0; i < strlen(time_buffer) - 1; i++) {
       if (time_buffer[i] == ':' || time_buffer[i] == '#') {
         isMinutes = true;
@@ -195,9 +184,9 @@ void updateClient() {
     }
     Serial.print("Hours ");
     Serial.print(hours);
-    Serial.print("and minutes ");
+    Serial.print(" and minutes ");
     Serial.println(minutes);
-    writeString(hours, minutes);
+    //writeString(hours, minutes);
   }
 }
 
@@ -205,5 +194,5 @@ void loop() {
 
   fetch_data();
   updateClient();
-  delay(500);
+  delay(15000);
 }
