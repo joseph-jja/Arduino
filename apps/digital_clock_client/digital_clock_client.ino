@@ -192,6 +192,9 @@ void updateClient() {
     int guess_minutes = atoi(minutes) + loop_minutes;
     char updated_minutes[3] = {0};
     sprintf(updated_minutes, "%d", guess_minutes);
+    //int guess_hours = atoi(minutes) + loop_minutes;
+    //char updated_minutes[3] = {0};
+    //sprintf(updated_minutes, "%d", guess_minutes);
 
     Serial.print("Hours ");
     Serial.print(hours);
@@ -202,13 +205,13 @@ void updateClient() {
     Serial.print(" and updated minutes ");
     Serial.println(updated_minutes);
     
-    writeString(hours, minutes);
+    writeString(hours, updated_minutes);
   }
 }
 
 void update_time() {
 
-   if (subminutes < 4) {
+   if (subminutes < 3) {
     subminutes++;
    } else {
     loop_minutes++;
