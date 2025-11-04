@@ -190,14 +190,24 @@ void updateClient() {
       keepChar = true;
     }
     int guess_minutes = atoi(minutes) + loop_minutes;
+    int guess_hours = atoi(hours);
+    if (guess_minutes > 59) {
+      guess_minutes = 0;
+      guess_hours++;
+      if (guess_hours > 23) {
+        guess_hours = 0;
+      }
+    }
+
     char updated_minutes[3] = {0};
+    char updated_hours[3] = {0};
     sprintf(updated_minutes, "%d", guess_minutes);
-    //int guess_hours = atoi(minutes) + loop_minutes;
-    //char updated_minutes[3] = {0};
-    //sprintf(updated_minutes, "%d", guess_minutes);
+    sprintf(updated_hours, "%d", guess_hours);
 
     Serial.print("Hours ");
     Serial.print(hours);
+    Serial.print(" and updated hours ");
+    Serial.print(updated_hours);
     Serial.print(" and minutes ");
     Serial.print(minutes);
     Serial.print(" and loop minutes ");
