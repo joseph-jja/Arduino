@@ -210,7 +210,7 @@ void get_time() {
       Serial.print('/');
       Serial.print(rtnow.day(), DEC);
       Serial.print(' ');
-      Serial.print(rtnow.hour(), DEC);
+      Serial.print(rtnow.hour(), DEC); // hour is in 24 hour time format
       Serial.print(':');
       Serial.print(rtnow.minute(), DEC);
       Serial.print(':');
