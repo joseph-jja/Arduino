@@ -115,6 +115,8 @@ void writeString(char hours[], char minutes[]) {
   }
 }
 
+int loop_minutes = 0;
+int subminutes = 0;
 bool firstTime = true;
 void fetch_data() {
 
@@ -145,6 +147,8 @@ void fetch_data() {
         Serial.println(payload);
         if (payload.length() < 20) { 
           sprintf(time_buffer, payload.c_str());
+          loop_minutes = 0;
+          subminutes = 0;
         }
       } else {
         Serial.print("Error response code: ");
@@ -185,12 +189,31 @@ void updateClient() {
       }
       keepChar = true;
     }
+    int guess_minutes = atoi(minutes) + loop_minutes;
+    char updated_minutes[3] = {0};
+    sprintf(updated_minutes, "%d", guess_minutes);
+
     Serial.print("Hours ");
     Serial.print(hours);
     Serial.print(" and minutes ");
-    Serial.println(minutes);
+    Serial.print(minutes);
+    Serial.print(" and loop minutes ");
+    Serial.print(loop_minutes);
+    Serial.print(" and updated minutes ");
+    Serial.println(updated_minutes);
+    
     writeString(hours, minutes);
   }
+}
+
+void update_time() {
+
+   if (subminutes < 4) {
+    subminutes++;
+   } else {
+    loop_minutes++;
+    subminutes = 0;
+   }
 }
 
 void loop() {
@@ -198,4 +221,5 @@ void loop() {
   fetch_data();
   updateClient();
   delay(15000);
+  update_time(); 
 }
