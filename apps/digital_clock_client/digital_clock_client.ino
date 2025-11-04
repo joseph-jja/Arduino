@@ -95,20 +95,23 @@ void writeString(char hours[], char minutes[]) {
 
   mx.clear();
 
+  //Serial.print("Columns: ");
+  //Serial.println(mx.getColumnCount());
+
   if (strlen(hours) == 1) {
-    mx.setChar(0, '0');
-    mx.setChar(1, hours[0]);
+    mx.setChar(30, '0');
+    mx.setChar(22, hours[0]);
   } else {
-    mx.setChar(0, hours[0]);
-    mx.setChar(1, hours[1]);
+    mx.setChar(30, hours[0]);
+    mx.setChar(22, hours[1]);
   }
 
   if (strlen(minutes) == 1) {
-    mx.setChar(2, '0');
-    mx.setChar(3, minutes[0]);
+    mx.setChar(14, '0');
+    mx.setChar(6, minutes[0]);
   } else {
-    mx.setChar(2, minutes[0]);
-    mx.setChar(3, minutes[1]);
+    mx.setChar(14, minutes[0]);
+    mx.setChar(6, minutes[1]);
   }
 }
 
@@ -186,7 +189,7 @@ void updateClient() {
     Serial.print(hours);
     Serial.print(" and minutes ");
     Serial.println(minutes);
-    //writeString(hours, minutes);
+    writeString(hours, minutes);
   }
 }
 
