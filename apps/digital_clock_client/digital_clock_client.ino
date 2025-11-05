@@ -215,7 +215,7 @@ void updateClient() {
     Serial.print(" and updated minutes ");
     Serial.println(updated_minutes);
     
-    writeString(hours, updated_minutes);
+    writeString(updated_hours, updated_minutes);
   }
 }
 
