@@ -1,3 +1,5 @@
+#pragma once
+
 // wifi config
 const char* ssid     = "ESP-GPS-AP-25";
 const char* password = "ESP8266-GPS-AP-25";
