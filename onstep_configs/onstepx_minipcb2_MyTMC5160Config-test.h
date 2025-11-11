@@ -171,7 +171,7 @@
 
 // GUIDING BEHAVIOUR ------------------------------------------ see https://onstep.groups.io/g/main/wiki/Configuration_Mount#GUIDING
 #define GUIDE_TIME_LIMIT 10       //     10, n. Time limit n=0..120 seconds. Use 0 to disable.                        Adjust
-#define GUIDE_DISABLE_BACKLASH ON //    OFF, Disable backlash takeup during guiding at <= 1X.                         Option
+#define GUIDE_DISABLE_BACKLASH OFF //    OFF, Disable backlash takeup during guiding at <= 1X.                         Option
 
 // LIMITS ------------------------------------------------------ see https://onstep.groups.io/g/main/wiki/Configuration_Mount#LIMITS
 #define LIMIT_SENSE OFF  //    OFF, HIGH or LOW state on limit sense switch stops movement.                  Option
@@ -193,10 +193,10 @@
 #define PEC_BUFFER_SIZE_LIMIT 720 //    720, Seconds of PEC buffer allowed.                                           Infreq
 
 // TRACKING BEHAVIOUR ---------------------------------------- see https://onstep.groups.io/g/main/wiki/Configuration_Mount#TRACKING
-#define TRACK_BACKLASH_RATE 20         //     20, n. Where n=2..50 (x sidereal rate) during backlash takeup.               Option
+#define TRACK_BACKLASH_RATE 10         //     20, n. Where n=2..50 (x sidereal rate) during backlash takeup.               Option
                                        //         Too fast motors stall/gears slam or too slow and sluggish in backlash.
 #define TRACK_AUTOSTART OFF            //    OFF, ON Start with tracking enabled.                                          Option
-#define TRACK_COMPENSATION_DEFAULT OFF //    OFF, No compensation or REFRACTION, REFRACTION_DUAL, MODEL, MODEL_DUAL.       Option
+#define TRACK_COMPENSATION_DEFAULT MODEL_DUAL //    OFF, No compensation or REFRACTION, REFRACTION_DUAL, MODEL, MODEL_DUAL.       Option
 #define TRACK_COMPENSATION_MEMORY OFF  //    OFF, ON Remembers refraction/pointing model compensated tracking settings.    Option
 
 // SLEWING BEHAVIOUR ------------------------------------------ see https://onstep.groups.io/g/main/wiki/Configuration_Mount#SLEWING
