@@ -138,7 +138,7 @@ void setup() {
     }
     setupMPU6050();
 
-    setup_mmc5983ma();
+    //setup_mmc5983ma();
 
     setup_builtin_pin();
 }
@@ -215,13 +215,13 @@ void loop() {
     getAccelerometerData();
     delay(100);
 
-    get_compass_data();
+    //get_compass_data();
     delay(50);
 
     server.handleClient();
     MDNS.update();
 
-    if (Serial.available() > 0) {
+    /*if (Serial.available() > 0) {
 
         // get incoming byte:
         int inByte = Serial.read();
@@ -230,5 +230,5 @@ void loop() {
         itoa(inByte, single, 10);
         Serial.println(single);
 
-    }
+    }*/
 }
