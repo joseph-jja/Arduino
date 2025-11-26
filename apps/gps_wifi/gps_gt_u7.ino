@@ -7,9 +7,7 @@ void get_gps_info() {
         currentHour = 0,
         currentMinute = 0;
 
-    long avail = ss.available();
-
-    while (avail > 0) {
+    while (ss.available() > 0) {
         //Serial.println("Trying to get GPS data.");
         if (gps.encode(ss.read())) {
             blink_pin(100);
@@ -49,7 +47,6 @@ void get_gps_info() {
                 Serial.println(gps_date);
             }
         }
-        avail = ss.available();
     }
     delay(500);
 }
