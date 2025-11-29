@@ -1,6 +1,13 @@
 // designed for the ESP32 S3 dual core!
+// ESP32 S3 -> Development Board N16R8 MCU
+// GPS -> gt-u7
+// I2C display -> SSD1306 
 #include <TinyGPSPlus.h>
 #include <HardwareSerial.h>
+
+#include <SPI.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
 
 // Define the ESP32-S3 pins for UART2 (adjust if your hardware is different)
 // Pin 34 is for TXD2, and Pin 36 is for RXD2 in this example.
@@ -16,7 +23,12 @@ HardwareSerial gpsSerial(2);
 // The TinyGPSPlus object
 TinyGPSPlus gps;
 
+#define OLED_RESET 4
+Adafruit_SSD1306 display(OLED_RESET);
 
+#if (SSD1306_LCDHEIGHT != 64)
+//#error("Height incorrect, please fix Adafruit_SSD1306.h!");
+#endif
 
 void setup() {
   // Initialize the serial monitor for debugging
@@ -41,6 +53,12 @@ void setup() {
     0              // Core to run on (0 or 1)
   );
   */
+
+  display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
+  display.display();
+  
+  // Clear the buffer.
+  display.clearDisplay();
 }
 
 void loop() {
@@ -97,5 +115,11 @@ void displayInfo() {
   }
 
   Serial.println();
+
+  // setup text size
+  display.setTextSize(2);
+
+  // text color
+  display.setTextColor(WHITE);
 }
 
