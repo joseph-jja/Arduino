@@ -121,5 +121,16 @@ void displayInfo() {
 
   // text color
   display.setTextColor(WHITE);
+
+  /* 
+  // write data at positions
+  display.setCursor(x, y);
+
+  memset(buff, '\0', sizeof(buff));
+  // fill buffer
+  display.println(buff);
+
+  display.display();
+  */
 }
 
