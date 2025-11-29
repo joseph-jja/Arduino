@@ -1,4 +1,4 @@
-
+// designed for the ESP32 S3 dual core!
 #include <TinyGPSPlus.h>
 #include <HardwareSerial.h>
 
@@ -24,6 +24,8 @@ void setup() {
   gpsSerial.begin(GPS_BAUD, SERIAL_8N1, GPS_RXD2, GPS_TXD2);
 
   Serial.println("ESP32 GPS Receiver with TinyGPSPlus");
+  Serial.print("Running on core ");
+  Serial.println(xPortGetCoreID());
 }
 
 void loop() {
