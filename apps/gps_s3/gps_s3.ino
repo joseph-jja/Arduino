@@ -16,6 +16,8 @@ HardwareSerial gpsSerial(2);
 // The TinyGPSPlus object
 TinyGPSPlus gps;
 
+
+
 void setup() {
   // Initialize the serial monitor for debugging
   Serial.begin(115200);
@@ -23,9 +25,22 @@ void setup() {
   // Initialize the serial communication with the GPS module on UART2
   gpsSerial.begin(GPS_BAUD, SERIAL_8N1, GPS_RXD2, GPS_TXD2);
 
+  BaseType_t coreID = xPortGetCoreID();
   Serial.println("ESP32 GPS Receiver with TinyGPSPlus");
   Serial.print("Running on core ");
-  Serial.println(xPortGetCoreID());
+  Serial.println(coreID);
+
+  /* 
+  xTaskCreatePinnedToCore(
+    myTask,        // Task function
+    "MyTask",      // Name of task
+    2048,          // Stack size (bytes)
+    NULL,          // Parameter to pass to task
+    1,             // Task priority
+    NULL,          // Task handle
+    0              // Core to run on (0 or 1)
+  );
+  */
 }
 
 void loop() {
