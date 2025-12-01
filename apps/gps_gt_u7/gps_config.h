@@ -4,6 +4,10 @@
 #define GPS_TX_PIN   33
 #define GPS_RX_PIN   34
 
+// uncomment for hardware serial
+//#define USE_HARDWARE_SERIAL true
+#define GPS_SERIAL_NUMBER  2
+
 typedef struct {
     // data was updated
     bool updated;

@@ -2,7 +2,12 @@
 
 // gps
 #include <TinyGPSPlus.h>
+
+#ifdef USE_HARDWARE_SERIAL
+#include <HardwareSerial.h>
+#else
 #include <SoftwareSerial.h>
+#endif
 
 #define GPS_BAUD 9600
 
@@ -10,7 +15,11 @@
 TinyGPSPlus gps;
 
 // The serial connection to the GPS device
-SoftwareSerial softwareSerial(GPS_RX_PIN, GPS_TX_PIN);
+#ifdef USE_HARDWARE_SERIAL
+HardwareSerial gpsSerial(GPS_SERIAL_NUMBER);
+#else
+SoftwareSerial gpsSerial(GPS_RX_PIN, GPS_TX_PIN);
+#endif
 
 GPS_LOCATION gpsdata;
 
@@ -18,7 +27,11 @@ void setup_gps() {
 
     Serial.print("GPS GT-U7 setup using Tiny GPS library version ");
     Serial.println(TinyGPSPlus::libraryVersion());
-    softwareSerial.begin(GPS_BAUD);
+#ifdef USE_HARDWARE_SERIAL
+    gpsSerial.begin(GPS_BAUD, SERIAL_8N1, GPS_RX_PIN, GPS_TX_PIN);
+#else
+    gpsSerial.begin(GPS_BAUD);
+#endif
 }
 
 void loop_gps() {
@@ -30,9 +43,9 @@ void loop_gps() {
     minutes = 0,
     seconds = 0;
 
-  while (softwareSerial.available() > 0) {
+  while (gpsSerial.available() > 0) {
         //Serial.println("Trying to get GPS data.");
-        if (gps.encode(softwareSerial.read())) {
+        if (gps.encode(gpsSerial.read())) {
             Serial.print("GPS data read using ");
             Serial.print(gps.satellites.value());
             Serial.println(" satellites.");
@@ -80,7 +93,8 @@ GPS_LOCATION getGPSData() {
     return gpsdata;
 }
 
-/* usage example 
+/* usage example */
+/**/
 void setup() {
     setup_gps();
 }
@@ -90,5 +104,5 @@ void loop() {
     GPS_LOCATION myGPS = getGPSData();
     // do something with the data, like display on screen?
     delay(1000);
-}
-*/
+}*/
+
