@@ -104,8 +104,11 @@ void cook_data() {
   double accZSquare = mpudata.AccZ * mpudata.AccZ;
   mpudata.accPitch = atan2(-1 * mpudata.AccX, sqrt(accYSquare + accZSquare)) * PI_180;
 
+  // time time time see what's become of me
+  double deltaTime = floor((millis() - lastUpdatedTime) / 1000);
+  lastUpdatedTime = millis();
+
   // gyro roll
-  double deltaTime = millis() - lastUpdatedTime;
   mpudata.gyroRoll = previousRollFiltered + (mpudata.GyroX * deltaTime);
 
   double rollPart = FILTER_COEFFICIENT * mpudata.gyroRoll;
@@ -125,7 +128,6 @@ void cook_data() {
   Serial.print(" and Pitch: ");
   Serial.print(mpudata.filteredPitch);
   Serial.println();
-  lastUpdatedTime = millis();
   previousRollFiltered = mpudata.filteredRoll;
   previousPitchFiltered = mpudata.filteredPitch;
 }
@@ -170,9 +172,9 @@ void loop_accel_n_gyro() {
   Serial.print(mpudata.temperatureF);
   Serial.println(" degF");
 
-  Serial.println("");
-
   cook_data();
+
+  Serial.println("");
 }
 
 MPU6050_PROCESSED_DATA getMPU6050Data() {
