@@ -8,4 +8,4 @@
 * You can pull this into a project and then call setup_gps() in your setup function
 * Then call loop_gps() to poll the GPS data
 * Then call GPS_LOCATION myGPS = getGPSData(); to get the actual data
-** The flag updated will be true if the location data was updated
+  * The flag updated will be true if the location data was updated
