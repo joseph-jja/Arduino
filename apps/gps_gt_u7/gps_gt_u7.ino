@@ -98,6 +98,7 @@ GPS_LOCATION getGPSData() {
 /* usage example */
 /*
 void setup() {
+    Serial.begin(9600);
     setup_gps();
 }
 
