@@ -4,6 +4,8 @@
 #include <TinyGPSPlus.h>
 #include <SoftwareSerial.h>
 
+#define GPS_BAUD 9600
+
 // The TinyGPS object
 TinyGPSPlus gps;
 
@@ -16,7 +18,7 @@ void setup_gps() {
 
     Serial.print("GPS GT-U7 setup using Tiny GPS library version ");
     Serial.println(TinyGPSPlus::libraryVersion());
-    softwareSerial.begin(GPSBaud);
+    softwareSerial.begin(GPS_BAUD);
 }
 
 void loop_gps() {
@@ -48,7 +50,7 @@ void loop_gps() {
             if (gps.time.isValid() || gps.time.isUpdated()) {
                 hours = gps.time.hour();
                 minutes = gps.time.minute();
-                seconds = gps.time.seconds();
+                seconds = gps.time.second();
                 memset(gpsdata.gps_time, '\0', sizeof(gpsdata.gps_date));
                 sprintf(gpsdata.gps_time, "%02d:%02d:%02d", hours, minutes, seconds);
                 Serial.print("Got raw time: ");
@@ -74,7 +76,19 @@ void loop_gps() {
 }
 
 // get the DPS data 
-GPS_LOCATION getGPSDate() {
+GPS_LOCATION getGPSData() {
     return gpsdata;
 }
 
+/* usage example 
+void setup() {
+    setup_gps();
+}
+
+void loop() {
+    loop_gps();
+    GPS_LOCATION myGPS = getGPSData();
+    // do something with the data, like display on screen?
+    delay(1000);
+}
+*/
