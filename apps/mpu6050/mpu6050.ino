@@ -1,7 +1,14 @@
 #import "mpu6050_config.h"
 
+// conversion from C to F
+// 9 / 5 = 1.8
+static const float C2F_MULTIPLIER = 1.8;
+static const float C2F_ADDITION = 32;
+
 // mpu6050
 Adafruit_MPU6050 mpu;
+
+MPU6050_data mpudata;
 
 void setup_accel_n_gyro() {
 
@@ -78,6 +85,45 @@ void setup_accel_n_gyro() {
 
 void loop_accel_n_gyro() {
 
+    sensors_event_t a, g, temp;
+    mpu.getEvent( & a, & g, & temp);
+
+    mpudata.AccX = a.acceleration.x;
+    mpudata.AccY = a.acceleration.y;
+    mpudata.AccZ = a.acceleration.z;
+    mpudata.GyroX = g.gyro.x;
+    mpudata.GyroY = g.gyro.y;
+    mpudata.GyroZ = g.gyro.z;
+    mpudata.temperatureC = temp.temperature;
+    mpudata.temperatureF = (C2F_MULTIPLIER * mpudata.temperatureC) + C2F_ADDITION;
+    
+    /* Print out the values */
+    Serial.print("RAW Angle ");
+    Serial.print("X: ");
+    Serial.print(mpudata.AccX);
+    Serial.print(", Y: ");
+    Serial.print(mpudata.AccY);
+    Serial.print(", Z: ");
+    Serial.print(mpudata.AccZ);
+    Serial.println(" m/s^2");
+
+    
+
+    Serial.print("RAW Gyro X: ");
+    Serial.print(mpudata.GyroX);
+    Serial.print(", Y (N/S): ");
+    Serial.print(mpudata.GyroY);
+    Serial.print(", Z (E/W): ");
+    Serial.print(mpudata.GyroZ);
+    Serial.println(" rad/s");
+
+    Serial.print("Chip Temperature: ");
+    Serial.print(mpudata.temperatureC);
+    Serial.print(" degC and ");
+    Serial.print(mpudata.temperatureF);
+    Serial.println(" degF");
+
+    Serial.println("");
 }
 
 // TODO create get method to get data values
