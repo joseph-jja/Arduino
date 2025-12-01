@@ -1,6 +1,18 @@
-// TODO create structure to contain data values 
+#import "mpu6050_config.h"
+
+// mpu6050
+Adafruit_MPU6050 mpu;
 
 void setup_accel_n_gyro() {
+
+  // Try to initialize MPU6050!
+  int i = 0;
+  if (!mpu.begin()) {
+      Serial.println("Failed to find MPU6050 chip");
+      while (mpu.begin() && i < 50) {
+          delay(100);
+      }
+  }
 
   // we want to detect smaller movements so we use 2G
     mpu.setAccelerometerRange(MPU6050_RANGE_2_G);
