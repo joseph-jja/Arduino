@@ -3,10 +3,12 @@
 
 // compass
 Adafruit_LIS3MDL lis3mdl;
+MAGNETOMETER megneto;
 
 void setup_magnetometer() {
 
       // Try to initialize!
+      // for 5 seconds
     int i = 0;
     boolean found = lis3mdl.begin_I2C();
     while (!found && i < 500) {          // hardware I2C mode, can pass in address & alt Wire
@@ -21,7 +23,7 @@ void setup_magnetometer() {
 
     Serial.println("LIS3MDL Found!");
   
-    lis3mdl.setPerformanceMode(LIS3MDL_MEDIUMMODE);
+    lis3mdl.setPerformanceMode(LIS3MDL_ULTRAHIGHMODE);
   Serial.print("Performance mode set to: ");
   switch (lis3mdl.getPerformanceMode()) {
     case LIS3MDL_LOWPOWERMODE: Serial.println("Low"); break;
@@ -39,7 +41,7 @@ void setup_magnetometer() {
     case LIS3MDL_POWERDOWNMODE: Serial.println("Power-down"); break;
   }
 
-  lis3mdl.setDataRate(LIS3MDL_DATARATE_155_HZ);
+  lis3mdl.setDataRate(LIS3MDL_DATARATE_40_HZ);
   // You can check the datarate by looking at the frequency of the DRDY pin
   Serial.print("Data rate set to: ");
   switch (lis3mdl.getDataRate()) {
@@ -76,6 +78,27 @@ void setup_magnetometer() {
 
 void loop_magnetometer() {
 
+  lis3mdl.read();      // get X Y and Z data at once
+  // Then print out the raw data
+  Serial.print("Compass readings: ");
+  megneto.compassX = lis3mdl.x;
+  megneto.compassY = lis3mdl.y;
+  megneto.compassZ = lis3mdl.z;
+  Serial.print("X:  "); Serial.print(megneto.compassX); 
+  Serial.print("  \tY:  "); Serial.print(megneto.compassY); 
+  Serial.print("  \tZ:  "); Serial.println(megneto.compassZ); 
+
+  /* Or....get a new sensor event, normalized to uTesla */
+  sensors_event_t event; 
+  lis3mdl.getEvent(&event);
+  megneto.magneticX = event.magnetic.x;
+  megneto.magneticY = event.magnetic.y;
+  megneto.magneticZ = event.magnetic.z;
+  /* Display the results (magnetic field is measured in uTesla) */
+  Serial.print("\tX: "); Serial.print(megneto.magneticX);
+  Serial.print(" \tY: "); Serial.print(megneto.magneticY); 
+  Serial.print(" \tZ: "); Serial.print(megneto.magneticZ); 
+  Serial.println(" uTesla ");
 }
 
 // TODO create get method to get data values
