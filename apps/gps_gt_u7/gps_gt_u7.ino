@@ -43,6 +43,8 @@ void loop_gps() {
     minutes = 0,
     seconds = 0;
 
+  gpsdata.updated = false;
+
   while (gpsSerial.available() > 0) {
         //Serial.println("Trying to get GPS data.");
         if (gps.encode(gpsSerial.read())) {
@@ -58,7 +60,7 @@ void loop_gps() {
                 Serial.print(", ");
                 Serial.print(gpsdata.longitude, 6);
                 Serial.println("");
-                delay(1000);
+                gpsdata.updated = true;
             }
             if (gps.time.isValid() || gps.time.isUpdated()) {
                 hours = gps.time.hour();
@@ -94,7 +96,7 @@ GPS_LOCATION getGPSData() {
 }
 
 /* usage example */
-/**/
+/*
 void setup() {
     setup_gps();
 }
