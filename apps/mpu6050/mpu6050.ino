@@ -183,7 +183,7 @@ MPU6050_PROCESSED_DATA getMPU6050Data() {
 }
 
 /* usage example */
-/**/
+/*
 void setup() {
 
   Serial.begin(9600);
