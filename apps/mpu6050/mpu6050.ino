@@ -17,6 +17,12 @@ Adafruit_MPU6050 mpu;
 
 MPU6050_PROCESSED_DATA mpudata;
 
+const float GYRO_SCALE = 131.0;
+
+double previousRollFiltered = 0;
+double previousPitchFiltered = 0;
+double lastUpdatedTime = 0;
+
 void setup_accel_n_gyro() {
 
   // Try to initialize MPU6050!
@@ -90,9 +96,6 @@ void setup_accel_n_gyro() {
   }
 }
 
-double previousRollFiltered = 0;
-double previousPitchFiltered = 0;
-double lastUpdatedTime = 0;
 void cook_data() {
 
   // x axis accelerometer
@@ -109,11 +112,14 @@ void cook_data() {
   lastUpdatedTime = millis();
 
   // gyro roll
-  mpudata.gyroRoll = previousRollFiltered + (mpudata.GyroX * deltaTime);
+  mpudata.gyroRoll =  mpudata.GyroX / GYRO_SCALE;
+  mpudata.gyroPitch = mpudata.GyroY / GYRO_SCALE;
 
-  double rollPart = FILTER_COEFFICIENT * mpudata.gyroRoll;
-  mpudata.filteredRoll = rollPart + (DELTA_FILTER_COEFFICIENT * mpudata.accAngleX);
-  mpudata.filteredPitch = rollPart + (DELTA_FILTER_COEFFICIENT * mpudata.accAngleY);
+  previousRollFiltered = previousRollFiltered + mpudata.gyroRoll * deltaTime;
+  previousPitchFiltered  = previousPitchFiltered + mpudata.gyroPitch * deltaTime;
+
+  mpudata.filteredRoll = FILTER_COEFFICIENT * previousRollFiltered + DELTA_FILTER_COEFFICIENT * mpudata.accAngleX;
+  mpudata.filteredPitch = FILTER_COEFFICIENT * previousPitchFiltered + DELTA_FILTER_COEFFICIENT * mpudata.accAngleY;
 
   Serial.print("Accelerometer => ");
   Serial.print("Roll: ");
@@ -155,8 +161,6 @@ void loop_accel_n_gyro() {
   Serial.print(", Z: ");
   Serial.print(mpudata.AccZ);
   Serial.println(" m/s^2");
-
-
 
   Serial.print("RAW Gyro X: ");
   Serial.print(mpudata.GyroX);
