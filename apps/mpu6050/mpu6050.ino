@@ -189,7 +189,7 @@ MPU6050_PROCESSED_DATA getMPU6050Data() {
 }
 
 /* usage example */
-
+/*
 void setup() {
 
   Serial.begin(9600);
@@ -201,4 +201,4 @@ void loop() {
   MPU6050_PROCESSED_DATA myMPU = getMPU6050Data();
   // do something with the data, like display on screen?
   delay(1000);
-}
+}*/
