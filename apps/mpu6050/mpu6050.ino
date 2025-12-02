@@ -112,30 +112,33 @@ void cook_data() {
   lastUpdatedTime = millis();
 
   // gyro roll
-  mpudata.gyroRoll =  mpudata.GyroX / GYRO_SCALE;
-  mpudata.gyroPitch = mpudata.GyroY / GYRO_SCALE;
+  mpudata.gyroRollRate =  mpudata.GyroX / GYRO_SCALE;
+  mpudata.gyroPitchRate = mpudata.GyroY / GYRO_SCALE;
 
-  previousRollFiltered = previousRollFiltered + mpudata.gyroRoll * deltaTime;
-  previousPitchFiltered  = previousPitchFiltered + mpudata.gyroPitch * deltaTime;
+  previousRollFiltered = previousRollFiltered + (mpudata.gyroRollRate * deltaTime);
+  previousPitchFiltered  = previousPitchFiltered + (mpudata.gyroPitchRate * deltaTime);
 
-  mpudata.filteredRoll = FILTER_COEFFICIENT * previousRollFiltered + DELTA_FILTER_COEFFICIENT * mpudata.accAngleX;
-  mpudata.filteredPitch = FILTER_COEFFICIENT * previousPitchFiltered + DELTA_FILTER_COEFFICIENT * mpudata.accAngleY;
+  mpudata.filteredRoll = (FILTER_COEFFICIENT * previousRollFiltered) + (DELTA_FILTER_COEFFICIENT * mpudata.accAngleX);
+  mpudata.filteredPitch = (FILTER_COEFFICIENT * previousPitchFiltered) + (DELTA_FILTER_COEFFICIENT * mpudata.accAngleY);
+
+  previousRollFiltered = mpudata.filteredRoll;
+  previousPitchFiltered = mpudata.filteredPitch;
 
   Serial.print("Accelerometer => ");
   Serial.print("Roll: ");
   Serial.print(mpudata.accAngleX);
   Serial.print(" and Pitch: ");
-  Serial.println(mpudata.accPitcaccAngleYh);
+  Serial.println(mpudata.accAngleY);
   Serial.print(" Gyro Roll: ");
-  Serial.print(mpudata.gyroRoll);
+  Serial.print(mpudata.gyroRollRate);
+  Serial.print(" and Pitch: ");
+  Serial.print(mpudata.gyroPitch);
   Serial.println();
   Serial.print(" Filtered Roll: ");
   Serial.print(mpudata.filteredRoll);
   Serial.print(" and Pitch: ");
   Serial.print(mpudata.filteredPitch);
   Serial.println();
-  previousRollFiltered = mpudata.filteredRoll;
-  previousPitchFiltered = mpudata.filteredPitch;
 }
 
 void loop_accel_n_gyro() {
