@@ -22,11 +22,14 @@ typedef struct {
   float temperatureC;
   float temperatureF;
 
+  // accelerometer angles
   float accAngleX;
   float accAngleY;
 
   // roll and pitch 
   double gyroRoll;
+  double gyroPitch;
+
   double filteredRoll; 
   double filteredPitch; 
 
