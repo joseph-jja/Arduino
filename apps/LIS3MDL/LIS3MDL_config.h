@@ -13,4 +13,7 @@ typedef struct {
   float magneticX;
   float magneticY;
   float magneticZ;
+
+  float compassHeading;
+  float magneticHeading;
 } MAGNETOMETER;
