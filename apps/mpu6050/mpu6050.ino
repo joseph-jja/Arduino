@@ -112,11 +112,11 @@ void cook_data() {
   lastUpdatedTime = millis();
 
   // gyro roll
-  mpudata.gyroRollRate =  mpudata.GyroX / GYRO_SCALE;
+  mpudata.gyroRollRate = mpudata.GyroX / GYRO_SCALE;
   mpudata.gyroPitchRate = mpudata.GyroY / GYRO_SCALE;
 
   previousRollFiltered = previousRollFiltered + (mpudata.gyroRollRate * deltaTime);
-  previousPitchFiltered  = previousPitchFiltered + (mpudata.gyroPitchRate * deltaTime);
+  previousPitchFiltered = previousPitchFiltered + (mpudata.gyroPitchRate * deltaTime);
 
   mpudata.filteredRoll = (FILTER_COEFFICIENT * previousRollFiltered) + (DELTA_FILTER_COEFFICIENT * mpudata.accAngleX);
   mpudata.filteredPitch = (FILTER_COEFFICIENT * previousPitchFiltered) + (DELTA_FILTER_COEFFICIENT * mpudata.accAngleY);
@@ -141,14 +141,26 @@ void cook_data() {
   Serial.println();
 }
 
+double flatten(double in, double offset) {
+  return round((in < 0 ? in + offset : in - offset) * 10) / 10;
+}
+
 void loop_accel_n_gyro() {
 
   sensors_event_t a, g, temp;
   mpu.getEvent(&a, &g, &temp);
 
-  mpudata.AccX = a.acceleration.x;
-  mpudata.AccY = a.acceleration.y;
-  mpudata.AccZ = a.acceleration.z;
+  double x = 0.0, y = 0.0, z = 0.0;
+  for (int i = 0; i < AVERAGE_LOOP_COUNT; i++) {
+    x += a.acceleration.x;
+    y += a.acceleration.y;
+    z += a.acceleration.z;
+    delay(10);
+  }
+
+  mpudata.AccX = flatten(x / AVERAGE_LOOP_COUNT, ACCEL_OFFSET_X);
+  mpudata.AccY = flatten(y / AVERAGE_LOOP_COUNT, ACCEL_OFFSET_Y);
+  mpudata.AccZ = flatten(z / AVERAGE_LOOP_COUNT, ACCEL_OFFSET_Z);
   mpudata.GyroX = g.gyro.x;
   mpudata.GyroY = g.gyro.y;
   mpudata.GyroZ = g.gyro.z;
@@ -201,4 +213,5 @@ void loop() {
   MPU6050_PROCESSED_DATA myMPU = getMPU6050Data();
   // do something with the data, like display on screen?
   delay(1000);
-}*/
+}
+*/
