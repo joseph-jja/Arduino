@@ -96,12 +96,12 @@ double lastUpdatedTime = 0;
 void cook_data() {
 
   // x axis accelerometer
-  mpudata.accRoll = atan2(mpudata.AccY, mpudata.AccZ) * RAD_TO_DEG;
+  mpudata.accAngleX = atan2(mpudata.AccY, mpudata.AccZ) * RAD_TO_DEG;
 
   // y axis accelerometer
   double accYSquare = mpudata.AccY * mpudata.AccY;
   double accZSquare = mpudata.AccZ * mpudata.AccZ;
-  mpudata.accPitch = atan2(-1 * mpudata.AccX, sqrt(accYSquare + accZSquare)) * RAD_TO_DEG;
+  mpudata.accAngleY = atan2(-1 * mpudata.AccX, sqrt(accYSquare + accZSquare)) * RAD_TO_DEG;
 
   // time time time see what's become of me
   // time in seconds is needed here
@@ -112,14 +112,14 @@ void cook_data() {
   mpudata.gyroRoll = previousRollFiltered + (mpudata.GyroX * deltaTime);
 
   double rollPart = FILTER_COEFFICIENT * mpudata.gyroRoll;
-  mpudata.filteredRoll = rollPart + (DELTA_FILTER_COEFFICIENT * mpudata.accRoll);
-  mpudata.filteredPitch = rollPart + (DELTA_FILTER_COEFFICIENT * mpudata.accPitch);
+  mpudata.filteredRoll = rollPart + (DELTA_FILTER_COEFFICIENT * mpudata.accAngleX);
+  mpudata.filteredPitch = rollPart + (DELTA_FILTER_COEFFICIENT * mpudata.accAngleY);
 
   Serial.print("Accelerometer => ");
   Serial.print("Roll: ");
-  Serial.print(mpudata.accRoll);
+  Serial.print(mpudata.accAngleX);
   Serial.print(" and Pitch: ");
-  Serial.println(mpudata.accPitch);
+  Serial.println(mpudata.accPitcaccAngleYh);
   Serial.print(" Gyro Roll: ");
   Serial.print(mpudata.gyroRoll);
   Serial.println();
