@@ -105,6 +105,7 @@ void cook_data() {
   mpudata.accPitch = atan2(-1 * mpudata.AccX, sqrt(accYSquare + accZSquare)) * PI_180;
 
   // time time time see what's become of me
+  // time in seconds is needed here
   double deltaTime = floor((millis() - lastUpdatedTime) / 1000);
   lastUpdatedTime = millis();
 
@@ -182,7 +183,7 @@ MPU6050_PROCESSED_DATA getMPU6050Data() {
 }
 
 /* usage example */
-
+/**/
 void setup() {
 
   Serial.begin(9600);
@@ -194,4 +195,4 @@ void loop() {
   MPU6050_PROCESSED_DATA myMPU = getMPU6050Data();
   // do something with the data, like display on screen?
   delay(1000);
-}
+}*/

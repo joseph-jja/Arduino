@@ -3,7 +3,7 @@
 // accelerometer gyroscope address
 const int MPU = 0x68; 
 
-#define FILTER_COEFFICIENT 0.98
+#define FILTER_COEFFICIENT 0.95
 static const float DELTA_FILTER_COEFFICIENT = 1 - FILTER_COEFFICIENT;
 
 typedef struct {
