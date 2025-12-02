@@ -23,6 +23,8 @@ double previousRollFiltered = 0;
 double previousPitchFiltered = 0;
 double lastUpdatedTime = 0;
 
+bool showRawValues = false;
+
 void setup_accel_n_gyro() {
 
   // Try to initialize MPU6050!
@@ -129,12 +131,12 @@ void cook_data() {
   Serial.print(mpudata.accAngleX);
   Serial.print(" and Pitch: ");
   Serial.println(mpudata.accAngleY);
-  Serial.print(" Gyro Roll: ");
+  Serial.print("Gyro Roll: ");
   Serial.print(mpudata.gyroRollRate);
   Serial.print(" and Pitch: ");
   Serial.print(mpudata.gyroPitch);
   Serial.println();
-  Serial.print(" Filtered Roll: ");
+  Serial.print("Filtered Roll: ");
   Serial.print(mpudata.filteredRoll);
   Serial.print(" and Pitch: ");
   Serial.print(mpudata.filteredPitch);
@@ -167,29 +169,31 @@ void loop_accel_n_gyro() {
   mpudata.temperatureC = temp.temperature;
   mpudata.temperatureF = (C2F_MULTIPLIER * mpudata.temperatureC) + C2F_ADDITION;
 
-  /* Print out the values */
-  Serial.print("RAW Angle ");
-  Serial.print("X: ");
-  Serial.print(mpudata.AccX);
-  Serial.print(", Y: ");
-  Serial.print(mpudata.AccY);
-  Serial.print(", Z: ");
-  Serial.print(mpudata.AccZ);
-  Serial.println(" m/s^2");
+  if (showRawValues) {
+    /* Print out the values */
+    Serial.print("RAW Angle ");
+    Serial.print("X: ");
+    Serial.print(mpudata.AccX);
+    Serial.print(", Y: ");
+    Serial.print(mpudata.AccY);
+    Serial.print(", Z: ");
+    Serial.print(mpudata.AccZ);
+    Serial.println(" m/s^2");
 
-  Serial.print("RAW Gyro X: ");
-  Serial.print(mpudata.GyroX);
-  Serial.print(", Y (N/S): ");
-  Serial.print(mpudata.GyroY);
-  Serial.print(", Z (E/W): ");
-  Serial.print(mpudata.GyroZ);
-  Serial.println(" rad/s");
+    Serial.print("RAW Gyro X: ");
+    Serial.print(mpudata.GyroX);
+    Serial.print(", Y (N/S): ");
+    Serial.print(mpudata.GyroY);
+    Serial.print(", Z (E/W): ");
+    Serial.print(mpudata.GyroZ);
+    Serial.println(" rad/s");
 
-  Serial.print("Chip Temperature: ");
-  Serial.print(mpudata.temperatureC);
-  Serial.print(" degC and ");
-  Serial.print(mpudata.temperatureF);
-  Serial.println(" degF");
+    Serial.print("Chip Temperature: ");
+    Serial.print(mpudata.temperatureC);
+    Serial.print(" degC and ");
+    Serial.print(mpudata.temperatureF);
+    Serial.println(" degF");
+  }
 
   cook_data();
 
@@ -213,5 +217,4 @@ void loop() {
   MPU6050_PROCESSED_DATA myMPU = getMPU6050Data();
   // do something with the data, like display on screen?
   delay(1000);
-}
-*/
+}*/
