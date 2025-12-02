@@ -43,11 +43,7 @@ void write_display(int left, int top, char *buff) {
   display.display();
 }
 
-Adafruit_SSD1306 getDisplay() {
-  return display;
-}
-
-/**/
+/*
 void setup() {
   // put your setup code here, to run once:
   setup_SDD1306();
