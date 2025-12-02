@@ -1,3 +1,7 @@
+#include "LIS3MDL_config.h"
+
+#include <math.h>
+
 // compass
 #include <Adafruit_LIS3MDL.h>
 
@@ -99,10 +103,19 @@ void loop_magnetometer() {
   megneto.magneticY = event.magnetic.y;
   megneto.magneticZ = event.magnetic.z;
   /* Display the results (magnetic field is measured in uTesla) */
+  Serial.print("Magnetic readings: ");
   Serial.print("\tX: "); Serial.print(megneto.magneticX);
   Serial.print(" \tY: "); Serial.print(megneto.magneticY); 
   Serial.print(" \tZ: "); Serial.print(megneto.magneticZ); 
   Serial.println(" uTesla ");
+
+  megneto.compassHeading = atan2(megneto.compassY, megneto.compassX) * RAD_TO_DEG
+  megneto.magneticHeading = atan2(megneto.magneticY, megneto.magneticX) * RAD_TO_DEG
+
+  Serial.print("Headings: ");
+  Serial.print(megneto.compassHeading); 
+  Serial.print(megneto.magneticHeading); 
+  Serial.println("");
 }
 
 // TODO create get method to get data values
