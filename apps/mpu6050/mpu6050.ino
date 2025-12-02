@@ -90,19 +90,18 @@ void setup_accel_n_gyro() {
   }
 }
 
-static const double PI_180 = (180 / PI);
 double previousRollFiltered = 0;
 double previousPitchFiltered = 0;
 double lastUpdatedTime = 0;
 void cook_data() {
 
   // x axis accelerometer
-  mpudata.accRoll = atan2(mpudata.AccY, mpudata.AccZ) * PI_180;
+  mpudata.accRoll = atan2(mpudata.AccY, mpudata.AccZ) * RAD_TO_DEG;
 
   // y axis accelerometer
   double accYSquare = mpudata.AccY * mpudata.AccY;
   double accZSquare = mpudata.AccZ * mpudata.AccZ;
-  mpudata.accPitch = atan2(-1 * mpudata.AccX, sqrt(accYSquare + accZSquare)) * PI_180;
+  mpudata.accPitch = atan2(-1 * mpudata.AccX, sqrt(accYSquare + accZSquare)) * RAD_TO_DEG;
 
   // time time time see what's become of me
   // time in seconds is needed here
