@@ -26,7 +26,10 @@ typedef struct {
   float accAngleX;
   float accAngleY;
 
-  // roll and pitch 
+  // roll and pitch rates 
+  double gyroRollRate;
+  double gyroPitchRate;
+
   double gyroRoll;
   double gyroPitch;
 
