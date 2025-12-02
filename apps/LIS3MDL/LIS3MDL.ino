@@ -22,7 +22,8 @@ void setup_magnetometer() {
     }
 
     Serial.println("LIS3MDL Found!");
-  
+
+      // we want high performance 
     lis3mdl.setPerformanceMode(LIS3MDL_ULTRAHIGHMODE);
   Serial.print("Performance mode set to: ");
   switch (lis3mdl.getPerformanceMode()) {
@@ -32,6 +33,7 @@ void setup_magnetometer() {
     case LIS3MDL_ULTRAHIGHMODE: Serial.println("Ultra-High"); break;
   }
 
+      // need this to work continually
   lis3mdl.setOperationMode(LIS3MDL_CONTINUOUSMODE);
   Serial.print("Operation mode set to: ");
   // Single shot mode will complete conversion and go into power down
@@ -41,7 +43,8 @@ void setup_magnetometer() {
     case LIS3MDL_POWERDOWNMODE: Serial.println("Power-down"); break;
   }
 
-  lis3mdl.setDataRate(LIS3MDL_DATARATE_40_HZ);
+      // good quality vs speed 
+  lis3mdl.setDataRate(LIS3MDL_DATARATE_10_HZ);
   // You can check the datarate by looking at the frequency of the DRDY pin
   Serial.print("Data rate set to: ");
   switch (lis3mdl.getDataRate()) {
@@ -58,7 +61,8 @@ void setup_magnetometer() {
     case LIS3MDL_DATARATE_560_HZ: Serial.println("560 Hz"); break;
     case LIS3MDL_DATARATE_1000_HZ: Serial.println("1000 Hz"); break;
   }
-  
+
+      // highly sensitive
   lis3mdl.setRange(LIS3MDL_RANGE_4_GAUSS);
   Serial.print("Range set to: ");
   switch (lis3mdl.getRange()) {
