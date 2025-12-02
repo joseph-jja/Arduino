@@ -22,9 +22,10 @@ typedef struct {
   float temperatureC;
   float temperatureF;
 
+  float accAngleX;
+  float accAngleY;
+
   // roll and pitch 
-  double accRoll;
-  double accPitch; 
   double gyroRoll;
   double filteredRoll; 
   double filteredPitch; 
