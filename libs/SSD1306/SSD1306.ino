@@ -1,11 +1,11 @@
 // OneWire - Version: Latest
-#include "sdd1306_config.h'
+#include "sdd1306_config.h"
 
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
 void setup_SDD1306() {
 
-  display.begin(SSD1306_SWITCHCAPVCC, OLED_ADDRESS);
+  display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS);
   display.display();
   
   // Clear the buffer.
