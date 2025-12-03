@@ -1,21 +1,11 @@
 // OneWire - Version: Latest
-#include <SPI.h>
-#include <Adafruit_GFX.h>
-#include <Adafruit_SSD1306.h>
+#include "SDD1306_config.h'
 
-#define OLED_RESET 4
-Adafruit_SSD1306 display(OLED_RESET);
-
-#include <stdlib.h>
-#include <string.h>
-
-#if (SSD1306_LCDHEIGHT != 64)
-//#error("Height incorrect, please fix Adafruit_SSD1306.h!");
-#endif
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
 void setup_SDD1306() {
 
-  display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
+  display.begin(SSD1306_SWITCHCAPVCC, OLED_ADDRESS);
   display.display();
   
   // Clear the buffer.
