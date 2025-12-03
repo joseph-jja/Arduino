@@ -5,8 +5,8 @@ void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
 
-  setup_accel_n_gyro();
   setup_SDD1306();
+  setup_accel_n_gyro();
 }
 
 void loop() {
