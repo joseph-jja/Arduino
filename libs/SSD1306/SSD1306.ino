@@ -7,12 +7,16 @@ void setup_SDD1306() {
 
   display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS);
   display.display();
-  
+  delay(500);
+
   // Clear the buffer.
   display.clearDisplay();
 
   // setup text size
-  display.setTextSize(2);
+  display.setTextSize(1);
+
+  // monochrome 
+  display.setTextColor(WHITE);
 }
 
 void clear_display() {
@@ -25,9 +29,10 @@ void write_display(int left, int top, char *buff) {
 
   display.setCursor(left, top);
 
-  display.println(buff);
+  display.print(buff);
 
   display.display();
+  delay(100);
 }
 
 /*
