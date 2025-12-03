@@ -1,13 +1,8 @@
 #include "LIS3MDL_config.h"
 
-#include <math.h>
-
-// compass
-#include <Adafruit_LIS3MDL.h>
-
 // compass
 Adafruit_LIS3MDL lis3mdl;
-MAGNETOMETER megneto;
+MAGNETOMETER magneto;
 
 void setup_magnetometer() {
 
@@ -89,34 +84,50 @@ void loop_magnetometer() {
   lis3mdl.read();      // get X Y and Z data at once
   // Then print out the raw data
   Serial.print("Compass readings: ");
-  megneto.compassX = lis3mdl.x;
-  megneto.compassY = lis3mdl.y;
-  megneto.compassZ = lis3mdl.z;
-  Serial.print("X:  "); Serial.print(megneto.compassX); 
-  Serial.print("  \tY:  "); Serial.print(megneto.compassY); 
-  Serial.print("  \tZ:  "); Serial.println(megneto.compassZ); 
+  magneto.compassX = lis3mdl.x;
+  magneto.compassY = lis3mdl.y;
+  magneto.compassZ = lis3mdl.z;
+  Serial.print("X:  "); Serial.print(magneto.compassX); 
+  Serial.print("  \tY:  "); Serial.print(magneto.compassY); 
+  Serial.print("  \tZ:  "); Serial.println(magneto.compassZ); 
 
   /* Or....get a new sensor event, normalized to uTesla */
   sensors_event_t event; 
   lis3mdl.getEvent(&event);
-  megneto.magneticX = event.magnetic.x;
-  megneto.magneticY = event.magnetic.y;
-  megneto.magneticZ = event.magnetic.z;
+  magneto.magneticX = event.magnetic.x;
+  magneto.magneticY = event.magnetic.y;
+  magneto.magneticZ = event.magnetic.z;
   /* Display the results (magnetic field is measured in uTesla) */
   Serial.print("Magnetic readings: ");
-  Serial.print("\tX: "); Serial.print(megneto.magneticX);
-  Serial.print(" \tY: "); Serial.print(megneto.magneticY); 
-  Serial.print(" \tZ: "); Serial.print(megneto.magneticZ); 
+  Serial.print("\tX: "); Serial.print(magneto.magneticX);
+  Serial.print(" \tY: "); Serial.print(magneto.magneticY); 
+  Serial.print(" \tZ: "); Serial.print(magneto.magneticZ); 
   Serial.println(" uTesla ");
 
-  megneto.compassHeading = atan2(megneto.compassY, megneto.compassX) * RAD_TO_DEG
-  megneto.magneticHeading = atan2(megneto.magneticY, megneto.magneticX) * RAD_TO_DEG
+  magneto.compassHeading = atan2(magneto.compassY, magneto.compassX) * RAD_TO_DEG;
+  magneto.magneticHeading = atan2(magneto.magneticY, magneto.magneticX) * RAD_TO_DEG;
 
   Serial.print("Headings: ");
-  Serial.print(megneto.compassHeading); 
-  Serial.print(megneto.magneticHeading); 
+  Serial.print(magneto.compassHeading); 
+  Serial.print(magneto.magneticHeading); 
   Serial.println("");
 }
 
-// TODO create get method to get data values
+MAGNETOMETER getLIS3MDLReadings() {
+  return magneto;
+}
 
+/* usage example */
+/*
+void setup() {
+
+  Serial.begin(9600);
+  setup_magnetometer();
+}
+
+void loop() {
+  loop_magnetometer();
+  MAGNETOMETER myMPU = getLIS3MDLReadings();
+  // do something with the data, like display on screen?
+  delay(1000);
+}*/

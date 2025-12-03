@@ -1,5 +1,10 @@
 #pragma once
 
+#include <math.h>
+
+// compass
+#include <Adafruit_LIS3MDL.h>
+
 typedef struct {
   // updated
   bool updated;
