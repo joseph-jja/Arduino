@@ -1,12 +1,5 @@
 #import "mpu6050_config.h"
 
-#include <math.h>
-
-// accelerometer
-#include <Adafruit_MPU6050.h>
-#include <Adafruit_Sensor.h>
-#include <Wire.h>
-
 // conversion from C to F
 // 9 / 5 = 1.8
 static const float C2F_MULTIPLIER = 1.8;
