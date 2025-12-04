@@ -39,11 +39,11 @@ void loop() {
   write_display(2, 62, "G Pitch");
   write_number(6, 72, results.gyroPitch);
 
-  write_display(2, 62, "F Roll");
-  write_number(6, 72, results.filteredRoll);
+  write_display(2, 82, "F Roll");
+  write_number(6, 92, results.filteredRoll);
 
-  write_display(2, 62, "F Pitch");
-  write_number(6, 72, results.filteredPitch);
+  write_display(2, 102, "F Pitch");
+  write_number(6, 112, results.filteredPitch);
   
 
   show();
