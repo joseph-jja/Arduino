@@ -7,6 +7,16 @@ void setup() {
 
   setup_SDD1306();
   setup_accel_n_gyro();
+
+  rotate(3);
+}
+
+void write_number(int left, int top, double x) {
+
+  char buff[32];
+  memset(buff, '\0', 32);
+  sprintf(buff, "%0.02f", x);
+  write_display(left, top, buff);
 }
 
 void loop() {
@@ -15,16 +25,28 @@ void loop() {
   loop_accel_n_gyro();
   MPU6050_PROCESSED_DATA results = getMPU6050Data();
 
-  clear_display();
+  clear();
 
-  char buff[32];
-  memset(buff, '\0', 32);
-  sprintf(buff, "Acc Roll %0.02f", results.accAngleX);
-  write_display(5, 5, buff);
+  write_display(2, 2, "A Roll");
+  write_number(6, 12, results.accAngleX);
 
-  memset(buff, '\0', 32);
-  sprintf(buff, "Acc Roll %0.02f", results.accAngleY);
-  write_display(5, 5, buff);
+  write_display(2, 22, "A Pitch");
+  write_number(6, 32, results.accAngleY);
+
+  write_display(2, 42, "G Roll");
+  write_number(6, 52, results.gyroRoll);
+
+  write_display(2, 62, "G Pitch");
+  write_number(6, 72, results.gyroPitch);
+
+  write_display(2, 62, "F Roll");
+  write_number(6, 72, results.filteredRoll);
+
+  write_display(2, 62, "F Pitch");
+  write_number(6, 72, results.filteredPitch);
+  
+
+  show();
 
   delay(1000);
 }

@@ -19,10 +19,14 @@ void setup_SDD1306() {
   display.setTextColor(WHITE);
 }
 
-void clear_display() {
+void clear() {
 
   // clear display from last write
   display.clearDisplay();
+}
+
+void rotate(int i) {
+  display.setRotation(i);
 }
 
 void write_display(int left, int top, char *buff) {
@@ -30,9 +34,10 @@ void write_display(int left, int top, char *buff) {
   display.setCursor(left, top);
 
   display.print(buff);
+}
 
+void show() {
   display.display();
-  delay(100);
 }
 
 /*
