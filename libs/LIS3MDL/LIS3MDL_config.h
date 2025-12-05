@@ -4,6 +4,7 @@
 
 // compass
 #include <Adafruit_LIS3MDL.h>
+#include <Adafruit_Sensor.h>
 
 typedef struct {
   // updated
