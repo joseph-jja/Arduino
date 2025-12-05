@@ -9,11 +9,11 @@ void setup_magnetometer() {
       // Try to initialize!
       // for 5 seconds
     int i = 0;
-    boolean found = lis3mdl.begin_I2C();
+    boolean found = lis3mdl.begin_I2C(LSL3MDL_ADDRESS, &Wire);
     while (!found && i < 500) {          // hardware I2C mode, can pass in address & alt Wire
         Serial.println("Failed to find LIS3MDL chip, will try again in 10");
         delay(10);
-        found = lis3mdl.begin_I2C();
+        found = lis3mdl.begin_I2C(LSL3MDL_ADDRESS, &Wire);
     }
     if (!found) { 
         Serial.println("LIS3MDL NOT Found, stopping!");
