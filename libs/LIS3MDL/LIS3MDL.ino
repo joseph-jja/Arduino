@@ -72,11 +72,10 @@ void setup_magnetometer() {
   }
 
   lis3mdl.setIntThreshold(500);
-  lis3mdl.configInterrupt(true, true, true, // enable z axis
+  lis3mdl.configInterrupt(false, false, true, // enable z axis
                           true, // polarity
                           false, // don't latch
                           true); // enabled!
-
 }
 
 void loop_magnetometer() {
