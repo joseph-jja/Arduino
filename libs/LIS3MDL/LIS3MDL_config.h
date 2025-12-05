@@ -7,6 +7,8 @@
 #include <Adafruit_LIS3MDL.h>
 #include <Adafruit_Sensor.h>
 
+#define LSL3MDL_ADDRESS 0x1C
+
 typedef struct {
   // updated
   bool updated;
