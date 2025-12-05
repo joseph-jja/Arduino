@@ -72,7 +72,7 @@ void setup_magnetometer() {
   }
 
   lis3mdl.setIntThreshold(500);
-  lis3mdl.configInterrupt(false, false, true, // enable z axis
+  lis3mdl.configInterrupt(true, true, true, // enable z axis
                           true, // polarity
                           false, // don't latch
                           true); // enabled!
@@ -108,7 +108,9 @@ void loop_magnetometer() {
   magneto.magneticHeading = atan2(magneto.magneticY, magneto.magneticX) * RAD_TO_DEG;
 
   Serial.print("Headings: ");
+  Serial.print("Compass: ");
   Serial.print(magneto.compassHeading); 
+  Serial.print(" Magnetic: ");
   Serial.print(magneto.magneticHeading); 
   Serial.println("");
 }
