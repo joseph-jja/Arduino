@@ -17,6 +17,7 @@ double previousPitchFiltered = 0;
 double lastUpdatedTime = 0;
 
 bool showRawValues = false;
+bool found = false;
 
 void setup_accel_n_gyro() {
 
@@ -24,11 +25,17 @@ void setup_accel_n_gyro() {
   int i = 0;
   if (!mpu.begin()) {
     Serial.println("Failed to find MPU6050 chip");
-    while (mpu.begin() && i < 50) {
+    while (!mpu.begin() && i < 50) {
       delay(100);
     }
   }
 
+  if (!mpu.begin()) {
+    return;
+  }
+  
+  found = true;
+  
   // we want to detect smaller movements so we use 2G
   mpu.setAccelerometerRange(MPU6050_RANGE_2_G);
   Serial.print("Accelerometer range set to: ");
@@ -93,6 +100,10 @@ void setup_accel_n_gyro() {
 
 void cook_data() {
 
+  if (!found) {
+    return;
+  }
+
   // x axis accelerometer
   mpudata.accAngleX = atan2(mpudata.AccY, mpudata.AccZ) * RAD_TO_DEG;
 
@@ -141,6 +152,10 @@ double flatten(double in, double offset) {
 }
 
 void loop_accel_n_gyro() {
+
+  if (!found) {
+    return;
+  }
 
   sensors_event_t a, g, temp;
   mpu.getEvent(&a, &g, &temp);
