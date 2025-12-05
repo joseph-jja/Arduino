@@ -43,7 +43,7 @@ void setup_magnetometer() {
   }
 
       // good quality vs speed 
-  lis3mdl.setDataRate(LIS3MDL_DATARATE_10_HZ);
+  lis3mdl.setDataRate(LIS3MDL_DATARATE_40_HZ);
   // You can check the datarate by looking at the frequency of the DRDY pin
   Serial.print("Data rate set to: ");
   switch (lis3mdl.getDataRate()) {
