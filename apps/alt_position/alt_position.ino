@@ -11,14 +11,6 @@ void setup() {
   rotate(3);
 }
 
-void write_number(int left, int top, double x) {
-
-  char buff[32];
-  memset(buff, '\0', 32);
-  sprintf(buff, "%0.02f", x);
-  write_display(left, top, buff);
-}
-
 void loop() {
   // put your main code here, to run repeatedly:
 
