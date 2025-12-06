@@ -64,10 +64,6 @@ void write_number(int left, int top, double x) {
   long decimals = round((x - whole) * 100);
 
   snprintf(buff, sizeof(buff), "%d.%d", whole, decimals);
-  Serial.print("my x ");
-  Serial.print(x);
-  Serial.print(" got ");
-  Serial.println(buff);
   write_display(left, top, buff);
 }
 
