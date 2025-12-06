@@ -23,7 +23,7 @@ void setup_SDD1306() {
   // setup text size
   display.setTextSize(1);
 
-  // monochrome 
+  // monochrome
   display.setTextColor(WHITE);
 }
 
@@ -57,9 +57,17 @@ void write_display(int left, int top, const char buff[]) {
 
 void write_number(int left, int top, double x) {
 
-  char buff[32];
-  memset(buff, '\0', 32);
-  sprintf(buff, "%0.02f", x);
+  char buff[64];
+  memset(buff, '\0', sizeof(buff));
+
+  long whole = floor(x);
+  long decimals = round((x - whole) * 100);
+
+  snprintf(buff, sizeof(buff), "%d.%d", whole, decimals);
+  Serial.print("my x ");
+  Serial.print(x);
+  Serial.print(" got ");
+  Serial.println(buff);
   write_display(left, top, buff);
 }
 
@@ -80,4 +88,3 @@ void loop() {
   // put your main code here, to run repeatedly:
 
 }*/
-
