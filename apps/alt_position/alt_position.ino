@@ -1,5 +1,5 @@
-#import "mpu6050_config.h"
-#import "sdd1306_config.h"
+#include "mpu6050_config.h"
+#include "sdd1306_config.h"
 
 void setup() {
   // put your setup code here, to run once:
