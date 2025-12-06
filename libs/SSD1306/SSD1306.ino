@@ -44,7 +44,7 @@ void rotate(int i) {
   display.setRotation(i);
 }
 
-void write_display(int left, int top, char *buff) {
+void write_display(int left, int top, const char buff[]) {
 
   if (!found) {
     return;
@@ -53,6 +53,14 @@ void write_display(int left, int top, char *buff) {
   display.setCursor(left, top);
 
   display.print(buff);
+}
+
+void write_number(int left, int top, double x) {
+
+  char buff[32];
+  memset(buff, '\0', 32);
+  sprintf(buff, "%0.02f", x);
+  write_display(left, top, buff);
 }
 
 void show() {
