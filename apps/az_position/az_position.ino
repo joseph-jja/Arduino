@@ -1,5 +1,5 @@
-#import "LIS3MDL_config.h"
-#import "sdd1306_config.h"
+#include "LIS3MDL_config.h"
+#include "sdd1306_config.h"
 
 void setup() {
   // put your setup code here, to run once:
