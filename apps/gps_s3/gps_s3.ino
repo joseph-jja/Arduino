@@ -3,17 +3,7 @@
 // GPS -> gt-u7
 // I2C display -> SSD1306
 #include "gps_config.h"
-
-#include <SPI.h>
-#include <Adafruit_GFX.h>
-#include <Adafruit_SSD1306.h>
-
-#define OLED_RESET 4
-Adafruit_SSD1306 display(OLED_RESET);
-
-#if (SSD1306_LCDHEIGHT != 64)
-//#error("Height incorrect, please fix Adafruit_SSD1306.h!");
-#endif
+#include "sdd1306_config.h"
 
 void setup() {
   // Initialize the serial monitor for debugging
@@ -21,6 +11,8 @@ void setup() {
 
   // Initialize the serial communication with the GPS module on UART2
   setup_gps();
+
+  setup_SDD1306();
 
   BaseType_t coreID = xPortGetCoreID();
   Serial.println("ESP32 GPS Receiver with TinyGPSPlus");
@@ -38,12 +30,6 @@ void setup() {
     0              // Core to run on (0 or 1)
   );
   */
-
-  display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
-  display.display();
-
-  // Clear the buffer.
-  display.clearDisplay();
 }
 
 void loop() {
@@ -82,20 +68,13 @@ void displayInfo() {
 
   Serial.println();
 
-  // setup text size
-  display.setTextSize(2);
+  write_display(2, 2, "Latitude");
+  write_number(20, 2, myGPS.latitude);  
+  write_display(2, 12, "Longitude");
+  write_number(20, 12, myGPS.longitude);  
 
-  // text color
-  display.setTextColor(WHITE);
-
-  /* 
-  // write data at positions
-  display.setCursor(x, y);
-
-  memset(buff, '\0', sizeof(buff));
-  // fill buffer
-  display.println(buff);
-
-  display.display();
-  */
+  write_display(2, 32, "Date");
+  write_number(20, 32, myGPS.latitude);  
+  write_display(2, 42, "Time");
+  write_number(20, 42, myGPS.longitude);  
 }
