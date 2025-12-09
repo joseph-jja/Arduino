@@ -14,6 +14,7 @@ void setup() {
 
   setup_SDD1306();
 
+#ifdef ESP32
   BaseType_t coreID = xPortGetCoreID();
   Serial.println("ESP32 GPS Receiver with TinyGPSPlus");
   Serial.print("Running on core ");
@@ -30,6 +31,7 @@ void setup() {
     0              // Core to run on (0 or 1)
   );
   */
+#endif  
 }
 
 void loop() {
