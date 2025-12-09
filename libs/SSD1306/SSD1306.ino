@@ -27,6 +27,11 @@ void setup_SDD1306() {
   display.setTextColor(WHITE);
 }
 
+void setTextSize(int size) {
+  // setup text size
+  display.setTextSize(size);
+}
+
 void clear() {
 
   if (!found) {
