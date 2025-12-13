@@ -12,7 +12,7 @@ void setup() {
   clear();
   setup_magnetometer();
 
-  rotate(3);
+  rotate(1);
 }
 
 void loop() {
