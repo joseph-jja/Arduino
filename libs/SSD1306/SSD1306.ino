@@ -44,7 +44,7 @@ void clear_display() {
   display.display();
 }
 
-void rotate(int i) {
+void rotate_display(int i) {
   if (!found) {
     return;
   }
@@ -74,7 +74,7 @@ void write_number(int left, int top, double x) {
   write_display(left, top, buff);
 }
 
-void show() {
+void show_display() {
   if (!found) {
     return;
   }

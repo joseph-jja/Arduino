@@ -8,7 +8,7 @@ void setup() {
   setup_SDD1306();
   setup_accel_n_gyro();
 
-  rotate(3);
+  rotate_display(3);
 }
 
 void loop() {
@@ -38,7 +38,7 @@ void loop() {
   write_number(6, 112, results.filteredPitch);
   
 
-  show();
+  show_display();
 
   delay(1000);
 }

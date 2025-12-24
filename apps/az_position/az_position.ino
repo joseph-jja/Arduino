@@ -12,7 +12,7 @@ void setup() {
   clear_display();
   setup_magnetometer();
 
-  rotate(1);
+  rotate_display(1);
 }
 
 void loop() {
@@ -29,7 +29,7 @@ void loop() {
   write_display(2, 26, "Magnetic");
   write_number(6, 36, results.magneticHeading); 
 
-  show();
+  show_display();
 
   delay(1000);
 }
