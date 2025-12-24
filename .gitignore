@@ -1,2 +1,12 @@
 libraries/**
 adafruit-circuitpython*
+apps/*/gps_gt_u7*
+apps/*/LIS3MDL*
+apps/*/mpu6050*
+apps/*/SSD1306*
+apps/*/gps_config.h
+apps/*/mpu6050_config.h
+apps/*/LIS3MDL_config.h
+apps/*/sdd1306_config.h
+
+
