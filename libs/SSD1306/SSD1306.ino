@@ -32,7 +32,7 @@ void setTextSize(int size) {
   display.setTextSize(size);
 }
 
-void clear() {
+void clear_display() {
 
   if (!found) {
     return;

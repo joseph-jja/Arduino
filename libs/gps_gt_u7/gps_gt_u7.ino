@@ -45,7 +45,9 @@ void loop_gps() {
 
   gpsdata.updated = false;
 
-  while (gpsSerial.available() > 0) {
+  long start = millis(); 
+
+  while (gpsSerial.available() > 0 && (millis() - start) < 5000) {
         //Serial.println("Trying to get GPS data.");
         if (gps.encode(gpsSerial.read())) {
             Serial.print("GPS data read using ");

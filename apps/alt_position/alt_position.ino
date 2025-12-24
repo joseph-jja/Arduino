@@ -17,7 +17,7 @@ void loop() {
   loop_accel_n_gyro();
   MPU6050_PROCESSED_DATA results = getMPU6050Data();
 
-  clear();
+  clear_display();
 
   write_display(2, 2, "A Roll");
   write_number(6, 12, results.accAngleX);

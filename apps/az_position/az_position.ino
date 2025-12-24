@@ -9,7 +9,7 @@ void setup() {
   //Wire.begin(21, 22);
 
   setup_SDD1306();
-  clear();
+  clear_display();
   setup_magnetometer();
 
   rotate(1);
@@ -21,7 +21,7 @@ void loop() {
   loop_magnetometer();
   MAGNETOMETER results = getLIS3MDLReadings();
 
-  clear();
+  clear_display();
 
   write_display(2, 2, "Compass");
   write_number(6, 12, results.compassHeading);
