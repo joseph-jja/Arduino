@@ -7,7 +7,7 @@
 
 void setup() {
   // Initialize the serial monitor for debugging
-  Serial.begin(115200);
+  Serial.begin(9600);
 
   // Initialize the serial communication with the GPS module on UART2
   setup_gps();
@@ -46,10 +46,15 @@ void displayInfo() {
 
   GPS_LOCATION myGPS = getGPSData();
 
+  // clear the display
+  clear_display();
+
   // Add a small delay to avoid flooding the serial monitor
   if (millis() > 5000 && !myGPS.updated) {
     Serial.println(F("No GPS data received: check wiring or antenna."));
     // You may want to reset the ESP32 here if no data is received for a long time
+    write_display(2, 2, "No GPS data yet!");
+    show();
     return;
   }
 
@@ -79,4 +84,6 @@ void displayInfo() {
   write_number(20, 32, myGPS.latitude);  
   write_display(2, 42, "Time");
   write_number(20, 42, myGPS.longitude);  
+
+  show();
 }
