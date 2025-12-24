@@ -1,5 +1,12 @@
 #pragma once
 
+// Import required libraries for esp8266
+#include <Arduino.h>
+#include <ESP8266WiFi.h>
+#include <Hash.h>
+#include <ESP8266WebServer.h>
+#include <ESP8266mDNS.h>
+
 // wifi config
 const char* ssid     = "some SSID";
 const char* password = "ssid password";
