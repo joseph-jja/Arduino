@@ -19,6 +19,7 @@ void setup_SDD1306() {
 
   // Clear the buffer.
   display.clearDisplay();
+  display.display();
 
   // setup text size
   display.setTextSize(1);
@@ -40,6 +41,7 @@ void clear_display() {
 
   // clear display from last write
   display.clearDisplay();
+  display.display();
 }
 
 void rotate(int i) {
