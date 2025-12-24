@@ -75,21 +75,30 @@ void displayInfo() {
 
   Serial.println();
 
-  float latitude = myGPS.latitude;
-  float longitude = myGPS.longitude;
-
   char buffer[10];
+  long intPart;
+  long floatPart;
+
+  float latitude = floor(myGPS.latitude * 100) / 100;
+  float longitude = floor(myGPS.longitude * 100) / 100;
+
+  intPart = floor(latitude);
+  floatPart = abs(floor(((abs(latitude) - abs(intPart)) * 100) * 60 / 100));
+
   memset(buffer, '\0', 10);
-  sprintf(buffer, "%d:%2d", floor(latitude), ((latitude - floor(latitude)) / 60));
+  sprintf(buffer, "%d:%d", intPart, floatPart);
 
   write_display(2, 2, "Latitude");
   write_display(64, 2, buffer);  
 
+  intPart = floor(longitude);
+  floatPart = abs(floor(((abs(longitude) - abs(intPart)) * 100) * 60 / 100));
+
   memset(buffer, '\0', 10);
-  sprintf(buffer, "%d:%2d", floor(longitude), ((longitude - floor(longitude)) / 60));
+  sprintf(buffer, "%d:%d", intPart, floatPart);
 
   write_display(2, 12, "Longitude");
-  write_number(64, 12, myGPS.longitude);  
+  write_display(64, 12, buffer);  
 
   write_display(2, 32, "Date");
   write_display(64, 32, myGPS.gps_date);  
