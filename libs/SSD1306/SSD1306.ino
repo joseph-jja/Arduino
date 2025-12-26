@@ -81,6 +81,10 @@ void show_display() {
   display.display();
 }
 
+void setDisplayFont(const GFXfont *font) {
+  display.setFont(font); 
+}
+
 /*
 void setup() {
   // put your setup code here, to run once:
