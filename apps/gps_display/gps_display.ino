@@ -4,6 +4,7 @@
 // I2C display -> SSD1306
 #include "gps_config.h"
 #include "sdd1306_config.h"
+#include <Fonts/FreeMono9pt7b.h>
 
 void setup() {
   // Initialize the serial monitor for debugging
@@ -13,6 +14,8 @@ void setup() {
   setup_gps();
 
   setup_SDD1306();
+
+  setDisplayFont(&FreeMono9pt7b); 
 
 #ifdef ESP32
   BaseType_t coreID = xPortGetCoreID();
@@ -53,7 +56,7 @@ void displayInfo() {
   if (millis() > 5000 && !myGPS.updated) {
     Serial.println(F("No GPS data received: check wiring or antenna."));
     // You may want to reset the ESP32 here if no data is received for a long time
-    write_display(2, 2, "No GPS data yet!");
+    write_display(2, 16, "No GPS\ndata!");
     show_display();
     return;
   }
@@ -75,6 +78,7 @@ void displayInfo() {
 
   Serial.println();
 
+  clear_display();
   char buffer[10];
   long intPart;
   long floatPart;
@@ -88,8 +92,8 @@ void displayInfo() {
   memset(buffer, '\0', 10);
   sprintf(buffer, "%d:%d", intPart, floatPart);
 
-  write_display(2, 2, "Latitude");
-  write_display(64, 2, buffer);  
+  write_display(2, 11, "Latitude:");
+  write_display(100 - (strlen(buffer) * 12), 27, buffer);  
 
   intPart = floor(longitude);
   floatPart = abs(floor(((abs(longitude) - abs(intPart)) * 100) * 60 / 100));
@@ -97,13 +101,18 @@ void displayInfo() {
   memset(buffer, '\0', 10);
   sprintf(buffer, "%d:%d", intPart, floatPart);
 
-  write_display(2, 12, "Longitude");
-  write_display(64, 12, buffer);  
-
-  write_display(2, 32, "Date");
-  write_display(64, 32, myGPS.gps_date);  
-  write_display(2, 42, "Time");
-  write_display(64, 42, myGPS.gps_time);  
+  write_display(2, 41, "Longitude:");
+  write_display(100 - (strlen(buffer) * 12), 61, buffer);  
 
   show_display();
+  delay(5000);
+
+  clear_display();
+  write_display(2, 11, "Date:");
+  write_display(8, 27, myGPS.gps_date);  
+  write_display(2, 41, "Time:");
+  write_display(30, 61, myGPS.gps_time);  
+
+  show_display();
+  delay(2500);
 }
