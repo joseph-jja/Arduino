@@ -5,3 +5,6 @@
 #### Includes schematic
 
 #### Current version is just GPS and the GT-U7 GPS is used, which seems to only get a signal OUTSIDE
+
+#### Schematic
+![Schematic Diagram.](https://raw.githubusercontent.com/joseph-jja/Arduino/refs/heads/master/apps/gps_display/esp32_wroom_gps_oled_display.png))
