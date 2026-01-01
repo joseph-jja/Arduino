@@ -20,8 +20,8 @@
   #if defined(SERIAL_TMC_HARDWARE_UART)
     #define SERIAL_TMC          Serial1          // Use a single hardware serial port to up to four drivers
     #define SERIAL_TMC_BAUD     460800           // Baud rate
-    #define SERIAL_TMC_RX       39               // Recieving data
-    #define SERIAL_TMC_TX       23               // Transmit data
+    #define SERIAL_TMC_RX       16               // Recieving data
+    #define SERIAL_TMC_TX       17               // Transmit data
     #define SERIAL_TMC_ADDRESS_MAP(x) ((x==4)?2 : x) // Axis1(0) is 0, Axis2(1) is 1, Axis3(2) is 2, Axis4(3) is 3, Axis5(4) is 2
   #endif
 #endif
@@ -29,11 +29,11 @@
 // Uses default ESP32 I2C GPIO21 (SDA) and GPIO22 (SCL)
 
 // The multi-purpose pins (Aux3..Aux8 can be analog pwm/dac if supported)
-#define AUX2_PIN                4                // ESP8266 RST control, or MISO for Axis1&2, or Axis4 EN support
-#define AUX3_PIN                21               // Home SW for Axis1, or I2C SDA
+#define AUX2_PIN                9                // ESP8266 RST control, or MISO for Axis1&2, or Axis4 EN support
+#define AUX3_PIN                23               // Home SW for Axis1, or I2C SDA
 #define AUX4_PIN                22               // Home SW for Axis2, or I2C SCL
 #define AUX7_PIN                39               // Limit SW, PPS, etc.
-#define AUX8_PIN                25               // 1-Wire, Status LED, Reticle LED, Tone, etc.
+#define AUX8_PIN                21               // 1-Wire, Status LED, Reticle LED, Tone, etc.
 
 // Misc. pins
 #ifndef ONE_WIRE_PIN
@@ -80,12 +80,12 @@
 #define AXIS1_ENABLE_PIN        SHARED           // [must be low at boot 12]
 #define AXIS1_M0_PIN            13               // SPI MOSI
 #define AXIS1_M1_PIN            14               // SPI SCK
-#define AXIS1_M2_PIN            23               // SPI CS (UART TX)
+#define AXIS1_M2_PIN            10               // SPI CS (UART TX)
 #if AXIS4_POWER_DOWN != ON
   #define AXIS1_M3_PIN          AUX2_PIN         // SPI MISO (UART RX)
 #endif
-#define AXIS1_STEP_PIN          18
-#define AXIS1_DIR_PIN           0                // [must be high at boot 0]
+#define AXIS1_STEP_PIN          46
+#define AXIS1_DIR_PIN           3                // [must be high at boot 0]
 #ifndef AXIS1_SENSE_HOME_PIN
   #define AXIS1_SENSE_HOME_PIN  AUX3_PIN
 #endif
@@ -98,8 +98,8 @@
 #if AXIS4_POWER_DOWN != ON
   #define AXIS2_M3_PIN          AUX2_PIN         // SPI MISO (UART RX)
 #endif
-#define AXIS2_STEP_PIN          27
-#define AXIS2_DIR_PIN           26
+#define AXIS2_STEP_PIN          6
+#define AXIS2_DIR_PIN           5
 #ifndef AXIS2_SENSE_HOME_PIN
   #define AXIS2_SENSE_HOME_PIN  AUX4_PIN
 #endif
