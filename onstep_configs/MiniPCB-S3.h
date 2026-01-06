@@ -1,143 +1,137 @@
 // -------------------------------------------------------------------------------------------------
-// Pin map for OnStep MaxESP Version 3.x (ESP32S)
+// Pin map for OnStep MiniPCB-S3 Version 3.x (ESP32S)
 #pragma once
 
 #if defined(ESP32)
 
-// Serial0: RX Pin GPIO3, TX Pin GPIO1 (to USB serial adapter)
-// Serial1: RX1 Pin GPIO10, TX1 Pin GPIO9 (on SPI Flash pins, must be moved to be used)
-// Serial2: RX2 Pin GPIO16, TX2 Pin GPIO17
+// Serial0: USB serial adapter
+// Serial1: RX Pin U0, TX Pin U0
+// Serial2: RX1 Pin GPIO6, TX1 Pin GPIO5
 
 #if SERIAL_A_BAUD_DEFAULT != OFF
   #define SERIAL_A              Serial
 #endif
 #if SERIAL_B_BAUD_DEFAULT != OFF
-  #define SERIAL_B              Serial2
+  #define SERIAL_B              Serial1
 #endif
-
-// Use the following settings for any TMC UART driver (TMC2209) that may be present
-#if defined(STEP_DIR_TMC_UART_PRESENT) || defined(SERVO_TMC2209_PRESENT)
-  #if defined(SERIAL_TMC_HARDWARE_UART)
-    #define SERIAL_TMC          Serial1          // Use a single hardware serial port to up to four drivers
-    #define SERIAL_TMC_BAUD     460800           // Baud rate
-    #define SERIAL_TMC_RX       16               // Recieving data
-    #define SERIAL_TMC_TX       17               // Transmit data
-    #define SERIAL_TMC_ADDRESS_MAP(x) ((x==4)?2 : x) // Axis1(0) is 0, Axis2(1) is 1, Axis3(2) is 2, Axis4(3) is 3, Axis5(4) is 2
-  #endif
+#if SERIAL_C_BAUD_DEFAULT != OFF
+  #define SERIAL_C              Serial2
 #endif
-
-// Uses default ESP32 I2C GPIO21 (SDA) and GPIO22 (SCL)
+#if defined(USB_DUAL_SERIAL) || defined(USB_TRIPLE_SERIAL)
+  #define SERIAL_D              SerialUSB1
+  #define SERIAL_D_BAUD_DEFAULT 9600
+#endif
+#if defined(USB_TRIPLE_SERIAL)
+  #define SERIAL_E              SerialUSB2
+  #define SERIAL_E_BAUD_DEFAULT 9600
+#endif
 
 // The multi-purpose pins (Aux3..Aux8 can be analog pwm/dac if supported)
-#define AUX2_PIN                9                // ESP8266 RST control, or MISO for Axis1&2, or Axis4 EN support
-#define AUX3_PIN                23               // Home SW for Axis1, or I2C SDA
-#define AUX4_PIN                22               // Home SW for Axis2, or I2C SCL
-#define AUX7_PIN                39               // Limit SW, PPS, etc.
-#define AUX8_PIN                21               // 1-Wire, Status LED, Reticle LED, Tone, etc.
+#define AUX0_PIN                9               // Status LED
+#define AUX1_PIN                8               // ESP8266 GPIO0, SPI MISO/Fault
+#define AUX2_PIN                7                // ESP8266 RST, SPI MISO/Fault
+#define AUX3_PIN                6                // Limit SW, Home SW
+#define AUX4_PIN                37               // Reticle LED, Home SW
+// lots of free pins to choose from
+//#define AUX5_PIN              DAC_PIN(A14)     // true analog output
 
 // Misc. pins
+// TODO update
 #ifndef ONE_WIRE_PIN
-  #define ONE_WIRE_PIN          AUX8_PIN         // Default Pin for OneWire bus
-#endif
-#define ADDON_GPIO0_PIN         26               // ESP8266 GPIO0 (Dir2)
-#ifndef ADDON_RESET_PIN
-  #define ADDON_RESET_PIN       AUX2_PIN         // ESP8266 RST
+  #define ONE_WIRE_PIN          21               // Default Pin for OneWire bus
 #endif
 
+#define ADDON_GPIO0_PIN       AUX1_PIN         // ESP8266 GPIO0 or SPI MISO/Fault
+#define ADDON_RESET_PIN       AUX2_PIN         // ESP8266 RST or SPI MISO/Fault
 // The PEC index sense is a logic level input, resets the PEC index on rising edge then waits for 60 seconds before allowing another reset
-#ifndef PEC_SENSE_PIN
-  #define PEC_SENSE_PIN         36               // [input only 36] PEC Sense, analog (A0) or digital (GPIO36)
-#endif
+#define PEC_SENSE_PIN           28               // PEC Sense, analog or digital
 
-// The status LED is a two wire jumper with a 2k resistor in series to limit the current to the LED
-#ifndef STATUS_LED_PIN
-  #define STATUS_LED_PIN        AUX8_PIN         // Default LED Cathode (-)
-#endif
-#define MOUNT_LED_PIN           STATUS_LED_PIN   // Default LED Cathode (-)
+// The status LED is a two wire jumper with a 10k resistor in series to limit the current to the LED
+#define STATUS_LED_PIN          AUX0_PIN         // Default LED Cathode (-)
+#define MOUNT_LED_PIN           AUX0_PIN         // Default LED Cathode (-)
 #ifndef RETICLE_LED_PIN 
-  #define RETICLE_LED_PIN       STATUS_LED_PIN   // Default LED Cathode (-)
+  #define RETICLE_LED_PIN       AUX4_PIN         // Default LED Cathode (-)
 #endif
 
 // For a piezo buzzer
-#ifndef STATUS_BUZZER_PIN
-  #define STATUS_BUZZER_PIN     AUX8_PIN         // Tone
+#ifndef STATUS_BUZZER_PIN 
+  #define STATUS_BUZZER_PIN     29               // Tone
 #endif
 
 // The PPS pin is a 3.3V logic input, OnStep measures time between rising edges and adjusts the internal sidereal clock frequency
 #ifndef PPS_SENSE_PIN
-  #define PPS_SENSE_PIN         AUX7_PIN         // PPS time source, GPS for example
+  #define PPS_SENSE_PIN         11               // PPS time source, GPS for example
 #endif
 
-// The limit switch sense is a logic level input normally pull high (2k resistor,) shorted to ground it stops gotos/tracking
 #ifndef LIMIT_SENSE_PIN
-  #define LIMIT_SENSE_PIN       AUX7_PIN
+  #define LIMIT_SENSE_PIN       AUX3_PIN         // The limit switch sense is a logic level input normally pull high (2k resistor,) shorted to ground it stops gotos/tracking
 #endif
 
-#define SHARED_DIRECTION_PINS                    // Hint that the direction pins are shared
-#define SHARED_ENABLE_PIN       12               // Hint that the enable pins are shared
+// hint that the driver mode pins are dedicated (not shared SPI bus except possibly MISO)
+#define DEDICATED_MODE_PINS
 
 // Axis1 RA/Azm step/dir driver
-#define AXIS1_ENABLE_PIN        SHARED           // [must be low at boot 12]
-#define AXIS1_M0_PIN            13               // SPI MOSI
-#define AXIS1_M1_PIN            14               // SPI SCK
-#define AXIS1_M2_PIN            10               // SPI CS (UART TX)
-#if AXIS4_POWER_DOWN != ON
-  #define AXIS1_M3_PIN          AUX2_PIN         // SPI MISO (UART RX)
-#endif
-#define AXIS1_STEP_PIN          46
-#define AXIS1_DIR_PIN           3                // [must be high at boot 0]
+#define AXIS1_ENABLE_PIN        47
+#define AXIS1_M0_PIN            48               // SPI MOSI
+#define AXIS1_M1_PIN            45               // SPI SCK
+#define AXIS1_M2_PIN            0               // SPI CS (UART TX)
+#define AXIS1_M3_PIN            AUX1_PIN         // SPI MISO (UART RX)
+#define AXIS1_STEP_PIN          35
+#define AXIS1_DIR_PIN           36
+#define AXIS1_FAULT_PIN         AXIS1_M3_PIN     // SPI MISO
 #ifndef AXIS1_SENSE_HOME_PIN
   #define AXIS1_SENSE_HOME_PIN  AUX3_PIN
 #endif
 
 // Axis2 Dec/Alt step/dir driver
-#define AXIS2_ENABLE_PIN        SHARED
-#define AXIS2_M0_PIN            13               // SPI MOSI
-#define AXIS2_M1_PIN            14               // SPI SCK
-#define AXIS2_M2_PIN            5                // SPI CS (UART TX)
-#if AXIS4_POWER_DOWN != ON
+#define AXIS2_ENABLE_PIN        3
+#define AXIS2_M0_PIN            18                // SPI MOSI
+#define AXIS2_M1_PIN            17                // SPI SCK
+#define AXIS2_M2_PIN            16                // SPI CS (UART TX)
+#if PINMAP == MiniPCB13
+  #define AXIS2_M3_PIN          AUX1_PIN         // SPI MISO (UART RX)
+#else
   #define AXIS2_M3_PIN          AUX2_PIN         // SPI MISO (UART RX)
 #endif
-#define AXIS2_STEP_PIN          6
-#define AXIS2_DIR_PIN           5
+#define AXIS2_STEP_PIN          5
+#define AXIS2_DIR_PIN           4
+#define AXIS2_FAULT_PIN         AXIS2_M3_PIN
 #ifndef AXIS2_SENSE_HOME_PIN
   #define AXIS2_SENSE_HOME_PIN  AUX4_PIN
 #endif
 
 // For rotator stepper driver
-#define AXIS3_ENABLE_PIN        OFF              // No enable pin control (always enabled)
+#define AXIS3_ENABLE_PIN        OFF
 #define AXIS3_M0_PIN            OFF              // SPI MOSI
 #define AXIS3_M1_PIN            OFF              // SPI SCK
 #define AXIS3_M2_PIN            OFF              // SPI CS (UART TX)
 #define AXIS3_M3_PIN            OFF              // SPI MISO (UART RX)
-#define AXIS3_STEP_PIN          2                // [must be low at boot 2]
-#define AXIS3_DIR_PIN           15
+#define AXIS3_STEP_PIN          30
+#define AXIS3_DIR_PIN           33
 
 // For focuser1 stepper driver
-#if !defined(SERIAL_TMC_HARDWARE_UART) && AXIS4_POWER_DOWN == ON
-  #define AXIS4_ENABLE_PIN      AUX2_PIN
-#endif
+#define AXIS4_ENABLE_PIN        OFF
 #define AXIS4_M0_PIN            OFF              // SPI MOSI
 #define AXIS4_M1_PIN            OFF              // SPI SCK
 #define AXIS4_M2_PIN            OFF              // SPI CS (UART TX)
 #define AXIS4_M3_PIN            OFF              // SPI MISO (UART RX)
-#define AXIS4_STEP_PIN          19
-#define AXIS4_DIR_PIN           15
+#define AXIS4_STEP_PIN          31
+#define AXIS4_DIR_PIN           32
 
 // For focuser2 stepper driver
-#define AXIS5_ENABLE_PIN        OFF              // No enable pin control (always enabled)
+#define AXIS5_ENABLE_PIN        OFF
 #define AXIS5_M0_PIN            OFF              // SPI MOSI
 #define AXIS5_M1_PIN            OFF              // SPI SCK
 #define AXIS5_M2_PIN            OFF              // SPI CS (UART TX)
 #define AXIS5_M3_PIN            OFF              // SPI MISO (UART RX)
-#define AXIS5_STEP_PIN          2
-#define AXIS5_DIR_PIN           15
+#define AXIS5_STEP_PIN          30
+#define AXIS5_DIR_PIN           33
 
 // ST4 interface
-#define ST4_RA_W_PIN            34               // [input only 34] ST4 RA- West
-#define ST4_DEC_S_PIN           32               // ST4 DE- South
-#define ST4_DEC_N_PIN           33               // ST4 DE+ North
-#define ST4_RA_E_PIN            35               // [input only 35] ST4 RA+ East
+#define ST4_RA_W_PIN            15               // ST4 RA- West
+#define ST4_DEC_S_PIN           13               // ST4 DE- South
+#define ST4_DEC_N_PIN           12               // ST4 DE+ North
+#define ST4_RA_E_PIN            14               // ST4 RA+ East
 
 #else
 #error "Wrong processor for this configuration!"
