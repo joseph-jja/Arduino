@@ -28,7 +28,7 @@
 
 // The multi-purpose pins (Aux3..Aux8 can be analog pwm/dac if supported)
 #define AUX0_PIN                9               // Status LED
-#define AUX1_PIN                8               // ESP8266 GPIO0, SPI MISO/Fault
+#define AUX1_PIN                0               // ESP8266 GPIO0, SPI MISO/Fault
 #define AUX2_PIN                7                // ESP8266 RST, SPI MISO/Fault
 #define AUX3_PIN                6                // Limit SW, Home SW
 #define AUX4_PIN                37               // Reticle LED, Home SW
@@ -71,10 +71,10 @@
 #define DEDICATED_MODE_PINS
 
 // Axis1 RA/Azm step/dir driver
-#define AXIS1_ENABLE_PIN        47
-#define AXIS1_M0_PIN            48               // SPI MOSI
-#define AXIS1_M1_PIN            45               // SPI SCK
-#define AXIS1_M2_PIN            0               // SPI CS (UART TX)
+#define AXIS1_ENABLE_PIN        21
+#define AXIS1_M0_PIN            47               // SPI MOSI
+#define AXIS1_M1_PIN            48               // SPI SCK
+#define AXIS1_M2_PIN            45               // SPI CS (UART TX)
 #define AXIS1_M3_PIN            AUX1_PIN         // SPI MISO (UART RX)
 #define AXIS1_STEP_PIN          35
 #define AXIS1_DIR_PIN           36
