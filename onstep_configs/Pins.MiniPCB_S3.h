@@ -4,6 +4,34 @@
 
 #if defined(ESP32)
 
+/*
+// TMC2130 SPI Bus Definition (Shared)
+#define TMC_MISO_PIN 13
+#define TMC_MOSI_PIN 12
+#define TMC_SCK_PIN 11
+
+// Axis1 RA/Azm step/dir driver
+// AXIS1 (RA) Configuration
+#define AXIS1_ENABLE_PIN    16
+#define AXIS1_M0_PIN        12      // Shared MOSI
+#define AXIS1_M1_PIN        11      // Shared SCK
+#define AXIS1_M2_PIN        10      // Unique CSN
+#define AXIS1_M3_PIN        13      // Shared MISO
+#define AXIS1_STEP_PIN      8
+#define AXIS1_DIR_PIN       6
+#define AXIS1_FAULT_PIN     47      // Optional fault pin
+
+// AXIS2 (DEC) Configuration
+#define AXIS2_ENABLE_PIN    15
+#define AXIS2_M0_PIN        12      // Shared MOSI
+#define AXIS2_M1_PIN        11      // Shared SCK
+#define AXIS2_M2_PIN        9       // Unique CSN
+#define AXIS2_M3_PIN        13      // Shared MISO
+#define AXIS2_STEP_PIN      7
+#define AXIS2_DIR_PIN       5
+#define AXIS2_FAULT_PIN     48      // Optional fault pin
+*/
+
 // Serial0: USB serial adapter
 // Serial1: RX Pin U0, TX Pin U0
 // Serial2: RX1 Pin GPIO6, TX1 Pin GPIO5
