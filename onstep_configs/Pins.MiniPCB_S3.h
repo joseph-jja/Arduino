@@ -19,7 +19,7 @@
 #define AXIS1_M3_PIN        13      // Shared MISO
 #define AXIS1_STEP_PIN      8
 #define AXIS1_DIR_PIN       6
-#define AXIS1_FAULT_PIN     47      // Optional fault pin
+#define AXIS1_FAULT_PIN     AXIS1_M3_PIN      // Optional fault pin
 
 // AXIS2 (DEC) Configuration
 #define AXIS2_ENABLE_PIN    15
@@ -29,7 +29,7 @@
 #define AXIS2_M3_PIN        13      // Shared MISO
 #define AXIS2_STEP_PIN      7
 #define AXIS2_DIR_PIN       5
-#define AXIS2_FAULT_PIN     48      // Optional fault pin
+#define AXIS2_FAULT_PIN     AXIS2_M3_PIN      // Optional fault pin
 */
 
 // Serial0: USB serial adapter
