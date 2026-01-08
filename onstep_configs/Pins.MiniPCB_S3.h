@@ -55,11 +55,11 @@
 #endif
 
 // The multi-purpose pins (Aux3..Aux8 can be analog pwm/dac if supported)
-#define AUX0_PIN                3               // Status LED
-#define AUX1_PIN                47               // ESP8266 GPIO0, SPI MISO/Fault
-#define AUX2_PIN                7                // ESP8266 RST, SPI MISO/Fault
-#define AUX3_PIN                6                // Limit SW, Home SW
-#define AUX4_PIN                39               // Reticle LED, Home SW
+#define AUX0_PIN                48               // Status LED
+#define AUX1_PIN                13               // ESP8266 GPIO0, SPI MISO/Fault
+#define AUX2_PIN                RST                // ESP8266 RST, SPI MISO/Fault
+#define AUX3_PIN                18                // Limit SW, Home SW
+#define AUX4_PIN                10               // Reticle LED, Home SW
 // lots of free pins to choose from
 //#define AUX5_PIN              DAC_PIN(A14)     // true analog output
 
@@ -72,7 +72,7 @@
 #define ADDON_GPIO0_PIN       AUX1_PIN         // ESP8266 GPIO0 or SPI MISO/Fault
 #define ADDON_RESET_PIN       AUX2_PIN         // ESP8266 RST or SPI MISO/Fault
 // The PEC index sense is a logic level input, resets the PEC index on rising edge then waits for 60 seconds before allowing another reset
-#define PEC_SENSE_PIN           28               // PEC Sense, analog or digital
+#define PEC_SENSE_PIN           47               // PEC Sense, analog or digital
 
 // The status LED is a two wire jumper with a 10k resistor in series to limit the current to the LED
 #define STATUS_LED_PIN          AUX0_PIN         // Default LED Cathode (-)
@@ -83,12 +83,12 @@
 
 // For a piezo buzzer
 #ifndef STATUS_BUZZER_PIN 
-  #define STATUS_BUZZER_PIN     29               // Tone
+  #define STATUS_BUZZER_PIN     45               // Tone
 #endif
 
 // The PPS pin is a 3.3V logic input, OnStep measures time between rising edges and adjusts the internal sidereal clock frequency
 #ifndef PPS_SENSE_PIN
-  #define PPS_SENSE_PIN         11               // PPS time source, GPS for example
+  #define PPS_SENSE_PIN         21               // PPS time source, GPS for example
 #endif
 
 #ifndef LIMIT_SENSE_PIN
@@ -99,31 +99,27 @@
 #define DEDICATED_MODE_PINS
 
 // Axis1 RA/Azm step/dir driver
-#define AXIS1_ENABLE_PIN        5
-#define AXIS1_M0_PIN            6               // SPI MOSI
-#define AXIS1_M1_PIN            7               // SPI SCK
-#define AXIS1_M2_PIN            15               // SPI CS (UART TX)
-#define AXIS1_M3_PIN            16 //AUX1_PIN         // SPI MISO (UART RX)
-#define AXIS1_STEP_PIN          17
-#define AXIS1_DIR_PIN           88
-#define AXIS1_FAULT_PIN         AXIS1_M3_PIN     // SPI MISO
+#define AXIS1_ENABLE_PIN    16
+#define AXIS1_M0_PIN        12      // Shared MOSI
+#define AXIS1_M1_PIN        11      // Shared SCK
+#define AXIS1_M2_PIN        10      // Unique CSN
+#define AXIS1_M3_PIN        13      // Shared MISO
+#define AXIS1_STEP_PIN      8
+#define AXIS1_DIR_PIN       6
+#define AXIS1_FAULT_PIN     AXIS1_M3_PIN      // Optional fault pin
 #ifndef AXIS1_SENSE_HOME_PIN
   #define AXIS1_SENSE_HOME_PIN  AUX3_PIN
 #endif
 
 // Axis2 Dec/Alt step/dir driver
-#define AXIS2_ENABLE_PIN        3
-#define AXIS2_M0_PIN            18                // SPI MOSI
-#define AXIS2_M1_PIN            17                // SPI SCK
-#define AXIS2_M2_PIN            16                // SPI CS (UART TX)
-#if PINMAP == MiniPCB13
-  #define AXIS2_M3_PIN          AUX1_PIN         // SPI MISO (UART RX)
-#else
-  #define AXIS2_M3_PIN          AUX2_PIN         // SPI MISO (UART RX)
-#endif
-#define AXIS2_STEP_PIN          5
-#define AXIS2_DIR_PIN           4
-#define AXIS2_FAULT_PIN         AXIS2_M3_PIN
+#define AXIS2_ENABLE_PIN    15
+#define AXIS2_M0_PIN        12      // Shared MOSI
+#define AXIS2_M1_PIN        11      // Shared SCK
+#define AXIS2_M2_PIN        9       // Unique CSN
+#define AXIS2_M3_PIN        13      // Shared MISO
+#define AXIS2_STEP_PIN      7
+#define AXIS2_DIR_PIN       5
+#define AXIS2_FAULT_PIN     AXIS2_M3_PIN      // Optional fault pin
 #ifndef AXIS2_SENSE_HOME_PIN
   #define AXIS2_SENSE_HOME_PIN  AUX4_PIN
 #endif
@@ -156,10 +152,10 @@
 #define AXIS5_DIR_PIN           33
 
 // ST4 interface
-#define ST4_RA_W_PIN            15               // ST4 RA- West
-#define ST4_DEC_S_PIN           13               // ST4 DE- South
-#define ST4_DEC_N_PIN           12               // ST4 DE+ North
-#define ST4_RA_E_PIN            14               // ST4 RA+ East
+#define ST4_RA_W_PIN            2               // ST4 RA- West
+#define ST4_DEC_S_PIN           5               // ST4 DE- South
+#define ST4_DEC_N_PIN           4               // ST4 DE+ North
+#define ST4_RA_E_PIN            1               // ST4 RA+ East
 
 #else
 #error "Wrong processor for this configuration!"
