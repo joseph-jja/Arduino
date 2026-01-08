@@ -17,28 +17,20 @@
 #if SERIAL_C_BAUD_DEFAULT != OFF
   #define SERIAL_C              Serial2
 #endif
-#if defined(USB_DUAL_SERIAL) || defined(USB_TRIPLE_SERIAL)
-  #define SERIAL_D              SerialUSB1
-  #define SERIAL_D_BAUD_DEFAULT 9600
-#endif
-#if defined(USB_TRIPLE_SERIAL)
-  #define SERIAL_E              SerialUSB2
-  #define SERIAL_E_BAUD_DEFAULT 9600
-#endif
 
 // The multi-purpose pins (Aux3..Aux8 can be analog pwm/dac if supported)
 #define AUX0_PIN                48               // Status LED
 #define AUX1_PIN                13               // ESP8266 GPIO0, SPI MISO/Fault
 #define AUX2_PIN                21                // ESP8266 RST, SPI MISO/Fault
-#define AUX3_PIN                24                // Limit SW, Home SW
-#define AUX4_PIN                48               // Reticle LED, Home SW
+#define AUX3_PIN                23                // Limit SW, Home SW
+#define AUX4_PIN                25               // Reticle LED, Home SW
 // lots of free pins to choose from
 //#define AUX5_PIN              DAC_PIN(A14)     // true analog output
 
 // Misc. pins
 // TODO update
 #ifndef ONE_WIRE_PIN
-  #define ONE_WIRE_PIN          22               // Default Pin for OneWire bus
+  #define ONE_WIRE_PIN          23               // Default Pin for OneWire bus
 #endif
 
 #define ADDON_GPIO0_PIN       AUX1_PIN         // ESP8266 GPIO0 or SPI MISO/Fault
@@ -55,12 +47,12 @@
 
 // For a piezo buzzer
 #ifndef STATUS_BUZZER_PIN 
-  #define STATUS_BUZZER_PIN     45               // Tone
+  #define STATUS_BUZZER_PIN     3               // Tone
 #endif
 
 // The PPS pin is a 3.3V logic input, OnStep measures time between rising edges and adjusts the internal sidereal clock frequency
 #ifndef PPS_SENSE_PIN
-  #define PPS_SENSE_PIN         21               // PPS time source, GPS for example
+  #define PPS_SENSE_PIN         41               // PPS time source, GPS for example
 #endif
 
 #ifndef LIMIT_SENSE_PIN
@@ -102,8 +94,8 @@
 #define AXIS3_M1_PIN            OFF              // SPI SCK
 #define AXIS3_M2_PIN            OFF              // SPI CS (UART TX)
 #define AXIS3_M3_PIN            OFF              // SPI MISO (UART RX)
-#define AXIS3_STEP_PIN          30
-#define AXIS3_DIR_PIN           33
+#define AXIS3_STEP_PIN          42
+#define AXIS3_DIR_PIN           43
 
 // For focuser1 stepper driver
 #define AXIS4_ENABLE_PIN        OFF
@@ -111,8 +103,8 @@
 #define AXIS4_M1_PIN            OFF              // SPI SCK
 #define AXIS4_M2_PIN            OFF              // SPI CS (UART TX)
 #define AXIS4_M3_PIN            OFF              // SPI MISO (UART RX)
-#define AXIS4_STEP_PIN          31
-#define AXIS4_DIR_PIN           32
+#define AXIS4_STEP_PIN          44
+#define AXIS4_DIR_PIN           19
 
 // For focuser2 stepper driver
 #define AXIS5_ENABLE_PIN        OFF
@@ -120,12 +112,12 @@
 #define AXIS5_M1_PIN            OFF              // SPI SCK
 #define AXIS5_M2_PIN            OFF              // SPI CS (UART TX)
 #define AXIS5_M3_PIN            OFF              // SPI MISO (UART RX)
-#define AXIS5_STEP_PIN          30
-#define AXIS5_DIR_PIN           33
+#define AXIS5_STEP_PIN          42
+#define AXIS5_DIR_PIN           43
 
 // ST4 interface
 #define ST4_RA_W_PIN            2               // ST4 RA- West
-#define ST4_DEC_S_PIN           5               // ST4 DE- South
+#define ST4_DEC_S_PIN           14               // ST4 DE- South
 #define ST4_DEC_N_PIN           4               // ST4 DE+ North
 #define ST4_RA_E_PIN            1               // ST4 RA+ East
 
