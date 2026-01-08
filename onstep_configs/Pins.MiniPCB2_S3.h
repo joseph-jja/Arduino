@@ -4,34 +4,6 @@
 
 #if defined(ESP32)
 
-/*
-// TMC2130 SPI Bus Definition (Shared)
-#define TMC_MISO_PIN 13
-#define TMC_MOSI_PIN 12
-#define TMC_SCK_PIN 11
-
-// Axis1 RA/Azm step/dir driver
-// AXIS1 (RA) Configuration
-#define AXIS1_ENABLE_PIN    16
-#define AXIS1_M0_PIN        12      // Shared MOSI
-#define AXIS1_M1_PIN        11      // Shared SCK
-#define AXIS1_M2_PIN        10      // Unique CSN
-#define AXIS1_M3_PIN        13      // Shared MISO
-#define AXIS1_STEP_PIN      8
-#define AXIS1_DIR_PIN       6
-#define AXIS1_FAULT_PIN     AXIS1_M3_PIN      // Optional fault pin
-
-// AXIS2 (DEC) Configuration
-#define AXIS2_ENABLE_PIN    15
-#define AXIS2_M0_PIN        12      // Shared MOSI
-#define AXIS2_M1_PIN        11      // Shared SCK
-#define AXIS2_M2_PIN        9       // Unique CSN
-#define AXIS2_M3_PIN        13      // Shared MISO
-#define AXIS2_STEP_PIN      7
-#define AXIS2_DIR_PIN       5
-#define AXIS2_FAULT_PIN     AXIS2_M3_PIN      // Optional fault pin
-*/
-
 // Serial0: USB serial adapter
 // Serial1: RX Pin U0, TX Pin U0
 // Serial2: RX1 Pin GPIO6, TX1 Pin GPIO5
@@ -57,16 +29,16 @@
 // The multi-purpose pins (Aux3..Aux8 can be analog pwm/dac if supported)
 #define AUX0_PIN                48               // Status LED
 #define AUX1_PIN                13               // ESP8266 GPIO0, SPI MISO/Fault
-#define AUX2_PIN                3                // ESP8266 RST, SPI MISO/Fault
-#define AUX3_PIN                18                // Limit SW, Home SW
-#define AUX4_PIN                10               // Reticle LED, Home SW
+#define AUX2_PIN                21                // ESP8266 RST, SPI MISO/Fault
+#define AUX3_PIN                24                // Limit SW, Home SW
+#define AUX4_PIN                48               // Reticle LED, Home SW
 // lots of free pins to choose from
 //#define AUX5_PIN              DAC_PIN(A14)     // true analog output
 
 // Misc. pins
 // TODO update
 #ifndef ONE_WIRE_PIN
-  #define ONE_WIRE_PIN          21               // Default Pin for OneWire bus
+  #define ONE_WIRE_PIN          22               // Default Pin for OneWire bus
 #endif
 
 #define ADDON_GPIO0_PIN       AUX1_PIN         // ESP8266 GPIO0 or SPI MISO/Fault
@@ -103,7 +75,7 @@
 #define AXIS1_M0_PIN        12      // Shared MOSI
 #define AXIS1_M1_PIN        11      // Shared SCK
 #define AXIS1_M2_PIN        10      // Unique CSN
-#define AXIS1_M3_PIN        AUX1_PIN      // Shared MISO
+#define AXIS1_M3_PIN        AUX1_PIN      // Shared MISO 13
 #define AXIS1_STEP_PIN      8
 #define AXIS1_DIR_PIN       6
 #define AXIS1_FAULT_PIN     AXIS1_M3_PIN      // Optional fault pin
@@ -113,10 +85,10 @@
 
 // Axis2 Dec/Alt step/dir driver
 #define AXIS2_ENABLE_PIN    15
-#define AXIS2_M0_PIN        12      // Shared MOSI
-#define AXIS2_M1_PIN        11      // Shared SCK
+#define AXIS2_M0_PIN        17      // Shared MOSI
+#define AXIS2_M1_PIN        18      // Shared SCK
 #define AXIS2_M2_PIN        9       // Unique CSN
-#define AXIS2_M3_PIN        AUX1_PIN      // Shared MISO
+#define AXIS2_M3_PIN        AUX2_PIN      // Shared MISO
 #define AXIS2_STEP_PIN      7
 #define AXIS2_DIR_PIN       5
 #define AXIS2_FAULT_PIN     AXIS2_M3_PIN      // Optional fault pin
