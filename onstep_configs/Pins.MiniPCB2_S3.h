@@ -22,8 +22,8 @@
 #define AUX0_PIN                48               // Status LED
 #define AUX1_PIN                16               // ESP8266 GPIO0, SPI MISO/Fault
 #define AUX2_PIN                12                // ESP8266 RST, SPI MISO/Fault
-#define AUX3_PIN                23                // Limit SW, Home SW
-#define AUX4_PIN                25               // Reticle LED, Home SW
+#define AUX3_PIN                37                // Limit SW, Home SW
+#define AUX4_PIN                36               // Reticle LED, Home SW
 // lots of free pins to choose from
 //#define AUX5_PIN              DAC_PIN(A14)     // true analog output
 
