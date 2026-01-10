@@ -20,8 +20,8 @@
 
 // The multi-purpose pins (Aux3..Aux8 can be analog pwm/dac if supported)
 #define AUX0_PIN                48               // Status LED
-#define AUX1_PIN                13               // ESP8266 GPIO0, SPI MISO/Fault
-#define AUX2_PIN                21                // ESP8266 RST, SPI MISO/Fault
+#define AUX1_PIN                16               // ESP8266 GPIO0, SPI MISO/Fault
+#define AUX2_PIN                12                // ESP8266 RST, SPI MISO/Fault
 #define AUX3_PIN                23                // Limit SW, Home SW
 #define AUX4_PIN                25               // Reticle LED, Home SW
 // lots of free pins to choose from
@@ -63,26 +63,26 @@
 #define DEDICATED_MODE_PINS
 
 // Axis1 RA/Azm step/dir driver
-#define AXIS1_ENABLE_PIN    16
-#define AXIS1_M0_PIN        12      // Shared MOSI
-#define AXIS1_M1_PIN        11      // Shared SCK
-#define AXIS1_M2_PIN        10      // Unique CSN
-#define AXIS1_M3_PIN        AUX1_PIN      // Shared MISO 13
-#define AXIS1_STEP_PIN      8
-#define AXIS1_DIR_PIN       6
+#define AXIS1_ENABLE_PIN    5
+#define AXIS1_M0_PIN        6      // Dedicated MOSI
+#define AXIS1_M1_PIN        7      // Dedicated SCK
+#define AXIS1_M2_PIN        15     // Unique CSN
+#define AXIS1_M3_PIN        AUX1_PIN     // Dedicated MISO/FAULT
+#define AXIS1_STEP_PIN      17
+#define AXIS1_DIR_PIN       18
 #define AXIS1_FAULT_PIN     AXIS1_M3_PIN      // Optional fault pin
 #ifndef AXIS1_SENSE_HOME_PIN
   #define AXIS1_SENSE_HOME_PIN  AUX3_PIN
 #endif
 
 // Axis2 Dec/Alt step/dir driver
-#define AXIS2_ENABLE_PIN    15
-#define AXIS2_M0_PIN        17      // Shared MOSI
-#define AXIS2_M1_PIN        18      // Shared SCK
-#define AXIS2_M2_PIN        9       // Unique CSN
-#define AXIS2_M3_PIN        AUX2_PIN      // Shared MISO
-#define AXIS2_STEP_PIN      7
-#define AXIS2_DIR_PIN       5
+#define AXIS2_ENABLE_PIN    8
+#define AXIS2_M0_PIN        9      // Dedicated MOSI
+#define AXIS2_M1_PIN        10     // Dedicated SCK
+#define AXIS2_M2_PIN        11     // Unique CSN
+#define AXIS2_M3_PIN        AUX2_PIN     // Dedicated MISO/FAULT
+#define AXIS2_STEP_PIN      13
+#define AXIS2_DIR_PIN       14
 #define AXIS2_FAULT_PIN     AXIS2_M3_PIN      // Optional fault pin
 #ifndef AXIS2_SENSE_HOME_PIN
   #define AXIS2_SENSE_HOME_PIN  AUX4_PIN
@@ -116,10 +116,10 @@
 #define AXIS5_DIR_PIN           43
 
 // ST4 interface
-#define ST4_RA_W_PIN            2               // ST4 RA- West
-#define ST4_DEC_S_PIN           14               // ST4 DE- South
-#define ST4_DEC_N_PIN           4               // ST4 DE+ North
-#define ST4_RA_E_PIN            1               // ST4 RA+ East
+#define ST4_RA_W_PIN        1
+#define ST4_DEC_S_PIN       2
+#define ST4_DEC_N_PIN       4
+#define ST4_RA_E_PIN        21
 
 #else
 #error "Wrong processor for this configuration!"
