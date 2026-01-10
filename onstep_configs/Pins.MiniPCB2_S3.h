@@ -116,10 +116,10 @@
 #define AXIS5_DIR_PIN           43
 
 // ST4 interface
-#define ST4_RA_W_PIN        1
-#define ST4_DEC_S_PIN       2
-#define ST4_DEC_N_PIN       4
-#define ST4_RA_E_PIN        21
+#define ST4_RA_W_PIN        1      // ST4 RA- West
+#define ST4_DEC_S_PIN       2      // ST4 DE- South
+#define ST4_DEC_N_PIN       4      // ST4 DE+ North
+#define ST4_RA_E_PIN        21     // ST4 RA+ East
 
 #else
 #error "Wrong processor for this configuration!"
