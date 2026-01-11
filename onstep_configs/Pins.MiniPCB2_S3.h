@@ -22,21 +22,21 @@
 #define AUX0_PIN                48               // Status LED
 #define AUX1_PIN                16               // ESP8266 GPIO0, SPI MISO/Fault
 #define AUX2_PIN                12                // ESP8266 RST, SPI MISO/Fault
-#define AUX3_PIN                37                // Limit SW, Home SW
-#define AUX4_PIN                36               // Reticle LED, Home SW
+#define AUX3_PIN                36                // Limit SW, Home SW
+#define AUX4_PIN                47               // Reticle LED, Home SW
 // lots of free pins to choose from
 //#define AUX5_PIN              DAC_PIN(A14)     // true analog output
 
 // Misc. pins
 // TODO update
 #ifndef ONE_WIRE_PIN
-  #define ONE_WIRE_PIN          23               // Default Pin for OneWire bus
+  #define ONE_WIRE_PIN          0               // Default Pin for OneWire bus
 #endif
 
 #define ADDON_GPIO0_PIN       AUX1_PIN         // ESP8266 GPIO0 or SPI MISO/Fault
 #define ADDON_RESET_PIN       AUX2_PIN         // ESP8266 RST or SPI MISO/Fault
 // The PEC index sense is a logic level input, resets the PEC index on rising edge then waits for 60 seconds before allowing another reset
-#define PEC_SENSE_PIN           47               // PEC Sense, analog or digital
+#define PEC_SENSE_PIN           21               // PEC Sense, analog or digital
 
 // The status LED is a two wire jumper with a 10k resistor in series to limit the current to the LED
 #define STATUS_LED_PIN          AUX0_PIN         // Default LED Cathode (-)
@@ -52,7 +52,7 @@
 
 // The PPS pin is a 3.3V logic input, OnStep measures time between rising edges and adjusts the internal sidereal clock frequency
 #ifndef PPS_SENSE_PIN
-  #define PPS_SENSE_PIN         41               // PPS time source, GPS for example
+  #define PPS_SENSE_PIN         38               // PPS time source, GPS for example
 #endif
 
 #ifndef LIMIT_SENSE_PIN
@@ -116,10 +116,10 @@
 #define AXIS5_DIR_PIN           43
 
 // ST4 interface
-#define ST4_RA_W_PIN        1      // ST4 RA- West
-#define ST4_DEC_S_PIN       2      // ST4 DE- South
+#define ST4_RA_W_PIN        37      // ST4 RA- West
+#define ST4_DEC_S_PIN       1      // ST4 DE- South
 #define ST4_DEC_N_PIN       4      // ST4 DE+ North
-#define ST4_RA_E_PIN        21     // ST4 RA+ East
+#define ST4_RA_E_PIN        2     // ST4 RA+ East
 
 #else
 #error "Wrong processor for this configuration!"
