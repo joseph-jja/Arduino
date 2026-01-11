@@ -162,8 +162,10 @@
                                     //         falling edge, or use BOTH for rising and falling edges.
 //#define TIME_LOCATION_PPS_SENSE HIGH
 // GPS pins
+// #define SERIAL_GPS SoftSerial
 //#define SERIAL_GPS_RX 44
 //#define SERIAL_GPS_TX 43
+//#define TIME_LOCATION_SOURCE_FALLBACK  DS3231 //
 
 // STATUS ------------------------------------------------------ see https://onstep.groups.io/g/main/wiki/Configuration_Mount#STATUS
 #define STATUS_MOUNT_LED ON       //    OFF, ON Flashes proportional to rate of movement or solid on for slews.       Option
