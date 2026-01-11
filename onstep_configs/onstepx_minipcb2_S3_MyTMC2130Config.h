@@ -163,8 +163,8 @@
 //#define TIME_LOCATION_PPS_SENSE HIGH
 // GPS pins
 // #define SERIAL_GPS SoftSerial
-//#define SERIAL_GPS_RX 39
-//#define SERIAL_GPS_TX 40
+//#define SERIAL_GPS_RX 40
+//#define SERIAL_GPS_TX 39
 //#define TIME_LOCATION_SOURCE_FALLBACK  DS3231 //
 
 // STATUS ------------------------------------------------------ see https://onstep.groups.io/g/main/wiki/Configuration_Mount#STATUS
