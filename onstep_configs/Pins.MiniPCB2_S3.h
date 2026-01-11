@@ -94,8 +94,8 @@
 #define AXIS3_M1_PIN            OFF              // SPI SCK
 #define AXIS3_M2_PIN            OFF              // SPI CS (UART TX)
 #define AXIS3_M3_PIN            OFF              // SPI MISO (UART RX)
-#define AXIS3_STEP_PIN          42
-#define AXIS3_DIR_PIN           43
+#define AXIS3_STEP_PIN          40
+#define AXIS3_DIR_PIN           39
 
 // For focuser1 stepper driver
 #define AXIS4_ENABLE_PIN        OFF
@@ -112,8 +112,8 @@
 #define AXIS5_M1_PIN            OFF              // SPI SCK
 #define AXIS5_M2_PIN            OFF              // SPI CS (UART TX)
 #define AXIS5_M3_PIN            OFF              // SPI MISO (UART RX)
-#define AXIS5_STEP_PIN          42
-#define AXIS5_DIR_PIN           43
+#define AXIS5_STEP_PIN          40
+#define AXIS5_DIR_PIN           39
 
 // ST4 interface
 #define ST4_RA_W_PIN        37      // ST4 RA- West
