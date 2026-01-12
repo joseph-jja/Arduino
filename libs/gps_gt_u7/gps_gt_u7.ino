@@ -29,8 +29,10 @@ void setup_gps() {
   Serial.println(TinyGPSPlus::libraryVersion());
 #ifdef USE_HARDWARE_SERIAL
   gpsSerial.begin(GPS_BAUD, SERIAL_8N1, GPS_RX_PIN, GPS_TX_PIN);
+  Serial.println("Using hardware serial!");
 #else
   gpsSerial.begin(GPS_BAUD);
+  Serial.println("Using hardware serial!");
 #endif
 }
 
