@@ -54,7 +54,7 @@ void displayInfo() {
 
   // Add a small delay to avoid flooding the serial monitor
   if (millis() > 5000 && !myGPS.updated) {
-    Serial.println(F("No GPS data received: check wiring or antenna."));
+    Serial.println(F("No GPS data received. Possibly a wiring or antenna issue."));
     // You may want to reset the ESP32 here if no data is received for a long time
     write_display(2, 16, "No GPS\ndata!");
     show_display();
