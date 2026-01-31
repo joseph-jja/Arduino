@@ -3,12 +3,18 @@
 #include <math.h>
 #include <time.h>
 
-// Import required libraries for esp8266
 #include <Arduino.h>
+
+#ifdef ESP32
+#include <WiFi.h>
+
+#else
+// Import required libraries for esp8266
 #include <ESP8266WiFi.h>
-#include <Hash.h>
 #include <ESP8266WebServer.h>
 #include <ESP8266mDNS.h>
+#include <Hash.h>
+#endif 
 
 #include "Adafruit_LEDBackpack.h"
 #include "Adafruit_GFX.h"
@@ -34,8 +40,12 @@ static time_t rawtime;
 long currentHour,
   currentMinute;
 
+#ifdef ESP32
+WiFiServer server(80);
+#else
 // Create AsyncWebServer object on port 80
 ESP8266WebServer server(80);
+#endif 
 
 void setup_builtin_pin() {
   pinMode(LED_BUILTIN, OUTPUT);
