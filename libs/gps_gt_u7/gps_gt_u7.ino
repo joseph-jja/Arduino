@@ -75,7 +75,7 @@ void loop_gps() {
           minutes = gps.time.minute();
           seconds = gps.time.second();
           memset(gpsdata.gps_time, '\0', sizeof(gpsdata.gps_date));
-          sprintf(gpsdata.gps_time, "%02d:%02d:%02d", hours, minutes, seconds);
+          snprintf(gpsdata.gps_time, sizeof(gpsdata.gps_time), "%02d:%02d:%02d", hours, minutes, seconds);
           Serial.print("Got raw time: ");
           Serial.print(hours);
           Serial.print(":");
@@ -90,7 +90,7 @@ void loop_gps() {
           year = gps.date.year();
           month = gps.date.month();
           day = gps.date.day();
-          sprintf(gpsdata.gps_date, "%4d/%02d/%02d", year, month, day);
+          snprintf(gpsdata.gps_date, sizeof(gpsdata.gps_date), %4d/%02d/%02d", year, month, day);
           Serial.print("Got valid date ");
           Serial.println(gpsdata.gps_date);
         }
