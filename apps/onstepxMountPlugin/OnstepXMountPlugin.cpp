@@ -12,7 +12,7 @@ void OnStepXMountPlugin::init() {
   for (int i = 0; i < MAX_SITES; i++) {
     memset(siteInfo[i].sitename, '\0', SITE_NAME_LENGTH);
     int j = i + 1;
-    sprintf(siteInfo[i].sitename, "Site %d", j);
+    snprintf(siteInfo[i].sitename, sizeof(siteInfo[i].sitename), "Site %d", j);
     siteInfo[i].latitude.sign = '+';
     siteInfo[i].latitude.hours = -1;
     siteInfo[i].latitude.minutes = -1;
@@ -54,7 +54,7 @@ bool OnStepXMountPlugin::command(char reply[], char command[], char parameter[],
   if (command[0] == (char)6) {
     *numericReply = false;
     *supressFrame = true;
-    sprintf(reply, MOUNT_MODE);
+    snprintf(reply, sizeof(reply), MOUNT_MODE);
     return true;
   }
 
@@ -63,19 +63,19 @@ bool OnStepXMountPlugin::command(char reply[], char command[], char parameter[],
     bool override = false;
     if (command[1] == 'U') {
       override = true;
-      sprintf(response_buffer, "NHp");
+      snprintf(response_buffer, sizeof(response_buffer), "NHp");
     } else if (command[1] == 'm') {
       override = true;
-      sprintf(response_buffer, "N");
+      snprintf(response_buffer, sizeof(response_buffer), "N");
     } else if (command[1] == 'r' || command[1] == 'R') {
       *numericReply = false;
       *supressFrame = true;
-      sprintf(reply, "13:00:00#*");
+      snprintf(reply, sizeof(reply), "13:00:00#*");
       return true;
     } else if (command[1] == 'd' || command[1] == 'D') {
       *numericReply = false;
       *supressFrame = true;
-      sprintf(reply, "+90:00:00#*");
+      snprintf(reply, sizeof(reply), "+90:00:00#*");
       return true;
     } else if (command[1] == 't') {
       override = true;
@@ -88,7 +88,7 @@ bool OnStepXMountPlugin::command(char reply[], char command[], char parameter[],
       offset_toString(utc_offset, response_buffer, RESPONSE_BUFFER_SIZE);
     } else if (command[1] == 'X' && parameter[0] == '9' && parameter[1] == '8') {
       override = true;
-      sprintf(response_buffer, "N");
+      snprintf(response_buffer, sizeof(response_buffer), "N");
     } else if (command[1] == 'C') {
       // GC get date
       override = true;
@@ -108,30 +108,30 @@ bool OnStepXMountPlugin::command(char reply[], char command[], char parameter[],
     } else if (command[1] == 'M') {
       // GM get site name
       override = true;
-      sprintf(response_buffer, "%s", siteInfo[0].sitename);
+      snprintf(response_buffer, sizeof(response_buffer), "%s", siteInfo[0].sitename);
     } else if (command[1] == 'N') {
       // GM get site name
       override = true;
-      sprintf(response_buffer, "%s", siteInfo[1].sitename);
+      snprintf(response_buffer, sizeof(response_buffer), "%s", siteInfo[1].sitename);
     } else if (command[1] == 'O') {
       // GM get site name
       override = true;
-      sprintf(response_buffer, "%s", siteInfo[2].sitename);
+      snprintf(response_buffer, sizeof(response_buffer), "%s", siteInfo[2].sitename);
     } else if (command[1] == 'P') {
       // GM get site name
       override = true;
-      sprintf(response_buffer, "%s", siteInfo[3].sitename);
+      snprintf(response_buffer, sizeof(response_buffer), "%s", siteInfo[3].sitename);
     } else if (command[1] == 'T') {
       // tracking rate
       override = true;
-      sprintf(response_buffer, "60.164");
+      snprintf(response_buffer, sizeof(response_buffer), "60.164");
     }
 
     // if we have a valid override command, return the response
     if (override) {
       *numericReply = false;
-      *supressFrame = false;
-      sprintf(reply, response_buffer);
+      *n = false;
+      snprintf(reply, sizeof(reply), response_buffer);
       return true;
     }
 
