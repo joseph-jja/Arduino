@@ -131,7 +131,7 @@ void fetch_data() {
       firstTime = false;
       char url[128];
       // \r\n\r\n
-      sprintf(url, "http://%s/gettime", gateway.toString().c_str());
+      snprintf(url, sizeof(url), "http://%s/gettime", gateway.toString().c_str());
       Serial.print("Attempting to connect to: ");
       Serial.println(url);
 
@@ -146,7 +146,7 @@ void fetch_data() {
         Serial.print("And got: ");
         Serial.println(payload);
         if (payload.length() < 20) { 
-          sprintf(time_buffer, payload.c_str());
+          snprintf(time_buffer, sizeof(time_buffer), payload.c_str());
           loop_minutes = 0;
           subminutes = 0;
         }
@@ -201,8 +201,8 @@ void updateClient() {
 
     char updated_minutes[3] = {0};
     char updated_hours[3] = {0};
-    sprintf(updated_minutes, "%d", guess_minutes);
-    sprintf(updated_hours, "%d", guess_hours);
+    snprintf(updated_minutes, sizeof(updated_minutes), "%d", guess_minutes);
+    snprintf(updated_hours, sizeof(updated_hours), "%d", guess_hours);
 
     Serial.print("Hours ");
     Serial.print(hours);
