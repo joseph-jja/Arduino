@@ -194,20 +194,20 @@ void writeTemps(float c1, float f1) {
   //if (swap) {
   //  float x1 = c1 + 0.50;
   //  float x2 = c1 - 0.50;
-  //  sprintf(buff, "R %d-%dC", (int)roundf(x2), (int)roundf(x1));
+  //  snprintf(buff, isizeof(buff), "R %d-%dC", (int)roundf(x2), (int)roundf(x1));
   //} else{
-    sprintf(buff, "%d.%dC", (int)c1, getFractionPart(c1));
+    snprintf(buff, sizeof(buff), "%d.%dC", (int)c1, getFractionPart(c1));
   //}
   display.println(buff);
 
   display.setCursor(fahrenheitLeft, bottom);
   memset(buff, '\0', sizeof(buff));
   //if (swap) {
-    sprintf(buff, "%d.%dF", (int)f1, getFractionPart(f1));
+    snprintf(buff, sizeof(buff), "%d.%dF", (int)f1, getFractionPart(f1));
   //} else{
   //  float x1 = f1 + 0.90;
   //  float x2 = f1 - 0.90;
-  //  sprintf(buff, "R %d-%dF", (int)roundf(x2), (int)roundf(x1));
+  //  snprintf(buff, sizeof(buff), "R %d-%dF", (int)roundf(x2), (int)roundf(x1));
   //}
   display.println(buff);
 

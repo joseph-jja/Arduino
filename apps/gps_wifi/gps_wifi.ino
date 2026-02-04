@@ -59,7 +59,7 @@ void updateData() {
 
 
     memset(jsonData, '\0', sizeof(jsonData));
-    sprintf(jsonData, "{ \"degC\": %2.2f, \"degF\": %2.2f, \"gps\": {\"latitude\": %3.2f, \"longitude\": %3.2f, \"date\": %s, \"time\": \"%s\"}, \"Acc\": { \"X\": %3.2f, \"Y\": %3.2f , \"Z\": %3.2f }, \"Gyro\": { \"X\": %3.2f, \"Y\": %3.2f , \"Z\": %3.2f }, \"Compass\": { \"X\": %3.2f, \"Y\": %3.2f , \"Z\": %3.2f }, \"Magnetic\": { \"X\": %3.2f, \"Y\": %3.2f , \"Z\": %3.2f } }",
+    snprintf(jsonData, sizeof(jsonData), "{ \"degC\": %2.2f, \"degF\": %2.2f, \"gps\": {\"latitude\": %3.2f, \"longitude\": %3.2f, \"date\": %s, \"time\": \"%s\"}, \"Acc\": { \"X\": %3.2f, \"Y\": %3.2f , \"Z\": %3.2f }, \"Gyro\": { \"X\": %3.2f, \"Y\": %3.2f , \"Z\": %3.2f }, \"Compass\": { \"X\": %3.2f, \"Y\": %3.2f , \"Z\": %3.2f }, \"Magnetic\": { \"X\": %3.2f, \"Y\": %3.2f , \"Z\": %3.2f } }",
         temperatureC, temperatureF,
         latitude, longitude,
         gps_date, gps_time,
@@ -116,7 +116,7 @@ void setup() {
         responseHTML = (char*)malloc(strlen(jsonData) + strlen(index_html) + 1);
         if (responseHTML) {
             memset(responseHTML, '\0', sizeof(responseHTML));
-            sprintf(responseHTML, index_html, jsonData);
+            snprintf(responseHTML, sizeof(responseHTML), index_html, jsonData);
             Serial.print("Request for home page");
             Serial.println(strlen(responseHTML));
             server.send(200, "text/html", responseHTML);
