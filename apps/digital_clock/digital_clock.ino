@@ -7,14 +7,15 @@
 
 #ifdef ESP32
 #include <WiFi.h>
-
+#include <WebServer.h>
+#include <ESPmDNS.h>
 #else
 // Import required libraries for esp8266
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
 #include <ESP8266mDNS.h>
 #include <Hash.h>
-#endif 
+#endif
 
 #include "Adafruit_LEDBackpack.h"
 #include "Adafruit_GFX.h"
@@ -29,7 +30,7 @@ Adafruit_AlphaNum4 alpha4 = Adafruit_AlphaNum4();
 #define SERIAL_BAUD 115200
 #define TIME_BUFFER_SIZE 30
 
-bool debug = false;
+bool debug = true;
 
 bool rtcInitialized = false;
 
@@ -37,15 +38,16 @@ bool rtcInitialized = false;
 RTC_DS3231 rtc;
 
 static time_t rawtime;
-long currentHour,
-  currentMinute;
+long currentHour = 0,
+     currentMinute = 0;
 
 #ifdef ESP32
-WiFiServer server(80);
+WebServer server(80);
+#define LED_BUILTIN 2
 #else
 // Create AsyncWebServer object on port 80
 ESP8266WebServer server(80);
-#endif 
+#endif
 
 void setup_builtin_pin() {
   pinMode(LED_BUILTIN, OUTPUT);
@@ -115,7 +117,7 @@ void handleTimeRequest() {
     // gets the time from the RTC clock
     DateTime rtnow = rtc.now();
     char buffer[TIME_BUFFER_SIZE];
-    memset(buffer, '\0', TIME_BUFFER_SIZE);
+    memset(buffer, '\0', sizeof(buffer));
     //int year = rtnow.year();
     //int month = rtnow.month();
     //int day = rtnow.day();
@@ -123,7 +125,7 @@ void handleTimeRequest() {
     int minutes = rtnow.minute();
     //int seconds = rtnow.second();
     // client clock only needs time really
-    sprintf(buffer, "%d:%d#", hour, minutes);
+    snprintf(buffer, sizeof(buffer), "%d:%d#", hour, minutes);
     server.send(200, "text/plain", buffer);
   } else {
     server.send(200, "text/plain", "ERROR");
@@ -131,7 +133,7 @@ void handleTimeRequest() {
 }
 
 void setup() {
-  Serial.begin(SERIAL_BAUD);
+  Serial.begin(9600);
   Serial.println();
   Serial.println("Application setup!");
   Serial.print("Build date: ");
@@ -190,12 +192,18 @@ void setup() {
   server.begin();
   Serial.printf("Web server started, open %s in a web browser\n", WiFi.softAPIP().toString().c_str());
 
-  if (MDNS.begin("esp8266")) {
+  if (MDNS.begin("esp32-wroom")) {
     Serial.println("MDNS responder started");
   }
+  MDNS.addService("_http", "_tcp", 80);
 }
 
 void get_time() {
+
+  // no time no call function :)
+  if (!rtcInitialized) {
+    return;
+  }
 
   int uptime = millis();
   int seconds = uptime / 1000;
@@ -209,43 +217,40 @@ void get_time() {
   }
   static tm *now = localtime(&rawtime);
 
-  if (rtcInitialized) {
-    // gets the time from the RTC clock
-    DateTime rtnow = rtc.now();
-    if (debug) {
-      Serial.print("RTC Time Shows ");
-      Serial.print(rtnow.year(), DEC);
-      Serial.print('/');
-      Serial.print(rtnow.month(), DEC);
-      Serial.print('/');
-      Serial.print(rtnow.day(), DEC);
-      Serial.print(' ');
-      Serial.print(rtnow.hour(), DEC); // hour is in 24 hour time format
-      Serial.print(':');
-      Serial.print(rtnow.minute(), DEC);
-      Serial.print(':');
-      Serial.println(rtnow.second(), DEC);
-      // separator
-      Serial.println("##################################################");
-    }
-    // updates the clock time
-    now->tm_hour = rtnow.hour();
-    now->tm_min = rtnow.minute();
-    now->tm_sec = rtnow.second();
-    rawtime = mktime(now);
+  // gets the time from the RTC clock
+  DateTime rtnow = rtc.now();
+  if (debug) {
+    Serial.print("RTC Time Shows ");
+    Serial.print(rtnow.year(), DEC);
+    Serial.print('/');
+    Serial.print(rtnow.month(), DEC);
+    Serial.print('/');
+    Serial.print(rtnow.day(), DEC);
+    Serial.print(' ');
+    Serial.print(rtnow.hour(), DEC);  // hour is in 24 hour time format
+    Serial.print(':');
+    Serial.print(rtnow.minute(), DEC);
+    Serial.print(':');
+    Serial.println(rtnow.second(), DEC);
   }
+  // updates the clock time
+  now->tm_hour = rtnow.hour();
+  now->tm_min = rtnow.minute();
+  now->tm_sec = rtnow.second();
+  rawtime = mktime(now);
 
   currentHour = now->tm_hour;
   currentMinute = now->tm_min;
 
-  char ampm[10];
-
-  memset(ampm, '\0', sizeof(ampm) + 1);
-  sprintf(ampm, "%2d:%2d", currentHour, currentMinute);
-
   if (debug) {
+    char ampm[20];
+
+    memset(ampm, '\0', sizeof(ampm));
+    snprintf(ampm, sizeof(ampm), "%2d:%2d", currentHour, currentMinute);
+
     Serial.print("Arduino Time Shows ");
     Serial.println(ampm);
+    Serial.println("##################################################");
   }
 }
 
@@ -254,19 +259,19 @@ void writeString() {
   char hours[3];
   char minutes[3];
 
-  memset(hours, '\0', sizeof(hours) + 1);
-  memset(minutes, '\0', sizeof(minutes) + 1);
+  memset(hours, '\0', sizeof(hours));
+  memset(minutes, '\0', sizeof(minutes));
 
   if (currentHour < 10) {
-    sprintf(hours, "0%d", currentHour);
+    snprintf(hours, sizeof(hours), "0%d", currentHour);
   } else {
-    sprintf(hours, "%d", currentHour);
+    snprintf(hours, sizeof(hours), "%d", currentHour);
   }
 
   if (currentMinute < 10) {
-    sprintf(minutes, "0%d", currentMinute);
+    snprintf(minutes, sizeof(minutes), "0%d", currentMinute);
   } else {
-    sprintf(minutes, "%d", currentMinute);
+    snprintf(minutes, sizeof(minutes), "%d", currentMinute);
   }
 
   if (debug) {
@@ -297,7 +302,9 @@ void loop() {
   blink_pin(100);
 
   server.handleClient();
+#ifndef ESP32
   MDNS.update();
+#endif
 
   delay(100);
 }
