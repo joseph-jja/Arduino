@@ -154,7 +154,7 @@ void displayInfo() {
   floatPart = abs(floor(((abs(latitude) - abs(intPart)) * 100) * 60 / 100));
 
   memset(buffer, '\0', 10);
-  sprintf(buffer, "%d:%d", intPart, floatPart);
+  snprintf(buffer, sizeof(buffer), "%d:%d", intPart, floatPart);
 
   write_display(2, 11, "Latitude:");
   write_display(100 - (strlen(buffer) * 12), 27, buffer);  
@@ -163,7 +163,7 @@ void displayInfo() {
   floatPart = abs(floor(((abs(longitude) - abs(intPart)) * 100) * 60 / 100));
 
   memset(buffer, '\0', 10);
-  sprintf(buffer, "%d:%d", intPart, floatPart);
+  snprintf(buffer, sizeof(buffer),  "%d:%d", intPart, floatPart);
 
   write_display(2, 41, "Longitude:");
   write_display(100 - (strlen(buffer) * 12), 61, buffer);  
