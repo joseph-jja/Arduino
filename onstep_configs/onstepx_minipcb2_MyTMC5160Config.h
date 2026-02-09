@@ -154,6 +154,8 @@
 #define TIME_LOCATION_PPS_SENSE HIGH //    OFF, HIGH senses PPS (pulse per second,) signal rising edge, or use LOW for   Option
                                     //         falling edge, or use BOTH for rising and falling edges.
 
+#define SERIAL_GPS                  SoftSerial
+#define SERIAL_GPS_BAUD               9600 // this I changed to 34800 and 115200, and tested
 #define SERIAL_GPS_TX 10
 #define SERIAL_GPS_RX 12
 #define PPS_SENSE_PIN 13
