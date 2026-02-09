@@ -151,7 +151,7 @@
 // TIME AND LOCATION ---------------------------------------------- see https://onstep.groups.io/g/main/wiki/Configuration_Mount#TLS
 #define TIME_LOCATION_SOURCE OFF //    OFF, DS3231 (I2C,) SD3031 (I2C,) TEENSY (T3.2 etc,) GPS, or NTP source.       Option
                                     //         Provides Date/Time, and if available, PPS & Lat/Long also.
-#define TIME_LOCATION_PPS_SENSE LOW //    OFF, HIGH senses PPS (pulse per second,) signal rising edge, or use LOW for   Option
+#define TIME_LOCATION_PPS_SENSE HIGH //    OFF, HIGH senses PPS (pulse per second,) signal rising edge, or use LOW for   Option
                                     //         falling edge, or use BOTH for rising and falling edges.
 
 // STATUS ------------------------------------------------------ see https://onstep.groups.io/g/main/wiki/Configuration_Mount#STATUS
@@ -162,9 +162,9 @@
 
 // ST4 INTERFACE -------------------------------------------------- see https://onstep.groups.io/g/main/wiki/Configuration_Mount#ST4
 // *** It is up to you to verify the interface meets the electrical specifications of any connected device, use at your own risk ***
-#define ST4_INTERFACE ON             //    OFF, ON enables interface. <= 1X guides unless hand control mode.             Option
+#define ST4_INTERFACE OFF             //    OFF, ON enables interface. <= 1X guides unless hand control mode.             Option
                                      //         During goto btn press: aborts slew or continue meridian flip pause home
-#define ST4_HAND_CONTROL ON          //     ON, ON for hand controller special features and SHC support.                 Option
+#define ST4_HAND_CONTROL OFF          //     ON, ON for hand controller special features and SHC support.                 Option
                                      //         Hold [E]+[W] btns >2s: Guide rate   [E]-  [W]+  [N] trk on/off [S] sync
                                      //         Hold [N]+[S] btns >2s: Usr cat item [E]-  [W]+  [N] goto [S] snd on/off
 #define ST4_HAND_CONTROL_FOCUSER OFF //     ON, ON alternate to above: Focuser move [E]f1 [W]f2 [N]-     [S]+            Option
