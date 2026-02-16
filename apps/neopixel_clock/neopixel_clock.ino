@@ -14,13 +14,36 @@ static int CYAN[3] = {0, 255, 255};
 static int PINKISH[3] = {255, 0, 150}; 
 static int PURPLE[3] = {255, 0, 255}; 
 
+/* 
+  Binary Table
+  0 0 0 0 = 0
+  0 0 0 1 = 1
+  0 0 1 0 = 2
+  0 0 1 1 = 3
+  0 1 0 0 = 4
+  0 1 0 1 = 5
+  0 1 1 0 = 6
+  0 1 1 1 = 7
+  1 0 0 0  = 8 
+  1 0 0 1 = 9
+*/
+static int ZERO_NUM[4] = {0, 0, 0, 0};
+static int ONE_NUM[4] = {0, 0, 0, 1};
+static int TWO_NUM[4] = {0, 0, 1, 0};
+static int THREE_NUM[4] = {0, 0, 1, 1};
+static int FOUR_NUM[4] = {0, 1, 0, 0};
+static int FIVE_NUM[4] = {0, 1, 0, 1};
+static int SIX_NUM[4] = {0, 1, 1, 0};
+static int SEVEN_NUM[4] = {0, 1, 1, 1};
+static int EIGHT_NUM[4] = {1, 0, 0, 0};
+static int NINE_NUM[4] = {1, 0, 0, 1};
+
 #define HOURS_ONE 18
 #define HOURS_TWO 17
 #define MINUTES_ONE 16
 #define MINUTES_TWO 15
 #define SECONDS_ONE 7
 #define SECONDS_TWO 6
-
 
 #define PIXEL_CT 4
 
