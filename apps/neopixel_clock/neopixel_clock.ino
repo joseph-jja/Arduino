@@ -4,8 +4,15 @@
 #include <Adafruit_NeoPixel.h>
 
 static int RED[3] = {255, 0, 0}; 
+static int LIGHT_RED[3] = {150, 0, 0}; 
 static int GREEN[3] = {0, 255, 0}; 
+static int LIGHT_GREEN[3] = {0, 150, 0}; 
 static int BLUE[3] = {0, 0, 255}; 
+static int LIGHT_BLUE[3] = {0, 0, 150}; 
+static int YELLOW[3] = {255, 255, 0}; 
+static int CYAN[3] = {0, 255, 255}; 
+static int PINKISH[3] = {255, 0, 150}; 
+static int PURPLE[3] = {255, 0, 255}; 
 
 #define HOURS_ONE 18
 #define HOURS_TWO 17
