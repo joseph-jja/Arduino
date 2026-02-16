@@ -82,8 +82,24 @@ void setup() {
 }
 
 void setSinglePixelColor(Adafruit_NeoPixel pixels, int color[], int pixel_index) {
-
   pixels.setPixelColor(pixel_index, color[0], color[1], color[2]);
+}
+
+void setPixelNumber(Adafruit_NeoPixel pixels, int color[], int number[]) {
+
+  // we know number is going to be 4 
+  size_t length = sizeof(number) / sizeof(number[0]);
+  int end = (int) length;
+
+  for (int i = 0; i < end; i++) {
+    int onOrOff = number[i];
+    if (0 == onOrOff) {
+      // color is black aka off
+      pixels.setPixelColor(i, 0, 0, 0);
+    } else {
+      pixels.setPixelColor(i, color[0], color[1], color[2]);
+    }
+  }
 }
 
 void loop() {
