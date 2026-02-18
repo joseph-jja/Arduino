@@ -27,13 +27,13 @@
 #define SERIAL_C_BAUD_DEFAULT OFF  //    OFF, n. Baud rate as above. See (src/pinmaps/) for Serial port assignments.   Infreq
 //#define SERIAL_D_BAUD_DEFAULT OFF  //    OFF, n. Baud rate as above. See (src/pinmaps/) for Serial port assignments.   Infreq
 //#define SERIAL_E_BAUD_DEFAULT OFF  //    OFF, n. Baud rate as above. See (src/pinmaps/) for Serial port assignments.   Infreq
-#define SERIAL_RADIO WIFI_ACCESS_POINT        //    OFF, Use BLUETOOTH or WIFI_ACCESS_POINT or WIFI_STATION (ESP32 only.)         Option
+#define SERIAL_RADIO WIFI_ACCESS_POINT   OFF     //    OFF, Use BLUETOOTH or WIFI_ACCESS_POINT or WIFI_STATION (ESP32 only.)         Option
 
 // wifi 
-#define AP_SSID           "ONSTEP-S3"         // set WiFi SSID name
-#define MDNS_NAME         "ONSTEP-S3"         // set mDNS name
-#define PASSWORD_DEFAULT    "ONSTEP-S3"  
-#define AP_PASSWORD         "ONSTEP-S3"
+//#define AP_SSID           "ONSTEP-S3"         // set WiFi SSID name
+//#define MDNS_NAME         "ONSTEP-S3"         // set mDNS name
+//#define PASSWORD_DEFAULT    "ONSTEP-S3"  
+//#define AP_PASSWORD         "ONSTEP-S3"
 
 // STATUS --------------------------------------------- see https://onstep.groups.io/g/main/wiki/Configuration_Controller#STATUS_LED
 #define STATUS_LED ON //    OFF, Steady illumination if no error, blinks w/error code otherwise.          Option
