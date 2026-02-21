@@ -4,9 +4,6 @@
 #include <math.h>
 #include <time.h>
 
-#include "Config.h"
-#include "Constants.h"
-
 #include <Arduino.h>
 #include <RTClib.h>
 
@@ -15,6 +12,9 @@
 #include <ESPmDNS.h>
 
 #include <Adafruit_NeoPixel.h>
+
+#include "Config.h"
+#include "Constants.h"
 
 static int RED[3] = {255, 0, 0}; 
 static int LIGHT_RED[3] = {150, 0, 0}; 
