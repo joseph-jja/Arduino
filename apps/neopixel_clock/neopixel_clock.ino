@@ -248,6 +248,41 @@ void setPixelNumber(Adafruit_NeoPixel pixels, int color[], int number[]) {
   }
 }
 
+int[] decimal_to_binary(int decimal_number) {
+
+     int binary_number[4] = { 0, 0, 0, 0 };
+     switch(decimal_number) {
+          case 0:
+          //do nothing and use default
+          break;
+          case 1:
+               binary_number[3] = 1;
+          break;
+          case 2:
+               binary_number[2] = 1;
+          break;
+          case 3:
+               binary_number[3] = 1;
+               binary_number[2] = 1;
+          break;
+          case 4:
+          break;
+          case 5:
+          break;
+          case 6:
+          break;
+          case 7:
+          break;
+          case 8:
+          break;
+          case 9:
+          break;
+          default:
+               // do nothing and use 0
+          break;
+     }
+}
+
 void loop() {
 
   
