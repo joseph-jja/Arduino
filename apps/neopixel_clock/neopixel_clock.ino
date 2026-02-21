@@ -16,16 +16,16 @@
 #include "Config.h"
 #include "Constants.h"
 
-static int RED[3] = {255, 0, 0}; 
-static int LIGHT_RED[3] = {150, 0, 0}; 
-static int GREEN[3] = {0, 255, 0}; 
-static int LIGHT_GREEN[3] = {0, 150, 0}; 
-static int BLUE[3] = {0, 0, 255}; 
-static int LIGHT_BLUE[3] = {0, 0, 150}; 
-static int YELLOW[3] = {255, 255, 0}; 
-static int CYAN[3] = {0, 255, 255}; 
-static int PINKISH[3] = {255, 0, 150}; 
-static int PURPLE[3] = {255, 0, 255}; 
+static int RED[3] = { 255, 0, 0 };
+static int LIGHT_RED[3] = { 150, 0, 0 };
+static int GREEN[3] = { 0, 255, 0 };
+static int LIGHT_GREEN[3] = { 0, 150, 0 };
+static int BLUE[3] = { 0, 0, 255 };
+static int LIGHT_BLUE[3] = { 0, 0, 150 };
+static int YELLOW[3] = { 255, 255, 0 };
+static int CYAN[3] = { 0, 255, 255 };
+static int PINKISH[3] = { 255, 0, 150 };
+static int PURPLE[3] = { 255, 0, 255 };
 
 #define SERIAL_BAUD 115200
 #define TIME_BUFFER_SIZE 30
@@ -56,16 +56,16 @@ WebServer server(80);
   1 0 0 0  = 8 
   1 0 0 1 = 9
 */
-static int ZERO_NUM[4] = {0, 0, 0, 0};
-static int ONE_NUM[4] = {0, 0, 0, 1};
-static int TWO_NUM[4] = {0, 0, 1, 0};
-static int THREE_NUM[4] = {0, 0, 1, 1};
-static int FOUR_NUM[4] = {0, 1, 0, 0};
-static int FIVE_NUM[4] = {0, 1, 0, 1};
-static int SIX_NUM[4] = {0, 1, 1, 0};
-static int SEVEN_NUM[4] = {0, 1, 1, 1};
-static int EIGHT_NUM[4] = {1, 0, 0, 0};
-static int NINE_NUM[4] = {1, 0, 0, 1};
+static int ZERO_NUM[4] = { 0, 0, 0, 0 };
+static int ONE_NUM[4] = { 0, 0, 0, 1 };
+static int TWO_NUM[4] = { 0, 0, 1, 0 };
+static int THREE_NUM[4] = { 0, 0, 1, 1 };
+static int FOUR_NUM[4] = { 0, 1, 0, 0 };
+static int FIVE_NUM[4] = { 0, 1, 0, 1 };
+static int SIX_NUM[4] = { 0, 1, 1, 0 };
+static int SEVEN_NUM[4] = { 0, 1, 1, 1 };
+static int EIGHT_NUM[4] = { 1, 0, 0, 0 };
+static int NINE_NUM[4] = { 1, 0, 0, 1 };
 
 #define HOURS_ONE 18
 #define HOURS_TWO 17
@@ -165,27 +165,27 @@ void setup() {
   Serial.println(__TIME__);
 
   pixels_hours_1.begin();
-  pixels_hours_1.setBrightness(85); // 1/3 brightness
+  pixels_hours_1.setBrightness(85);  // 1/3 brightness
   pixels_hours_1.show();
 
   pixels_hours_2.begin();
-  pixels_hours_2.setBrightness(85); // 1/3 brightness
+  pixels_hours_2.setBrightness(85);  // 1/3 brightness
   pixels_hours_2.show();
 
   pixels_minutes_1.begin();
-  pixels_minutes_1.setBrightness(85); // 1/3 brightness
+  pixels_minutes_1.setBrightness(85);  // 1/3 brightness
   pixels_minutes_1.show();
 
   pixels_minutes_2.begin();
-  pixels_minutes_2.setBrightness(85); // 1/3 brightness
+  pixels_minutes_2.setBrightness(85);  // 1/3 brightness
   pixels_minutes_2.show();
 
   pixels_seconds_1.begin();
-  pixels_seconds_1.setBrightness(85); // 1/3 brightness
+  pixels_seconds_1.setBrightness(85);  // 1/3 brightness
   pixels_seconds_1.show();
 
   pixels_seconds_2.begin();
-  pixels_seconds_2.setBrightness(85); // 1/3 brightness
+  pixels_seconds_2.setBrightness(85);  // 1/3 brightness
   pixels_seconds_2.show();
 
   // clock found so initialize to current data time from computer
@@ -289,9 +289,9 @@ void setSinglePixelColor(Adafruit_NeoPixel pixels, int color[], int pixel_index)
 
 void setPixelNumber(Adafruit_NeoPixel pixels, int color[], int number[]) {
 
-  // we know number is going to be 4 
+  // we know number is going to be 4
   size_t length = sizeof(number) / sizeof(number[0]);
-  int end = (int) length;
+  int end = (int)length;
 
   for (int i = 0; i < end; i++) {
     int onOrOff = number[i];
@@ -307,51 +307,51 @@ void setPixelNumber(Adafruit_NeoPixel pixels, int color[], int number[]) {
 int binary_number[4] = { 0, 0, 0, 0 };
 void decimal_to_binary(int decimal_number) {
 
-     int binary_number[4] = { 0, 0, 0, 0 };
-     switch(decimal_number) {
-          case 0:
-          //do nothing and use default
-          break;
-          case 1:
-               binary_number[3] = 1;
-          break;
-          case 2:
-               binary_number[2] = 1;
-          break;
-          case 3:
-               binary_number[2] = 1;
-               binary_number[3] = 1;
-          break;
-          case 4:
-               binary_number[1] = 1;
-          break;
-          case 5:
-               binary_number[1] = 1;
-               binary_number[3] = 1;
-          break;
-          case 6:
-               binary_number[1] = 1;
-               binary_number[2] = 1;
-               binary_number[3] = 1;
-          break;
-          case 7:
-               binary_number[0] = 1;
-          break;
-          case 8:
-               binary_number[0] = 1;
-               binary_number[3] = 1;
-          break;
-          case 9:
-               binary_number[0] = 1;
-               binary_number[3] = 1;
-          break;
-          default:
-               // do nothing and use 0
-          break;
-     }
+  int binary_number[4] = { 0, 0, 0, 0 };
+  switch (decimal_number) {
+    case 0:
+      //do nothing and use default
+      break;
+    case 1:
+      binary_number[3] = 1;
+      break;
+    case 2:
+      binary_number[2] = 1;
+      break;
+    case 3:
+      binary_number[2] = 1;
+      binary_number[3] = 1;
+      break;
+    case 4:
+      binary_number[1] = 1;
+      break;
+    case 5:
+      binary_number[1] = 1;
+      binary_number[3] = 1;
+      break;
+    case 6:
+      binary_number[1] = 1;
+      binary_number[2] = 1;
+      binary_number[3] = 1;
+      break;
+    case 7:
+      binary_number[0] = 1;
+      break;
+    case 8:
+      binary_number[0] = 1;
+      binary_number[3] = 1;
+      break;
+    case 9:
+      binary_number[0] = 1;
+      binary_number[3] = 1;
+      break;
+    default:
+      // do nothing and use 0
+      break;
+  }
 }
 
 void loop() {
 
-  
+  get_time();
 }
