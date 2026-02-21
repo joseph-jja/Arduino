@@ -355,6 +355,38 @@ void decimal_to_binary(int binary_number[], int decimal_number) {
   }
 }
 
+int counter = 0;
+void get_color(int color[]) {
+
+  if (counter >= 10) {
+    counter = 0;
+  }
+
+  if (counter == 0) {
+    color = RED;
+  } else if (counter == 1) {
+    color = LIGHT_RED;
+  } else if (counter == 2) {
+    color = GREEN;
+  } else if (counter == 3) {
+    color = LIGHT_GREEN;
+  } else if (counter == 4) {
+    color = BLUE;
+  } else if (counter == 5) {
+    color = LIGHT_BLUE;
+  } else if (counter == 6) {
+    color = YELLOW;
+  } else if (counter == 7) {
+    color = CYAN;
+  } else if (counter == 8) {
+    color = PINKISH;
+  } else if (counter == 9) {
+    color = PURPLE;
+  }
+
+  counter++;
+}
+
 void loop() {
 
   get_time();
@@ -392,4 +424,13 @@ void loop() {
     decimal_to_binary(second_big_number, 0);
     decimal_to_binary(second_small_number, currentSeconds);
   }
+
+  int colors[3];
+  get_color(colors);
+  setPixelNumber(pixels_hours_1, colors, hour_big_number);
+  setPixelNumber(pixels_hours_2, colors, hour_small_number);
+  setPixelNumber(pixels_minutes_1, colors, minute_big_number);
+  setPixelNumber(pixels_minutes_2, colors, minute_small_number);
+  setPixelNumber(pixels_seconds_1, colors, second_big_number);
+  setPixelNumber(pixels_seconds_2, colors, second_small_number);
 }
