@@ -227,6 +227,62 @@ void setup() {
   MDNS.addService("_http", "_tcp", 80);
 }
 
+void get_time() {
+
+  // no time no call function :)
+  if (!rtcInitialized) {
+    return;
+  }
+
+  int uptime = millis();
+  int seconds = uptime / 1000;
+  if (debug) {
+    Serial.print("Uptime: ");
+    Serial.println(uptime);
+  }
+
+  if (rawtime == NULL) {
+    time(&rawtime);
+  }
+  static tm *now = localtime(&rawtime);
+
+  // gets the time from the RTC clock
+  DateTime rtnow = rtc.now();
+  if (debug) {
+    Serial.print("RTC Time Shows ");
+    Serial.print(rtnow.year(), DEC);
+    Serial.print('/');
+    Serial.print(rtnow.month(), DEC);
+    Serial.print('/');
+    Serial.print(rtnow.day(), DEC);
+    Serial.print(' ');
+    Serial.print(rtnow.hour(), DEC);  // hour is in 24 hour time format
+    Serial.print(':');
+    Serial.print(rtnow.minute(), DEC);
+    Serial.print(':');
+    Serial.println(rtnow.second(), DEC);
+  }
+  // updates the clock time
+  now->tm_hour = rtnow.hour();
+  now->tm_min = rtnow.minute();
+  now->tm_sec = rtnow.second();
+  rawtime = mktime(now);
+
+  currentHour = now->tm_hour;
+  currentMinute = now->tm_min;
+
+  if (debug) {
+    char ampm[20];
+
+    memset(ampm, '\0', sizeof(ampm));
+    snprintf(ampm, sizeof(ampm), "%2d:%2d", currentHour, currentMinute);
+
+    Serial.print("Arduino Time Shows ");
+    Serial.println(ampm);
+    Serial.println("##################################################");
+  }
+}
+
 void setSinglePixelColor(Adafruit_NeoPixel pixels, int color[], int pixel_index) {
   pixels.setPixelColor(pixel_index, color[0], color[1], color[2]);
 }
@@ -248,7 +304,8 @@ void setPixelNumber(Adafruit_NeoPixel pixels, int color[], int number[]) {
   }
 }
 
-int[] decimal_to_binary(int decimal_number) {
+int binary_number[4] = { 0, 0, 0, 0 };
+void decimal_to_binary(int decimal_number) {
 
      int binary_number[4] = { 0, 0, 0, 0 };
      switch(decimal_number) {
@@ -262,20 +319,31 @@ int[] decimal_to_binary(int decimal_number) {
                binary_number[2] = 1;
           break;
           case 3:
-               binary_number[3] = 1;
                binary_number[2] = 1;
+               binary_number[3] = 1;
           break;
           case 4:
+               binary_number[1] = 1;
           break;
           case 5:
+               binary_number[1] = 1;
+               binary_number[3] = 1;
           break;
           case 6:
+               binary_number[1] = 1;
+               binary_number[2] = 1;
+               binary_number[3] = 1;
           break;
           case 7:
+               binary_number[0] = 1;
           break;
           case 8:
+               binary_number[0] = 1;
+               binary_number[3] = 1;
           break;
           case 9:
+               binary_number[0] = 1;
+               binary_number[3] = 1;
           break;
           default:
                // do nothing and use 0
