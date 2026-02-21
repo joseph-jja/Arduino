@@ -39,7 +39,8 @@ RTC_DS3231 rtc;
 
 static time_t rawtime;
 long currentHour = 0,
-     currentMinute = 0;
+     currentMinute = 0,
+     currentSeconds = 0;
 
 WebServer server(80);
 
@@ -270,6 +271,7 @@ void get_time() {
 
   currentHour = now->tm_hour;
   currentMinute = now->tm_min;
+  currentSeconds = now->tm_sec;
 
   if (debug) {
     char ampm[20];
@@ -304,46 +306,48 @@ void setPixelNumber(Adafruit_NeoPixel pixels, int color[], int number[]) {
   }
 }
 
-int binary_number[4] = { 0, 0, 0, 0 };
-void decimal_to_binary(int decimal_number) {
+void copy_number(int binary_number[], int *input_number) {
 
-  int binary_number[4] = { 0, 0, 0, 0 };
+  size_t length = sizeof(binary_number) / sizeof(binary_number[0]);
+  int end = (int)length;
+
+  for (int i = 0; i < end; i++) {
+    binary_number[i] = input_number[i];
+  }
+}
+
+void decimal_to_binary(int binary_number[], int decimal_number) {
+
   switch (decimal_number) {
     case 0:
-      //do nothing and use default
+      copy_number(binary_number, ZERO_NUM);
       break;
     case 1:
-      binary_number[3] = 1;
+      copy_number(binary_number, ONE_NUM);
       break;
     case 2:
-      binary_number[2] = 1;
+      copy_number(binary_number, TWO_NUM);
       break;
     case 3:
-      binary_number[2] = 1;
-      binary_number[3] = 1;
+      copy_number(binary_number, THREE_NUM);
       break;
     case 4:
-      binary_number[1] = 1;
+      copy_number(binary_number, FOUR_NUM);
       break;
     case 5:
-      binary_number[1] = 1;
-      binary_number[3] = 1;
+      copy_number(binary_number, FIVE_NUM);
       break;
     case 6:
-      binary_number[1] = 1;
-      binary_number[2] = 1;
-      binary_number[3] = 1;
+      copy_number(binary_number, SIX_NUM);
       break;
     case 7:
-      binary_number[0] = 1;
+      copy_number(binary_number, SEVEN_NUM);
       break;
     case 8:
-      binary_number[0] = 1;
-      binary_number[3] = 1;
+      copy_number(binary_number, EIGHT_NUM);
       break;
     case 9:
-      binary_number[0] = 1;
-      binary_number[3] = 1;
+      copy_number(binary_number, NINE_NUM);
       break;
     default:
       // do nothing and use 0
@@ -354,4 +358,38 @@ void decimal_to_binary(int decimal_number) {
 void loop() {
 
   get_time();
+
+  int hour_big_number[4];
+  int hour_small_number[4];
+  int minute_big_number[4];
+  int minute_small_number[4];
+  int second_big_number[4];
+  int second_small_number[4];
+
+  if (currentHour >= 10) {
+    int small = currentHour - 10;
+    decimal_to_binary(hour_big_number, 1);
+    decimal_to_binary(hour_small_number, small);
+  } else {
+    decimal_to_binary(hour_big_number, 0);
+    decimal_to_binary(hour_small_number, currentHour);
+  }
+  if (currentMinute >= 10) {
+    int big = floor(currentMinute / 10);
+    int small = currentMinute - 10;
+    decimal_to_binary(minute_big_number, big);
+    decimal_to_binary(minute_small_number, small);
+  } else {
+    decimal_to_binary(minute_big_number, 0);
+    decimal_to_binary(minute_small_number, currentMinute);
+  }
+  if (currentSeconds >= 10) {
+    int big = floor(currentSeconds / 10);
+    int small = currentSeconds - 10;
+    decimal_to_binary(second_big_number, big);
+    decimal_to_binary(second_small_number, small);
+  } else {
+    decimal_to_binary(second_big_number, 0);
+    decimal_to_binary(second_small_number, currentSeconds);
+  }
 }
