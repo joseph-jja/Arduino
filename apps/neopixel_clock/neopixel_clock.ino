@@ -40,7 +40,7 @@ RTC_DS3231 rtc;
 static time_t rawtime;
 long currentHour = 0,
      currentMinute = 0,
-     currentSeconds = 0;
+     currentSeconds = 5;
 
 WebServer server(80);
 
@@ -158,7 +158,7 @@ void handleTimeRequest() {
 void setup() {
 
   Serial.begin(9600);
-  Serial.println();
+  delay(100);
   Serial.println("Application setup!");
   Serial.print("Build date: ");
   Serial.println(__DATE__);
@@ -190,7 +190,7 @@ void setup() {
   pixels_seconds_2.show();
 
   // clock found so initialize to current data time from computer
-  if (rtc.begin()) {
+  /*if (rtc.begin()) {
     Serial.println("Begin RTC!");
     // get time
     DateTime rtnow = rtc.now();
@@ -203,7 +203,7 @@ void setup() {
   } else {
     Serial.println("Could NOT Begin RTC!");
   }
-
+  */
   Serial.println("Setting up Access Point");
   WiFi.mode(WIFI_AP);
   WiFi.softAPConfig(local_IP, gateway, subnet);
@@ -289,19 +289,48 @@ void setSinglePixelColor(Adafruit_NeoPixel pixels, int color[], int pixel_index)
   pixels.setPixelColor(pixel_index, color[0], color[1], color[2]);
 }
 
-void setPixelNumber(Adafruit_NeoPixel pixels, int color[], int number[]) {
+void setPixelNumber(int index, int color[], int number[]) {
 
   // we know number is going to be 4
   size_t length = sizeof(number) / sizeof(number[0]);
   int end = (int)length;
 
+  Serial.print("----");
+  Serial.println(index);
+  Serial.println(color[0]);
+  Serial.println(number[0]);
+
   for (int i = 0; i < end; i++) {
     int onOrOff = number[i];
     if (0 == onOrOff) {
       // color is black aka off
-      pixels.setPixelColor(i, 0, 0, 0);
+      if (index == 0) {
+        pixels_hours_1.setPixelColor(i, 0, 0, 0);
+      } else if (index == 1) {
+          pixels_hours_2.setPixelColor(i, 0, 0, 0);
+      } else if (index == 2) {
+        pixels_minutes_1.setPixelColor(i, 0, 0, 0);
+      } else if (index == 3) {
+        pixels_minutes_2.setPixelColor(i, 0, 0, 0);
+      } else if (index == 4) {
+        pixels_seconds_1.setPixelColor(i, 0, 0, 0);
+      } else if (index == 5) {
+        pixels_seconds_2.setPixelColor(i, 0, 0, 0);
+      }
     } else {
-      pixels.setPixelColor(i, color[0], color[1], color[2]);
+      if (index == 0) {
+        pixels_hours_1.setPixelColor(i, color[0], color[1], color[2]);
+      } else if (index == 1) {
+        pixels_hours_2.setPixelColor(i, color[0], color[1], color[2]);
+      } else if (index == 2) {
+        pixels_minutes_1.setPixelColor(i, color[0], color[1], color[2]);
+      } else if (index == 3) {
+        pixels_minutes_2.setPixelColor(i, color[0], color[1], color[2]);
+      } else if (index == 4) {
+        pixels_seconds_1.setPixelColor(i, color[0], color[1], color[2]);
+      } else if (index == 5) {
+        pixels_seconds_2.setPixelColor(i, color[0], color[1], color[2]);
+      }
     }
   }
 }
@@ -389,7 +418,7 @@ void get_color(int color[]) {
 
 void loop() {
 
-  get_time();
+  //get_time();
 
   int hour_big_number[4];
   int hour_small_number[4];
@@ -427,10 +456,10 @@ void loop() {
 
   int colors[3];
   get_color(colors);
-  setPixelNumber(pixels_hours_1, colors, hour_big_number);
-  setPixelNumber(pixels_hours_2, colors, hour_small_number);
-  setPixelNumber(pixels_minutes_1, colors, minute_big_number);
-  setPixelNumber(pixels_minutes_2, colors, minute_small_number);
-  setPixelNumber(pixels_seconds_1, colors, second_big_number);
-  setPixelNumber(pixels_seconds_2, colors, second_small_number);
+  //setPixelNumber(0, colors, hour_big_number);
+  //setPixelNumber(1, colors, hour_small_number);
+  //setPixelNumber(2, colors, minute_big_number);
+  //setPixelNumber(3, colors, minute_small_number);
+  setPixelNumber(4, colors, second_big_number);
+  //setPixelNumber(5, colors, second_small_number);
 }
