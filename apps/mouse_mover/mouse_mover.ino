@@ -4,6 +4,10 @@
 // Initialize the USB Mouse object
 USBHIDMouse Mouse;
 
+/*
+#define RGB_BRIGHTNESS 64 // Limit brightness
+neopixelWrite(48, RGB_BRIGHTNESS, 0, 0); // Set to Red
+*/
 void setup() {
 
   Serial.begin(9600);
