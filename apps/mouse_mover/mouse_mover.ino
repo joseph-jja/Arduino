@@ -12,20 +12,25 @@ void setup() {
   // Begin the USB HID service
   Mouse.begin();
   USB.begin();
+
+  randomSeed(analogRead(A0));
 }
 
 void loop() {
 
+  long randNumber = random(600);
+  long negRandNumber = randNumber * -1;
+
 
   Serial.println("Trying to Move");
   // Move mouse in a square pattern
-  Mouse.move(100, 0);  // Right 10
+  Mouse.move(randNumber, 0);  // Right 
   delay(500);
-  Mouse.move(0, 100);  // Down 10
+  Mouse.move(0, randNumber);  // Down
   delay(500);
-  Mouse.move(-100, 0);  // Left 10
+  Mouse.move(negRandNumber, 0);  // Left
   delay(500);
-  Mouse.move(0, -100);  // Up 10
+  Mouse.move(0, negRandNumber);  // Up 
   delay(500);
 
   // Example: Click left button
