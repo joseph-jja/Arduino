@@ -501,11 +501,13 @@ void loop() {
   Serial.print(second_big_number[1]);
   Serial.print(" ");
   Serial.println(colors[0]);*/
+  pixels.clear(); 
   //setPixelNumber(0, colors, hour_big_number);
   //setPixelNumber(1, colors, hour_small_number);
   //setPixelNumber(2, colors, minute_big_number);
   //setPixelNumber(3, colors, minute_small_number);
   setPixelNumber(4, colors, second_big_number);
   //setPixelNumber(5, colors, second_small_number);
+  pixels.show(); 
   delay(1000);
 }
