@@ -40,7 +40,7 @@ RTC_DS3231 rtc;
 static time_t rawtime;
 long currentHour = 0,
      currentMinute = 0,
-     currentSeconds = 5;
+     currentSeconds = 53;
 
 WebServer server(80);
 
@@ -295,7 +295,7 @@ void setPixelNumber(int index, int color[], int number[]) {
   size_t length = sizeof(number) / sizeof(number[0]);
   int end = (int)length;
 
-  Serial.print("----");
+  Serial.print("---- ");
   Serial.println(index);
   Serial.println(color[0]);
   Serial.println(number[0]);
@@ -307,7 +307,7 @@ void setPixelNumber(int index, int color[], int number[]) {
       if (index == 0) {
         pixels_hours_1.setPixelColor(i, 0, 0, 0);
       } else if (index == 1) {
-          pixels_hours_2.setPixelColor(i, 0, 0, 0);
+        pixels_hours_2.setPixelColor(i, 0, 0, 0);
       } else if (index == 2) {
         pixels_minutes_1.setPixelColor(i, 0, 0, 0);
       } else if (index == 3) {
@@ -392,25 +392,45 @@ void get_color(int color[]) {
   }
 
   if (counter == 0) {
-    color = RED;
+    for (int i = 0; i < 3; i++) {
+      color[i] = RED[i];
+    }
   } else if (counter == 1) {
-    color = LIGHT_RED;
+    for (int i = 0; i < 3; i++) {
+      color[i] = LIGHT_RED[i];
+    }
   } else if (counter == 2) {
-    color = GREEN;
+    for (int i = 0; i < 3; i++) {
+      color[i] = GREEN[i];
+    }
   } else if (counter == 3) {
-    color = LIGHT_GREEN;
+    for (int i = 0; i < 3; i++) {
+      color[i] = LIGHT_GREEN[i];
+    }
   } else if (counter == 4) {
-    color = BLUE;
+    for (int i = 0; i < 3; i++) {
+      color[i] = BLUE[i];
+    }
   } else if (counter == 5) {
-    color = LIGHT_BLUE;
+    for (int i = 0; i < 3; i++) {
+      color[i] = LIGHT_BLUE[i];
+    }
   } else if (counter == 6) {
-    color = YELLOW;
+    for (int i = 0; i < 3; i++) {
+      color[i] = YELLOW[i];
+    }
   } else if (counter == 7) {
-    color = CYAN;
+    for (int i = 0; i < 3; i++) {
+      color[i] = CYAN[i];
+    }
   } else if (counter == 8) {
-    color = PINKISH;
+    for (int i = 0; i < 3; i++) {
+      color[i] = PINKISH[i];
+    }
   } else if (counter == 9) {
-    color = PURPLE;
+    for (int i = 0; i < 3; i++) {
+      color[i] = PURPLE[i];
+    }
   }
 
   counter++;
@@ -456,10 +476,15 @@ void loop() {
 
   int colors[3];
   get_color(colors);
+  Serial.print("Colors ");
+  Serial.print(second_big_number[1]);
+  Serial.print(" ");
+  Serial.println(colors[0]);
   //setPixelNumber(0, colors, hour_big_number);
   //setPixelNumber(1, colors, hour_small_number);
   //setPixelNumber(2, colors, minute_big_number);
   //setPixelNumber(3, colors, minute_small_number);
   setPixelNumber(4, colors, second_big_number);
   //setPixelNumber(5, colors, second_small_number);
+  delay(1000);
 }
