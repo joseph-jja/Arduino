@@ -345,7 +345,6 @@ void setPixelNumber(int index, int color[], int number[]) {
       } else if (index == 3) {
         pixels_minutes_2.setPixelColor(i, color[0], color[1], color[2]);
       } else if (index == 4) {
-        Serial.println("here we are");
         pixels_seconds_1.setPixelColor(i, color[0], color[1], color[2]);
       } else if (index == 5) {
         pixels_seconds_2.setPixelColor(i, color[0], color[1], color[2]);
