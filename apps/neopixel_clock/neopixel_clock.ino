@@ -285,10 +285,6 @@ void get_time() {
   }
 }
 
-void setSinglePixelColor(Adafruit_NeoPixel pixels, int color[], int pixel_index) {
-  pixels.setPixelColor(pixel_index, color[0], color[1], color[2]);
-}
-
 void setPixelNumber(int index, int color[], int number[]) {
 
   // we know number is going to be 4
