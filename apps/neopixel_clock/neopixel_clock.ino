@@ -297,8 +297,14 @@ void setPixelNumber(int index, int color[], int number[]) {
 
   Serial.print("---- ");
   Serial.println(index);
-  Serial.println(color[0]);
-  Serial.println(number[0]);
+  Serial.print(color[0]);
+  Serial.print(color[1]);
+  Serial.print(color[2]);
+  Serial.print(" ");
+  Serial.print(number[0]);
+  Serial.print(number[1]);
+  Serial.print(number[2]);
+  Serial.println(number[3]);
 
   for (int i = 0; i < end; i++) {
     int onOrOff = number[i];
@@ -338,7 +344,7 @@ void setPixelNumber(int index, int color[], int number[]) {
 void copy_number(int binary_number[], int *input_number) {
 
   size_t length = sizeof(binary_number) / sizeof(binary_number[0]);
-  int end = (int)length;
+  int end = 4;  //(int)length;
 
   for (int i = 0; i < end; i++) {
     binary_number[i] = input_number[i];
@@ -382,6 +388,14 @@ void decimal_to_binary(int binary_number[], int decimal_number) {
       // do nothing and use 0
       break;
   }
+
+  /* Serial.print("Nummies ");
+  Serial.print(binary_number[0]);
+  Serial.print(binary_number[1]);
+  Serial.print(binary_number[2]);
+  Serial.print(binary_number[3]);
+  Serial.print(" ");
+  Serial.print(decimal_number); */
 }
 
 int counter = 0;
@@ -447,6 +461,13 @@ void loop() {
   int second_big_number[4];
   int second_small_number[4];
 
+  memset(hour_big_number, '\0', sizeof(hour_big_number));
+  memset(hour_small_number, '\0', sizeof(hour_small_number));
+  memset(minute_big_number, '\0', sizeof(minute_big_number));
+  memset(minute_small_number, '\0', sizeof(minute_small_number));
+  memset(second_big_number, '\0', sizeof(second_big_number));
+  memset(second_small_number, '\0', sizeof(second_small_number));
+
   if (currentHour >= 10) {
     int small = currentHour - 10;
     decimal_to_binary(hour_big_number, 1);
@@ -475,11 +496,12 @@ void loop() {
   }
 
   int colors[3];
+  memset(colors, '\0', sizeof(colors));
   get_color(colors);
-  Serial.print("Colors ");
+  /*Serial.print("Colors ");
   Serial.print(second_big_number[1]);
   Serial.print(" ");
-  Serial.println(colors[0]);
+  Serial.println(colors[0]);*/
   //setPixelNumber(0, colors, hour_big_number);
   //setPixelNumber(1, colors, hour_small_number);
   //setPixelNumber(2, colors, minute_big_number);
