@@ -298,7 +298,9 @@ void setPixelNumber(int index, int color[], int number[]) {
   Serial.print("---- ");
   Serial.println(index);
   Serial.print(color[0]);
+  Serial.print(", ");
   Serial.print(color[1]);
+  Serial.print(", ");
   Serial.print(color[2]);
   Serial.print(" ");
   Serial.print(number[0]);
@@ -333,6 +335,7 @@ void setPixelNumber(int index, int color[], int number[]) {
       } else if (index == 3) {
         pixels_minutes_2.setPixelColor(i, color[0], color[1], color[2]);
       } else if (index == 4) {
+        Serial.println("here we are");
         pixels_seconds_1.setPixelColor(i, color[0], color[1], color[2]);
       } else if (index == 5) {
         pixels_seconds_2.setPixelColor(i, color[0], color[1], color[2]);
