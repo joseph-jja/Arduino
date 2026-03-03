@@ -289,7 +289,7 @@ void setPixelNumber(int index, int color[], int number[]) {
 
   // we know number is going to be 4
   size_t length = sizeof(number) / sizeof(number[0]);
-  int end = (int)length;
+  int end = 4;//(int)length;
 
   Serial.print("---- ");
   Serial.println(index);
