@@ -289,7 +289,7 @@ void setPixelNumber(int index, int color[], int number[]) {
 
   // we know number is going to be 4
   size_t length = sizeof(number) / sizeof(number[0]);
-  int end = 4;//(int)length;
+  int end = 4;  //(int)length;
 
   Serial.print("---- ");
   Serial.println(index);
@@ -303,6 +303,20 @@ void setPixelNumber(int index, int color[], int number[]) {
   Serial.print(number[1]);
   Serial.print(number[2]);
   Serial.println(number[3]);
+
+  if (index == 0) {
+    pixels_hours_1.clear();
+  } else if (index == 1) {
+    pixels_hours_2.clear();
+  } else if (index == 2) {
+    pixels_minutes_1.clear();
+  } else if (index == 3) {
+    pixels_minutes_2.clear();
+  } else if (index == 4) {
+    pixels_seconds_1.clear();
+  } else if (index == 5) {
+    pixels_seconds_2.clear();
+  }
 
   for (int i = 0; i < end; i++) {
     int onOrOff = number[i];
@@ -337,6 +351,20 @@ void setPixelNumber(int index, int color[], int number[]) {
         pixels_seconds_2.setPixelColor(i, color[0], color[1], color[2]);
       }
     }
+  }
+
+  if (index == 0) {
+    pixels_hours_1.show();
+  } else if (index == 1) {
+    pixels_hours_2.show();
+  } else if (index == 2) {
+    pixels_minutes_1.show();
+  } else if (index == 3) {
+    pixels_minutes_2.show();
+  } else if (index == 4) {
+    pixels_seconds_1.show();
+  } else if (index == 5) {
+    pixels_seconds_2.show();
   }
 }
 
@@ -449,6 +477,23 @@ void get_color(int color[]) {
   counter++;
 }
 
+void fade_through_colors() {
+
+  int all_pixels[4] = { 1, 1, 1, 1 };
+
+  int colors[3];
+  memset(colors, '\0', sizeof(colors));
+
+  for (int j = 0; j < 10; j++) {
+    memset(colors, '\0', sizeof(colors));
+    get_color(colors);
+    for (int i = 0; i < 6; i++) {
+      setPixelNumber(i, colors, all_pixels);
+    }
+    delay(100);
+  }
+}
+
 void loop() {
 
   //get_time();
@@ -501,13 +546,11 @@ void loop() {
   Serial.print(second_big_number[1]);
   Serial.print(" ");
   Serial.println(colors[0]);*/
-  pixels.clear(); 
   //setPixelNumber(0, colors, hour_big_number);
   //setPixelNumber(1, colors, hour_small_number);
   //setPixelNumber(2, colors, minute_big_number);
   //setPixelNumber(3, colors, minute_small_number);
   setPixelNumber(4, colors, second_big_number);
   //setPixelNumber(5, colors, second_small_number);
-  pixels.show(); 
   delay(1000);
 }
