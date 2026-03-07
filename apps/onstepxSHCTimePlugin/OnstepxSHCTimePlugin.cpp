@@ -42,6 +42,10 @@ void OnstepxSHCTimePlugin::init() {
 void OnstepxSHCTimePlugin::loop() {
   #ifdef TIME_LOCATION_SOURCE
     JulianDate jdate;
+
+    tls.get(&jdate);
+
+    GregorianDate greggy;
   
   #endif
 };
