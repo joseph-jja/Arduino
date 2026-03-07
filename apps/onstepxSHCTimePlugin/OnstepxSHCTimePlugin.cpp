@@ -10,11 +10,11 @@
 // intitialize all values to invalid values
 void OnstepxSHCTimePlugin::init() {
 
-  latitude.sign[0] = '';
+  latitude.sign = ' ';
   latitude.hours = INVALID_LOCATION;
   latitude.minutes = INVALID_LOCATION;
 
-  longitude.sign[0] = '';
+  longitude.sign = ' ';
   longitude.hours = INVALID_LOCATION;
   longitude.minutes = INVALID_LOCATION;
 
