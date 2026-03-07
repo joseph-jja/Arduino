@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 #include "Config.h"
-#include "OnstepXMountPlugin.h"
+#include "OnstepxSHCTimePlugin.h"
 
 //#include "../../lib/tasks/OnTask.h"
 
