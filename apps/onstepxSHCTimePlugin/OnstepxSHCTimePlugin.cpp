@@ -19,7 +19,8 @@ void OnstepxSHCTimePlugin::init() {
   longitude.minutes = INVALID_LOCATION;
 
   // not valid value
-  utc_offset = INVALID_OFFSET;
+  utc_offset.sign = ' ';
+  utc_offset.hours = INVALID_OFFSET;
 
   // invalid date
   dateInfo.year = INVALID_DATETIME;
@@ -32,8 +33,8 @@ void OnstepxSHCTimePlugin::init() {
   //  char meridian[3];
   
   #if TIME_LOCATION_SOURCE != OFF
-      TimeLocationSource *tls;
-      tls.init();
+      //TimeLocationSource *tls;
+      //tls.init();
   #endif
 };
 
@@ -43,7 +44,7 @@ void OnstepxSHCTimePlugin::loop() {
   #ifdef TIME_LOCATION_SOURCE
     JulianDate jdate;
 
-    tls.get(&jdate);
+    //tls.get(&jdate);
 
     GregorianDate greggy;
   
