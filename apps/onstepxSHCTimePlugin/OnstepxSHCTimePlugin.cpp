@@ -33,7 +33,9 @@ void OnstepxSHCTimePlugin::init() {
 };
 
 void OnstepxSHCTimePlugin::loop(){
+  #ifdef TIME_LOCATION_SOURCE
 
+  #endif
 };
 
 OnStepXMountPlugin onstepxMountPlugin;
