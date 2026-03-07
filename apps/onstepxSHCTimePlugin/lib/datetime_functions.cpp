@@ -79,12 +79,12 @@ bool parse_time(char* timeStr, TimeInfo* timeInfo) {
 
 void date_toString(DateInfo dateInfo, char buffer[], int bufferSize) {
     memset(buffer, '\0', bufferSize);
-    snprintf(buffer, sizoef(buffer), "%02ld/%02ld/%02ld", dateInfo.month, dateInfo.day, dateInfo.year);
+    snprintf(buffer, sizeof(buffer), "%02ld/%02ld/%02ld", dateInfo.month, dateInfo.day, dateInfo.year);
 };
 
 void time_12h_toString(TimeInfo timeInfo, char buffer[], int bufferSize) {
     memset(buffer, '\0', bufferSize);
-    snprintf(buffer, sizoef(buffer), "%02ld:%02ld:%02ld", timeInfo.hour, timeInfo.minutes, timeInfo.seconds);
+    snprintf(buffer, sizeof(buffer), "%02ld:%02ld:%02ld", timeInfo.hour, timeInfo.minutes, timeInfo.seconds);
 };
 
 void time_24h_toString(TimeInfo timeInfo, char buffer[], int bufferSize) {
@@ -95,6 +95,6 @@ void time_24h_toString(TimeInfo timeInfo, char buffer[], int bufferSize) {
     } else if (strcmp(timeInfo.meridian, "AM") == 0 && timeInfo.hour == 12) {
         hour = 0;
     }
-    snprintf(buffer, sizoef(buffer), "%02ld:%02ld:%02ld", hour, timeInfo.minutes, timeInfo.seconds);
+    snprintf(buffer, sizeof(buffer), "%02ld:%02ld:%02ld", hour, timeInfo.minutes, timeInfo.seconds);
 };
 
