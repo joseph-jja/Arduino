@@ -9,13 +9,20 @@
 
 void OnstepxSHCTimePlugin::init() {
 
-  //parse_location(DEFAULT_LATITUDE, &latitude, MAX_LATITUDE);
-  //parse_location(DEFAULT_LONGITUDE, &longitude, MAX_LONGITUDE);
+  latitude.sign = '';
+  latitude.hours = INVALID_LOCATION;
+  latitude.minutes = INVALID_LOCATION;
 
-  //parse_offset(DEFAULT_UTC_OFFSET, &utc_offset);
+  longitude.sign = '';
+  longitude.hours = INVALID_LOCATION;
+  longitude.minutes = INVALID_LOCATION;
 
-  //parse_date(DEFAULT_DATE, &dateInfo);
-  //parse_time(DEFAULT_TIME, &timeInfo);
+  // not valid value
+  offset = INVALID_OFFSET;
+
+  //dateInfo
+  //timeInfo
+
 };
 
 void OnstepxSHCTimePlugin::loop(){
