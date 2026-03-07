@@ -5,7 +5,7 @@
 #include "lib/datetime_functions.h"
 #include "lib/site_functions.h"
 
-#include "../../lib/commands/CommandErrors.h"
+//#include "../../lib/commands/CommandErrors.h"
 #include "../../lib/Constants.h"
 #include "../../lib/tls/Tls.h"
 #include "../../libApp/cmdLx200/CmdLx200.h"
