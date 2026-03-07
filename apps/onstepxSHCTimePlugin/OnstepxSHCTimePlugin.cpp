@@ -30,10 +30,14 @@ void OnstepxSHCTimePlugin::init() {
   timeInfo.minutes = INVALID_DATETIME;
   timeInfo.seconds = INVALID_DATETIME;
   //  char meridian[3];
+  
   #if TIME_LOCATION_SOURCE != OFF
       TimeLocationSource *tls;
+      tls.init();
   #endif
 };
+
+//tls.set(int year, int month, int day, int hour, int minute, int second) 
 
 void OnstepxSHCTimePlugin::loop() {
   #ifdef TIME_LOCATION_SOURCE
