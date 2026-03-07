@@ -51,4 +51,4 @@ void OnstepxSHCTimePlugin::loop() {
   #endif
 };
 
-OnStepXMountPlugin onstepxMountPlugin;
+OnstepxSHCTimePlugin onstepxSHCTimePlugin;
