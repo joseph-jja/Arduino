@@ -9,6 +9,7 @@
 #include "../../lib/Constants.h"
 #include "../../lib/tls/Tls.h"
 #include "../../libApp/cmdLx200/CmdLx200.h"
+#include "../../lib/calendars/Calendars.h"
 
 #define RESPONSE_BUFFER_SIZE 50
 #define INVALID_OFFSET = 100;
