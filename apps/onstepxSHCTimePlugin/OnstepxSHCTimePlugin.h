@@ -19,7 +19,7 @@ public:
 
   void loop();
 
-  bool command(char reply[], char command[], char parameter[], bool *supressFrame, bool *numericReply, CommandError *commandError);
+  //bool command(char reply[], char command[], char parameter[], bool *supressFrame, bool *numericReply, CommandError *commandError);
 
 private:
 
