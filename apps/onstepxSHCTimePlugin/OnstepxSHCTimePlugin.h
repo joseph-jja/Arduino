@@ -10,6 +10,8 @@
 #include "../../lib/tls/Tls.h"
 
 #define RESPONSE_BUFFER_SIZE 50
+#define INVALID_OFFSET = 100;
+#define INVALID_LOCATION = 10000;
 
 class OnstepxSHCTimePlugin {
 
