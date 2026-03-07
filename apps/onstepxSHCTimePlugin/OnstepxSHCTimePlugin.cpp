@@ -7,6 +7,7 @@
 
 //#include "../../lib/tasks/OnTask.h"
 
+// intitialize all values to invalid values
 void OnstepxSHCTimePlugin::init() {
 
   latitude.sign = '';
@@ -20,9 +21,15 @@ void OnstepxSHCTimePlugin::init() {
   // not valid value
   offset = INVALID_OFFSET;
 
-  //dateInfo
-  //timeInfo
-
+  // invalid date
+  dateInfo.year = INVALID_DATETIME;
+  dateInfo.month = INVALID_DATETIME;
+  dateInfo.day = INVALID_DATETIME;
+  
+  timeInfo.hour = INVALID_DATETIME;
+  timeInfo.minutes = INVALID_DATETIME;
+  timeInfo.seconds = INVALID_DATETIME;
+  //  char meridian[3];
 };
 
 void OnstepxSHCTimePlugin::loop(){
