@@ -1,4 +1,4 @@
-// USB2I2C plugin
+// OnstepX Plugin 4 SHC Time / Date
 #pragma once
 
 #include "lib/location_functions.h"
@@ -6,10 +6,12 @@
 #include "lib/site_functions.h"
 
 #include "../../lib/commands/CommandErrors.h"
+#include "../../lib/Constants.h"
+#include "../../lib/tls/Tls.h"
 
 #define RESPONSE_BUFFER_SIZE 50
 
-class OnStepXMountPlugin {
+class OnstepxSHCTimePlugin {
 
 public:
   // the initialization method must be present and named: void init();
@@ -23,13 +25,11 @@ private:
 
      char response_buffer[RESPONSE_BUFFER_SIZE];
 
-     SiteInfo   siteInfo[4];
      Location   latitude;
      Location   longitude;
      Offset     utc_offset;
      DateInfo   dateInfo;
      TimeInfo   timeInfo;
-     TimeInfo   siderealTimeInfo;
 };
 
-extern OnStepXMountPlugin onstepxMountPlugin;
+extern OnstepxSHCTimePlugin onstepxSHCTimePlugin;
