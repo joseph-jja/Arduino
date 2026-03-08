@@ -61,6 +61,10 @@ private:
      Offset     utc_offset;
      DateInfo   dateInfo;
      TimeInfo   timeInfo;
+
+  #if defined(TIME_LOCATION_SOURCE) && TIME_LOCATION_SOURCE != OFF
+      TimeLocationSource *tls;
+  #endif
 };
 
 extern OnstepxSHCTimePlugin onstepxSHCTimePlugin;
