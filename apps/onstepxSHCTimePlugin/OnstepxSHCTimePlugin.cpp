@@ -35,7 +35,6 @@ void OnstepxSHCTimePlugin::init() {
   //  char meridian[3];
   
   #if defined(TIME_LOCATION_SOURCE) && TIME_LOCATION_SOURCE != OFF
-      TimeLocationSource *tls;
       tls->init();
       tasks.add(1000, 0, true, 7, onstepxSHCTimePluginWrapper);
   #endif
