@@ -5,7 +5,9 @@
 #include "Config.h"
 #include "OnstepxSHCTimePlugin.h"
 
-//#include "../../lib/tasks/OnTask.h"
+#include "../../lib/tasks/OnTask.h"
+
+void onstepxSHCTimePluginWrapper() { onstepxSHCTimePlugin.loop(); }
 
 // intitialize all values to invalid values
 void OnstepxSHCTimePlugin::init() {
@@ -34,7 +36,8 @@ void OnstepxSHCTimePlugin::init() {
   
   #if defined(TIME_LOCATION_SOURCE) && TIME_LOCATION_SOURCE != OFF
       TimeLocationSource *tls;
-      //tls.init();
+      tls->init();
+      tasks.add(1000, 0, true, 7, onstepxSHCTimePluginWrapper);
   #endif
 };
 
@@ -44,9 +47,24 @@ void OnstepxSHCTimePlugin::loop() {
   #if defined(TIME_LOCATION_SOURCE) && TIME_LOCATION_SOURCE != OFF
     JulianDate jdate;
 
-    //tls.get(&jdate);
+    // get the date from the mount
+    char out[20];
+    onStepLx200.Get(":GC#", out);
+    
+    char* pEnd;
+    uint8_t month = strtol(&out[0], &pEnd, 10);
+    uint8_t day = strtol(&out[3], &pEnd, 10);
+    uint8_t year = strtol(&out[6], &pEnd, 10);
+  
+    // now get the date from the RTC
+    tls->get(&jdate);
 
-    GregorianDate greggy;
+    GregorianDate greggy = calendars.julianToGregorian(jdate);
+
+    // compare dates
+    if (greggy.year > year) {
+        // we should use this year
+    }
   
   #endif
 };
