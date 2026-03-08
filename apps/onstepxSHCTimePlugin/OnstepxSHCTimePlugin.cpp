@@ -54,9 +54,8 @@ void OnstepxSHCTimePlugin::loop() {
     uint8_t year = strtol(&out[6], &pEnd, 10);
   
     // now get the date from the RTC
-    //tls->get(&jdate);
-    //tls.set(int year, int month, int day, int hour, int minute, int second) 
-
+    //tls->get(jdate);
+    
     GregorianDate greggy = calendars.julianToGregorian(jdate);
 
     // compare dates and use ours if greater
@@ -65,6 +64,9 @@ void OnstepxSHCTimePlugin::loop() {
         snprintf(out, sizeof(out), ":SC%02d/%02d/%02d#",  greggy.month, greggy.day, greggy.year);
         //onStepLx200.Set(out);
     }
+    
+    //tls.set(int year, int month, int day, int hour, int minute, int second) 
+    
   
   #endif
 };
