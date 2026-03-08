@@ -40,8 +40,6 @@ void OnstepxSHCTimePlugin::init() {
   #endif
 };
 
-//tls.set(int year, int month, int day, int hour, int minute, int second) 
-
 void OnstepxSHCTimePlugin::loop() {
   #if defined(TIME_LOCATION_SOURCE) && TIME_LOCATION_SOURCE != OFF
     JulianDate jdate;
@@ -57,12 +55,15 @@ void OnstepxSHCTimePlugin::loop() {
   
     // now get the date from the RTC
     //tls->get(&jdate);
+    //tls.set(int year, int month, int day, int hour, int minute, int second) 
 
     GregorianDate greggy = calendars.julianToGregorian(jdate);
 
-    // compare dates
-    if (greggy.year > year) {
-        // we should use this year
+    // compare dates and use ours if greater
+    if (greggy.year > year && greggy.month > month && greggy.day > day) {
+        // we should use this year, month and day
+        snprintf(out, sizeof(out), ":SC%02d/%02d/%02d#",  greggy.month, greggy.day, greggy.year);
+        //onStepLx200.Set(out);
     }
   
   #endif
