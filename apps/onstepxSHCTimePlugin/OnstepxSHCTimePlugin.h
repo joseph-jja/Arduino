@@ -16,7 +16,8 @@
 #define INVALID_LOCATION 10000;
 #define INVALID_DATETIME -1;
 
-// store time in 12 hour format with AM/PM
+/*
+    // store time in 12 hour format with AM/PM
 typedef struct {
     long hour;
     long minutes;
@@ -41,7 +42,7 @@ typedef struct {
     char sign; // '+' or '-'
     long hours;
 } Offset;
-
+*/
 class OnstepxSHCTimePlugin {
 
 public:
@@ -56,11 +57,11 @@ private:
 
      char response_buffer[RESPONSE_BUFFER_SIZE];
 
-     Location   latitude;
+     /*Location   latitude;
      Location   longitude;
      Offset     utc_offset;
      DateInfo   dateInfo;
-     TimeInfo   timeInfo;
+     TimeInfo   timeInfo;*/
 
   #if defined(TIME_LOCATION_SOURCE) && TIME_LOCATION_SOURCE != OFF
       TimeLocationSource *tls;
