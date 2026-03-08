@@ -56,7 +56,7 @@ void OnstepxSHCTimePlugin::loop() {
     uint8_t year = strtol(&out[6], &pEnd, 10);
   
     // now get the date from the RTC
-    tls->get(&jdate);
+    //tls->get(&jdate);
 
     GregorianDate greggy = calendars.julianToGregorian(jdate);
 
