@@ -32,8 +32,8 @@ void OnstepxSHCTimePlugin::init() {
   timeInfo.seconds = INVALID_DATETIME;
   //  char meridian[3];
   
-  #if TIME_LOCATION_SOURCE != OFF
-      //TimeLocationSource *tls;
+  #if defiend(TIME_LOCATION_SOURCE) && TIME_LOCATION_SOURCE != OFF
+      TimeLocationSource *tls;
       //tls.init();
   #endif
 };
@@ -41,7 +41,7 @@ void OnstepxSHCTimePlugin::init() {
 //tls.set(int year, int month, int day, int hour, int minute, int second) 
 
 void OnstepxSHCTimePlugin::loop() {
-  #ifdef TIME_LOCATION_SOURCE
+  #if defiend(TIME_LOCATION_SOURCE) && TIME_LOCATION_SOURCE != OFF
     JulianDate jdate;
 
     //tls.get(&jdate);
