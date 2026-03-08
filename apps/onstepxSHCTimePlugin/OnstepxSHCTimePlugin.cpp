@@ -12,7 +12,7 @@ void onstepxSHCTimePluginWrapper() { onstepxSHCTimePlugin.loop(); }
 // intitialize all values to invalid values
 void OnstepxSHCTimePlugin::init() {
 
-  latitude.sign = ' ';
+  /*latitude.sign = ' ';
   latitude.hours = INVALID_LOCATION;
   latitude.minutes = INVALID_LOCATION;
 
@@ -31,7 +31,7 @@ void OnstepxSHCTimePlugin::init() {
   
   timeInfo.hour = INVALID_DATETIME;
   timeInfo.minutes = INVALID_DATETIME;
-  timeInfo.seconds = INVALID_DATETIME;
+  timeInfo.seconds = INVALID_DATETIME;*/
   //  char meridian[3];
   
   #if defined(TIME_LOCATION_SOURCE) && TIME_LOCATION_SOURCE != OFF
