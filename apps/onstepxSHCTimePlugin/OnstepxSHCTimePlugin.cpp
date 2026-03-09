@@ -34,14 +34,15 @@ void OnstepxSHCTimePlugin::init() {
   timeInfo.seconds = INVALID_DATETIME;*/
   //  char meridian[3];
   
-  #if defined(TIME_LOCATION_SOURCE) && TIME_LOCATION_SOURCE != OFF
+  #if defined(TIME_LOCATION_SOURCE) && TIME_LOCATION_SOURCE != OFF && TIME_LOCATION_SOURCE == DS3231
+      tls = new TlsDs3231;
       tls->init();
       tasks.add(1000, 0, true, 7, onstepxSHCTimePluginWrapper);
   #endif
 };
 
 void OnstepxSHCTimePlugin::loop() {
-  #if defined(TIME_LOCATION_SOURCE) && TIME_LOCATION_SOURCE != OFF
+  #if defined(TIME_LOCATION_SOURCE) && TIME_LOCATION_SOURCE != OFF && TIME_LOCATION_SOURCE == DS3231
     JulianDate jdate;
 
     // get the date from the mount
@@ -54,8 +55,12 @@ void OnstepxSHCTimePlugin::loop() {
     uint8_t year = strtol(&out[6], &pEnd, 10);
   
     // now get the date from the RTC
-    //tls->get(jdate);
-    
+    if (!tls->isReady()) {
+      return;
+    }
+      
+    tls->get(jdate);
+  
     GregorianDate greggy = calendars.julianToGregorian(jdate);
 
     // compare dates and use ours if greater
