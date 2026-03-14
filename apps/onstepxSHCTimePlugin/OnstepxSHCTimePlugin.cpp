@@ -7,42 +7,19 @@
 
 #include "../../lib/tasks/OnTask.h"
 
+  #if defined(TIME_LOCATION_SOURCE) && TIME_LOCATION_SOURCE != OFF && TIME_LOCATION_SOURCE == DS3231
+
 void onstepxSHCTimePluginWrapper() { onstepxSHCTimePlugin.loop(); }
 
 // intitialize all values to invalid values
 void OnstepxSHCTimePlugin::init() {
 
-  /*latitude.sign = ' ';
-  latitude.hours = INVALID_LOCATION;
-  latitude.minutes = INVALID_LOCATION;
-
-  longitude.sign = ' ';
-  longitude.hours = INVALID_LOCATION;
-  longitude.minutes = INVALID_LOCATION;
-
-  // not valid value
-  utc_offset.sign = ' ';
-  utc_offset.hours = INVALID_OFFSET;
-
-  // invalid date
-  dateInfo.year = INVALID_DATETIME;
-  dateInfo.month = INVALID_DATETIME;
-  dateInfo.day = INVALID_DATETIME;
-  
-  timeInfo.hour = INVALID_DATETIME;
-  timeInfo.minutes = INVALID_DATETIME;
-  timeInfo.seconds = INVALID_DATETIME;*/
-  //  char meridian[3];
-  
-  #if defined(TIME_LOCATION_SOURCE) && TIME_LOCATION_SOURCE != OFF && TIME_LOCATION_SOURCE == DS3231
       tls = new TlsDs3231;
       tls->init();
       tasks.add(1000, 0, true, 7, onstepxSHCTimePluginWrapper);
-  #endif
 };
 
 void OnstepxSHCTimePlugin::loop() {
-  #if defined(TIME_LOCATION_SOURCE) && TIME_LOCATION_SOURCE != OFF && TIME_LOCATION_SOURCE == DS3231
     JulianDate jdate;
 
     // get the date from the mount
@@ -73,7 +50,8 @@ void OnstepxSHCTimePlugin::loop() {
     //tls.set(int year, int month, int day, int hour, int minute, int second) 
     
   
-  #endif
 };
 
 OnstepxSHCTimePlugin onstepxSHCTimePlugin;
+  #endif
+
