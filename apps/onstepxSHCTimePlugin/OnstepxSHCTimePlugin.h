@@ -1,9 +1,7 @@
 // OnstepX Plugin 4 SHC Time / Date
 #pragma once
 
-//#include "lib/location_functions.h"
-//#include "lib/datetime_functions.h"
-//#include "lib/site_functions.h"
+#if defined(TIME_LOCATION_SOURCE) && TIME_LOCATION_SOURCE != OFF
 
 //#include "../../lib/commands/CommandErrors.h"
 #include "../../lib/Constants.h"
@@ -16,33 +14,6 @@
 #define INVALID_LOCATION 10000;
 #define INVALID_DATETIME -1;
 
-/*
-    // store time in 12 hour format with AM/PM
-typedef struct {
-    long hour;
-    long minutes;
-    long seconds;
-    char meridian[3]; // Stores "AM" or "PM"
-} TimeInfo; 
-
-// store date split out
-typedef struct {
-    long year;
-    long month;
-    long day;
-} DateInfo;
-
-typedef struct {
-    char sign; // '+' or '-'
-    long hours;
-    long minutes;
-} Location;
-
-typedef struct {
-    char sign; // '+' or '-'
-    long hours;
-} Offset;
-*/
 class OnstepxSHCTimePlugin {
 
 public:
@@ -57,15 +28,9 @@ private:
 
      char response_buffer[RESPONSE_BUFFER_SIZE];
 
-     /*Location   latitude;
-     Location   longitude;
-     Offset     utc_offset;
-     DateInfo   dateInfo;
-     TimeInfo   timeInfo;*/
-
-  #if defined(TIME_LOCATION_SOURCE) && TIME_LOCATION_SOURCE != OFF
       TimeLocationSource *tls;
-  #endif
 };
 
 extern OnstepxSHCTimePlugin onstepxSHCTimePlugin;
+#endif
+
