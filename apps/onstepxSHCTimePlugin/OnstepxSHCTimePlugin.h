@@ -26,11 +26,10 @@ public:
 
 private:
 
-     char response_buffer[RESPONSE_BUFFER_SIZE];
+  char response_buffer[RESPONSE_BUFFER_SIZE];
 
-      TimeLocationSource *tls;
+  TimeLocationSource *tls;
 };
 
 extern OnstepxSHCTimePlugin onstepxSHCTimePlugin;
 #endif
-
