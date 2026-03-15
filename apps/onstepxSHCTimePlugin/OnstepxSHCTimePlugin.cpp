@@ -42,14 +42,22 @@ void OnstepxSHCTimePlugin::loop() {
 
   GregorianDate greggy = calendars.julianToGregorian(jdate);
 
+  uint8_t mount_date = (year * 10000) + (month * 100) + day;
+  uint8_t rtc_date = (greggy.year * 10000) + (greggy.month * 100) + greggy.day;
+
   // compare dates and use ours if greater
-  if (greggy.year > year && greggy.month > month && greggy.day > day) {
+  if (rtc_date > mount_date) {
     // we should use this year, month and day
     snprintf(out, sizeof(out), ":SC%02d/%02d/%02d#", greggy.month, greggy.day, greggy.year);
-    //onStepLx200.Set(out);
+    onStepLx200.Set(out);
   }
 
-  //tls.set(int year, int month, int day, int hour, int minute, int second)
+  // get sidereal time
+  onStepLx200.Get(":GS#", out);
+  
+
+  //   tls.set(int year, int month, int day, int hour, int minute, int second);
+
 };
 
 OnstepxSHCTimePlugin onstepxSHCTimePlugin;
