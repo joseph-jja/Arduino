@@ -46,18 +46,32 @@ void OnstepxSHCTimePlugin::loop() {
   uint8_t rtc_date = (greggy.year * 10000) + (greggy.month * 100) + greggy.day;
 
   // compare dates and use ours if greater
+  bool shouldSetDate = false;
   if (rtc_date > mount_date) {
     // we should use this year, month and day
     snprintf(out, sizeof(out), ":SC%02d/%02d/%02d#", greggy.month, greggy.day, greggy.year);
     onStepLx200.Set(out);
+  } else {
+     shouldSetDate = true;
   }
 
   // get sidereal time
   onStepLx200.Get(":GS#", out);
-  
 
-  //   tls.set(int year, int month, int day, int hour, int minute, int second);
+  uint8_t hours = strtol(&out[0], &pEnd, 10);
+  uint8_t minutes = strtol(&out[3], &pEnd, 10);
+  uint8_t seconds = strtol(&out[6], &pEnd, 10);
 
+  //jdate.hour = now.Hour() + now.Minute()/60.0 + (now.Second() + t/1000000.0)/3600.0
+  double mount_hours = hours + minutes/60.0 + (seconds + 0.5/1000000.0)/3600.0;
+  bool shouldSetTime = false;
+  if (mount_hours > jdate.hour) {
+    snprintf(out, sizeof(out), ":SS%02d/%02d/%02d#", hours, minutes, seconds);
+  } else {
+     shouldSetTime = true;
+  }
+
+  //   tls.set(jdate);
 };
 
 OnstepxSHCTimePlugin onstepxSHCTimePlugin;
