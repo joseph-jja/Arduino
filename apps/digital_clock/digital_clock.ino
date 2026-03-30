@@ -202,6 +202,7 @@ void get_time() {
 
   // no time no call function :)
   if (!rtcInitialized) {
+    Serial.print("RTC NOT initialized in call to get_time()!");
     return;
   }
 
