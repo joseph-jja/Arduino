@@ -257,8 +257,8 @@ void get_time() {
 
 // called after get time and uses the values or currentHour and currentMinute
 void writeString() {
-  char hours[3];
-  char minutes[3];
+  char hours[4];
+  char minutes[4];
 
   memset(hours, '\0', sizeof(hours));
   memset(minutes, '\0', sizeof(minutes));
@@ -286,9 +286,15 @@ void writeString() {
 
   alpha4.clear();
   alpha4.writeDigitAscii(0, hours[0], false);
-  alpha4.writeDigitAscii(1, hours[1], true);
+  alpha4.writeDigitAscii(1, hours[1], false);
+#ifdef USE_HK16K33
+  alpha4.writeDigitAscii(2, ':', false);
+  alpha4.writeDigitAscii(3, minutes[0], false);
+  alpha4.writeDigitAscii(4, minutes[1], false);
+#else
   alpha4.writeDigitAscii(2, minutes[0], false);
   alpha4.writeDigitAscii(3, minutes[1], false);
+#endif
   alpha4.writeDisplay();
 
   delay(1000);
