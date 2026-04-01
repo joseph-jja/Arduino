@@ -145,7 +145,7 @@ void setup() {
 
   // it does not seem to work unless you pass in the address?
   alpha4.begin(0x70);
-  alpha4.setBrightness(5);
+  alpha4.setBrightness(3);
 
   for (int i = 0; i < 4; i++) {
     alpha4.writeDigitRaw(i, 0xFFFF);
