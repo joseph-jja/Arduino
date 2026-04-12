@@ -68,12 +68,12 @@ static int SEVEN_NUM[4] = { 0, 1, 1, 1 };
 static int EIGHT_NUM[4] = { 1, 0, 0, 0 };
 static int NINE_NUM[4] = { 1, 0, 0, 1 };
 
-static int HOURS_ONE = 18;
-static int HOURS_TWO = 17;
-static int MINUTES_ONE = 16;
-static int MINUTES_TWO = 15;
-static int SECONDS_ONE = 7;
-static int SECONDS_TWO = 6;
+static int HOURS_ONE = 16;
+static int HOURS_TWO = 15;
+static int MINUTES_ONE = 7;
+static int MINUTES_TWO = 6;
+static int SECONDS_ONE = 5;
+static int SECONDS_TWO = 4;
 
 static int PIXEL_CT = 4;
 
