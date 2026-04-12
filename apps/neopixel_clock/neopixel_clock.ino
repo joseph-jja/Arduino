@@ -75,6 +75,9 @@ static int MINUTES_TWO = 6;
 static int SECONDS_ONE = 5;
 static int SECONDS_TWO = 4;
 
+// from 0 to 255 brightness
+static int DEFAULT_BRIGHTNESS = 100;
+
 static int PIXEL_CT = 4;
 
 Adafruit_NeoPixel pixels_hours_1 = Adafruit_NeoPixel(PIXEL_CT, HOURS_ONE, NEO_GRB + NEO_KHZ800);
@@ -166,27 +169,27 @@ void setup() {
   Serial.println(__TIME__);
 
   pixels_hours_1.begin();
-  pixels_hours_1.setBrightness(100);  // from 0 to 255 brightness
+  pixels_hours_1.setBrightness(DEFAULT_BRIGHTNESS);  // from 0 to 255 brightness
   pixels_hours_1.show();
 
   pixels_hours_2.begin();
-  pixels_hours_2.setBrightness(100);  // from 0 to 255 brightness
+  pixels_hours_2.setBrightness(DEFAULT_BRIGHTNESS);  // from 0 to 255 brightness
   pixels_hours_2.show();
 
   pixels_minutes_1.begin();
-  pixels_minutes_1.setBrightness(100);  // from 0 to 255 brightness
+  pixels_minutes_1.setBrightness(DEFAULT_BRIGHTNESS);  // from 0 to 255 brightness
   pixels_minutes_1.show();
 
   pixels_minutes_2.begin();
-  pixels_minutes_2.setBrightness(100);  // from 0 to 255 brightness
+  pixels_minutes_2.setBrightness(DEFAULT_BRIGHTNESS);  // from 0 to 255 brightness
   pixels_minutes_2.show();
 
   pixels_seconds_1.begin();
-  pixels_seconds_1.setBrightness(100);  // from 0 to 255 brightness
+  pixels_seconds_1.setBrightness(DEFAULT_BRIGHTNESS);  // from 0 to 255 brightness
   pixels_seconds_1.show();
 
   pixels_seconds_2.begin();
-  pixels_seconds_2.setBrightness(100);  // from 0 to 255 brightness
+  pixels_seconds_2.setBrightness(DEFAULT_BRIGHTNESS);  // from 0 to 255 brightness
   pixels_seconds_2.show();
 
   // clock found so initialize to current data time from computer
