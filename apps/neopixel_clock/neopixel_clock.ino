@@ -166,27 +166,27 @@ void setup() {
   Serial.println(__TIME__);
 
   pixels_hours_1.begin();
-  pixels_hours_1.setBrightness(85);  // 1/3 brightness
+  pixels_hours_1.setBrightness(100);  // from 0 to 255 brightness
   pixels_hours_1.show();
 
   pixels_hours_2.begin();
-  pixels_hours_2.setBrightness(85);  // 1/3 brightness
+  pixels_hours_2.setBrightness(100);  // from 0 to 255 brightness
   pixels_hours_2.show();
 
   pixels_minutes_1.begin();
-  pixels_minutes_1.setBrightness(85);  // 1/3 brightness
+  pixels_minutes_1.setBrightness(100);  // from 0 to 255 brightness
   pixels_minutes_1.show();
 
   pixels_minutes_2.begin();
-  pixels_minutes_2.setBrightness(85);  // 1/3 brightness
+  pixels_minutes_2.setBrightness(100);  // from 0 to 255 brightness
   pixels_minutes_2.show();
 
   pixels_seconds_1.begin();
-  pixels_seconds_1.setBrightness(85);  // 1/3 brightness
+  pixels_seconds_1.setBrightness(100);  // from 0 to 255 brightness
   pixels_seconds_1.show();
 
   pixels_seconds_2.begin();
-  pixels_seconds_2.setBrightness(85);  // 1/3 brightness
+  pixels_seconds_2.setBrightness(100);  // from 0 to 255 brightness
   pixels_seconds_2.show();
 
   // clock found so initialize to current data time from computer
