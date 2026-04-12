@@ -27,7 +27,7 @@ static int CYAN[3] = { 0, 255, 255 };
 static int PINKISH[3] = { 255, 0, 150 };
 static int PURPLE[3] = { 255, 0, 255 };
 
-#define SERIAL_BAUD 115200
+#define SERIAL_BAUD 9600
 #define TIME_BUFFER_SIZE 30
 
 bool debug = true;
@@ -68,21 +68,21 @@ static int SEVEN_NUM[4] = { 0, 1, 1, 1 };
 static int EIGHT_NUM[4] = { 1, 0, 0, 0 };
 static int NINE_NUM[4] = { 1, 0, 0, 1 };
 
-#define HOURS_ONE 18
-#define HOURS_TWO 17
-#define MINUTES_ONE 16
-#define MINUTES_TWO 15
-#define SECONDS_ONE 7
-#define SECONDS_TWO 6
+static int HOURS_ONE = 18;
+static int HOURS_TWO = 17;
+static int MINUTES_ONE = 16;
+static int MINUTES_TWO = 15;
+static int SECONDS_ONE = 7;
+static int SECONDS_TWO = 6;
 
-#define PIXEL_CT 4
+static int PIXEL_CT = 4;
 
-Adafruit_NeoPixel pixels_hours_1 = Adafruit_NeoPixel(PIXEL_CT, HOURS_ONE);
-Adafruit_NeoPixel pixels_hours_2 = Adafruit_NeoPixel(PIXEL_CT, HOURS_TWO);
-Adafruit_NeoPixel pixels_minutes_1 = Adafruit_NeoPixel(PIXEL_CT, MINUTES_ONE);
-Adafruit_NeoPixel pixels_minutes_2 = Adafruit_NeoPixel(PIXEL_CT, MINUTES_TWO);
-Adafruit_NeoPixel pixels_seconds_1 = Adafruit_NeoPixel(PIXEL_CT, SECONDS_ONE);
-Adafruit_NeoPixel pixels_seconds_2 = Adafruit_NeoPixel(PIXEL_CT, SECONDS_TWO);
+Adafruit_NeoPixel pixels_hours_1 = Adafruit_NeoPixel(PIXEL_CT, HOURS_ONE, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel pixels_hours_2 = Adafruit_NeoPixel(PIXEL_CT, HOURS_TWO, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel pixels_minutes_1 = Adafruit_NeoPixel(PIXEL_CT, MINUTES_ONE, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel pixels_minutes_2 = Adafruit_NeoPixel(PIXEL_CT, MINUTES_TWO, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel pixels_seconds_1 = Adafruit_NeoPixel(PIXEL_CT, SECONDS_ONE, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel pixels_seconds_2 = Adafruit_NeoPixel(PIXEL_CT, SECONDS_TWO, NEO_GRB + NEO_KHZ800);
 
 void handleIndex() {
   Serial.print("Request for index page");
@@ -157,7 +157,7 @@ void handleTimeRequest() {
 
 void setup() {
 
-  Serial.begin(9600);
+  Serial.begin(SERIAL_BAUD);
   delay(100);
   Serial.println("Application setup!");
   Serial.print("Build date: ");
@@ -190,7 +190,7 @@ void setup() {
   pixels_seconds_2.show();
 
   // clock found so initialize to current data time from computer
-  /*if (rtc.begin()) {
+  if (rtc.begin()) {
     Serial.println("Begin RTC!");
     // get time
     DateTime rtnow = rtc.now();
@@ -203,7 +203,7 @@ void setup() {
   } else {
     Serial.println("Could NOT Begin RTC!");
   }
-  */
+  
   Serial.println("Setting up Access Point");
   WiFi.mode(WIFI_AP);
   WiFi.softAPConfig(local_IP, gateway, subnet);
@@ -289,7 +289,6 @@ void setPixelNumber(int index, int color[], int number[]) {
 
   // we know number is going to be 4
   size_t length = sizeof(number) / sizeof(number[0]);
-  int end = 4;  //(int)length;
 
   Serial.print("---- ");
   Serial.println(index);
@@ -304,38 +303,9 @@ void setPixelNumber(int index, int color[], int number[]) {
   Serial.print(number[2]);
   Serial.println(number[3]);
 
-  if (index == 0) {
-    pixels_hours_1.clear();
-  } else if (index == 1) {
-    pixels_hours_2.clear();
-  } else if (index == 2) {
-    pixels_minutes_1.clear();
-  } else if (index == 3) {
-    pixels_minutes_2.clear();
-  } else if (index == 4) {
-    pixels_seconds_1.clear();
-  } else if (index == 5) {
-    pixels_seconds_2.clear();
-  }
-
-  for (int i = 0; i < end; i++) {
+  for (int i = 0; i < PIXEL_CT; i++) {
     int onOrOff = number[i];
-    if (0 == onOrOff) {
-      // color is black aka off
-      if (index == 0) {
-        pixels_hours_1.setPixelColor(i, 0, 0, 0);
-      } else if (index == 1) {
-        pixels_hours_2.setPixelColor(i, 0, 0, 0);
-      } else if (index == 2) {
-        pixels_minutes_1.setPixelColor(i, 0, 0, 0);
-      } else if (index == 3) {
-        pixels_minutes_2.setPixelColor(i, 0, 0, 0);
-      } else if (index == 4) {
-        pixels_seconds_1.setPixelColor(i, 0, 0, 0);
-      } else if (index == 5) {
-        pixels_seconds_2.setPixelColor(i, 0, 0, 0);
-      }
-    } else {
+    if (1 == onOrOff) {
       if (index == 0) {
         pixels_hours_1.setPixelColor(i, color[0], color[1], color[2]);
       } else if (index == 1) {
@@ -350,20 +320,6 @@ void setPixelNumber(int index, int color[], int number[]) {
         pixels_seconds_2.setPixelColor(i, color[0], color[1], color[2]);
       }
     }
-  }
-
-  if (index == 0) {
-    pixels_hours_1.show();
-  } else if (index == 1) {
-    pixels_hours_2.show();
-  } else if (index == 2) {
-    pixels_minutes_1.show();
-  } else if (index == 3) {
-    pixels_minutes_2.show();
-  } else if (index == 4) {
-    pixels_seconds_1.show();
-  } else if (index == 5) {
-    pixels_seconds_2.show();
   }
 }
 
@@ -545,11 +501,29 @@ void loop() {
   Serial.print(second_big_number[1]);
   Serial.print(" ");
   Serial.println(colors[0]);*/
+
+  // clear all of the pixels 
+  pixels_hours_1.clear();
+  pixels_hours_2.clear();
+  pixels_minutes_1.clear();
+  pixels_minutes_2.clear();
+  pixels_seconds_1.clear();
+  pixels_seconds_2.clear();
+  
   //setPixelNumber(0, colors, hour_big_number);
   //setPixelNumber(1, colors, hour_small_number);
   //setPixelNumber(2, colors, minute_big_number);
   //setPixelNumber(3, colors, minute_small_number);
   setPixelNumber(4, colors, second_big_number);
   //setPixelNumber(5, colors, second_small_number);
+
+  // now show them all
+  pixels_hours_1.show();
+  pixels_hours_2.show();
+  pixels_minutes_1.show();
+  pixels_minutes_2.show();
+  pixels_seconds_1.show();
+  pixels_seconds_2.show();
+
   delay(1000);
 }
