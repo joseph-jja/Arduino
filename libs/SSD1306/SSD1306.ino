@@ -3,12 +3,12 @@
 
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire);
 
-bool found = false;
+bool sdd1306_found = false;
 
 void setup_SDD1306() {
 
-  found = display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS);
-  if (found) {
+  sdd1306_found = display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS);
+  if (sdd1306_found) {
     Serial.println("Found display!");
   } else {
     Serial.println("No display was found!");
@@ -35,7 +35,7 @@ void setTextSize(int size) {
 
 void clear_display() {
 
-  if (!found) {
+  if (!sdd1306_found) {
     return;
   }
 
@@ -45,7 +45,7 @@ void clear_display() {
 }
 
 void rotate_display(int i) {
-  if (!found) {
+  if (!sdd1306_found) {
     return;
   }
   display.setRotation(i);
@@ -53,7 +53,7 @@ void rotate_display(int i) {
 
 void write_display(int left, int top, const char buff[]) {
 
-  if (!found) {
+  if (!sdd1306_found) {
     return;
   }
 
@@ -75,7 +75,7 @@ void write_number(int left, int top, double x) {
 }
 
 void show_display() {
-  if (!found) {
+  if (!sdd1306_found) {
     return;
   }
   display.display();
