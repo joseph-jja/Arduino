@@ -17,7 +17,7 @@ double previousPitchFiltered = 0;
 double lastUpdatedTime = 0;
 
 bool showRawValues = false;
-bool found = false;
+bool mpu6050_found = false;
 
 void setup_accel_n_gyro() {
 
@@ -34,7 +34,7 @@ void setup_accel_n_gyro() {
     return;
   }
   
-  found = true;
+  mpu6050_found = true;
   
   // we want to detect smaller movements so we use 2G
   mpu.setAccelerometerRange(MPU6050_RANGE_2_G);
@@ -100,7 +100,7 @@ void setup_accel_n_gyro() {
 
 void cook_data() {
 
-  if (!found) {
+  if (!mpu6050_found) {
     return;
   }
 
@@ -153,7 +153,7 @@ double flatten(double in, double offset) {
 
 void loop_accel_n_gyro() {
 
-  if (!found) {
+  if (!mpu6050_found) {
     return;
   }
 
