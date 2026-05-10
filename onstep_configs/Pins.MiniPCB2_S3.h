@@ -22,7 +22,7 @@
 #endif
 
 // The multi-purpose pins (Aux3..Aux8 can be analog pwm/dac if supported)
-#define AUX0_PIN                48               // Status LED
+#define AUX0_PIN                21               // Status LED
 #define AUX1_PIN                16               // ESP8266 GPIO0, SPI MISO/Fault
 #define AUX2_PIN                12                // ESP8266 RST, SPI MISO/Fault
 #define AUX3_PIN                36                // Limit SW, Home SW
@@ -39,7 +39,7 @@
 #define ADDON_GPIO0_PIN       AUX1_PIN         // ESP8266 GPIO0 or SPI MISO/Fault
 #define ADDON_RESET_PIN       AUX2_PIN         // ESP8266 RST or SPI MISO/Fault
 // The PEC index sense is a logic level input, resets the PEC index on rising edge then waits for 60 seconds before allowing another reset
-#define PEC_SENSE_PIN           21               // PEC Sense, analog or digital
+#define PEC_SENSE_PIN           48               // PEC Sense, analog or digital
 
 // The status LED is a two wire jumper with a 10k resistor in series to limit the current to the LED
 #define STATUS_LED_PIN          AUX0_PIN         // Default LED Cathode (-)
@@ -66,26 +66,26 @@
 #define DEDICATED_MODE_PINS
 
 // Axis1 RA/Azm step/dir driver
-#define AXIS1_ENABLE_PIN    5
-#define AXIS1_M0_PIN        6      // Dedicated MOSI
-#define AXIS1_M1_PIN        7      // Dedicated SCK
-#define AXIS1_M2_PIN        15     // Unique CSN
+#define AXIS1_ENABLE_PIN    14
+//#define AXIS1_M0_PIN        6      // Dedicated MOSI
+//#define AXIS1_M1_PIN        7      // Dedicated SCK
+//#define AXIS1_M2_PIN        15     // Unique CSN
 #define AXIS1_M3_PIN        AUX1_PIN     // Dedicated MISO/FAULT
-#define AXIS1_STEP_PIN      17
-#define AXIS1_DIR_PIN       18
+#define AXIS1_STEP_PIN      12
+#define AXIS1_DIR_PIN       11
 #define AXIS1_FAULT_PIN     AXIS1_M3_PIN      // Optional fault pin
 #ifndef AXIS1_SENSE_HOME_PIN
   #define AXIS1_SENSE_HOME_PIN  AUX3_PIN
 #endif
 
 // Axis2 Dec/Alt step/dir driver
-#define AXIS2_ENABLE_PIN    8
-#define AXIS2_M0_PIN        9      // Dedicated MOSI
-#define AXIS2_M1_PIN        10     // Dedicated SCK
-#define AXIS2_M2_PIN        11     // Unique CSN
+#define AXIS2_ENABLE_PIN    14
+//#define AXIS2_M0_PIN        9      // Dedicated MOSI
+//#define AXIS2_M1_PIN        10     // Dedicated SCK
+//#define AXIS2_M2_PIN        11     // Unique CSN
 #define AXIS2_M3_PIN        AUX2_PIN     // Dedicated MISO/FAULT
-#define AXIS2_STEP_PIN      13
-#define AXIS2_DIR_PIN       14
+#define AXIS2_STEP_PIN      5
+#define AXIS2_DIR_PIN       4
 #define AXIS2_FAULT_PIN     AXIS2_M3_PIN      // Optional fault pin
 #ifndef AXIS2_SENSE_HOME_PIN
   #define AXIS2_SENSE_HOME_PIN  AUX4_PIN
