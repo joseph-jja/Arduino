@@ -8,8 +8,10 @@
 // Serial1: RX Pin U0, TX Pin U0
 // Serial2: RX1 Pin GPIO6, TX1 Pin GPIO5
 
-//#define SERIAL_B_TX   17
-//#define SERIAL_B_RX   18
+//#define SERIAL_B_TX   15
+//#define SERIAL_B_RX   16
+//#define SERIAL_C_TX   17
+//#define SERIAL_C_RX   18
 
 #if SERIAL_A_BAUD_DEFAULT != OFF
   #define SERIAL_A              Serial
@@ -23,7 +25,7 @@
 
 // The multi-purpose pins (Aux3..Aux8 can be analog pwm/dac if supported)
 #define AUX0_PIN                21               // Status LED
-#define AUX1_PIN                16               // ESP8266 GPIO0, SPI MISO/Fault
+#define AUX1_PIN                16               // ESP32 S3 Mini
 #define AUX2_PIN                12                // ESP8266 RST, SPI MISO/Fault
 #define AUX3_PIN                36                // Limit SW, Home SW
 #define AUX4_PIN                47               // Reticle LED, Home SW
