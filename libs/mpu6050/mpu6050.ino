@@ -114,7 +114,7 @@ void cook_data() {
 
   // time time time see what's become of me
   // time in seconds is needed here
-  double deltaTime = floor((millis() - lastUpdatedTime) / 1000);
+  double deltaTime = (millis() - lastUpdatedTime) / 1000.0;
   lastUpdatedTime = millis();
 
   // gyro roll
@@ -138,7 +138,7 @@ void cook_data() {
   Serial.print("Gyro Roll: ");
   Serial.print(mpudata.gyroRollRate);
   Serial.print(" and Pitch: ");
-  Serial.print(mpudata.gyroPitch);
+  Serial.print(mpudata.gyroPitchRate);
   Serial.println();
   Serial.print("Filtered Roll: ");
   Serial.print(mpudata.filteredRoll);
