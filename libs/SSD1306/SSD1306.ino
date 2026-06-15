@@ -36,6 +36,7 @@ void setTextSize(int size) {
 void clear_display() {
 
   if (!sdd1306_found) {
+    Serial.println("No display was found!");
     return;
   }
 
@@ -46,6 +47,7 @@ void clear_display() {
 
 void rotate_display(int i) {
   if (!sdd1306_found) {
+    Serial.println("No display was found!");
     return;
   }
   display.setRotation(i);
@@ -54,6 +56,7 @@ void rotate_display(int i) {
 void write_display(int left, int top, const char buff[]) {
 
   if (!sdd1306_found) {
+    Serial.println("No display was found!");
     return;
   }
 
@@ -76,13 +79,14 @@ void write_number(int left, int top, double x) {
 
 void show_display() {
   if (!sdd1306_found) {
+    Serial.println("No display was found!");
     return;
   }
   display.display();
 }
 
 void setDisplayFont(const GFXfont *font) {
-  display.setFont(font); 
+  display.setFont(font);
 }
 
 /*
