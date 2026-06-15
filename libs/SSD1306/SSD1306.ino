@@ -1,14 +1,14 @@
 // OneWire - Version: Latest
-#include "sdd1306_config.h"
+#include "ssd1306_config.h"
 
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire);
 
-bool sdd1306_found = false;
+bool ssd1306_found = false;
 
 void setup_SDD1306() {
 
-  sdd1306_found = display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS);
-  if (sdd1306_found) {
+  ssd1306_found = display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS);
+  if (ssd1306_found) {
     Serial.println("Found display!");
   } else {
     Serial.println("No display was found!");
@@ -35,7 +35,7 @@ void setTextSize(int size) {
 
 void clear_display() {
 
-  if (!sdd1306_found) {
+  if (!ssd1306_found) {
     Serial.println("No display was found!");
     return;
   }
@@ -46,7 +46,7 @@ void clear_display() {
 }
 
 void rotate_display(int i) {
-  if (!sdd1306_found) {
+  if (!ssd1306_found) {
     Serial.println("No display was found!");
     return;
   }
@@ -55,7 +55,7 @@ void rotate_display(int i) {
 
 void write_display(int left, int top, const char buff[]) {
 
-  if (!sdd1306_found) {
+  if (!ssd1306_found) {
     Serial.println("No display was found!");
     return;
   }
@@ -73,12 +73,12 @@ void write_number(int left, int top, double x) {
   long whole = floor(x);
   long decimals = round((x - whole) * 100);
 
-  snprintf(buff, sizeof(buff), "%d.%d", whole, decimals);
+  snprintf(buff, sizeof(buff), "%ld.%ld", whole, decimals);
   write_display(left, top, buff);
 }
 
 void show_display() {
-  if (!sdd1306_found) {
+  if (!ssd1306_found) {
     Serial.println("No display was found!");
     return;
   }
