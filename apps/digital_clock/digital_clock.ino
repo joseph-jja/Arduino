@@ -287,7 +287,7 @@ void writeString() {
   alpha4.clear();
   alpha4.writeDigitAscii(0, hours[0], false);
   alpha4.writeDigitAscii(1, hours[1], false);
-#ifdef USE_HK16K33
+#ifdef USE_HT16K33
   alpha4.writeDigitAscii(2, ':', false);
   alpha4.writeDigitAscii(3, minutes[0], false);
   alpha4.writeDigitAscii(4, minutes[1], false);

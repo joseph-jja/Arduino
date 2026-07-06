@@ -6,3 +6,5 @@ const char* password = "ESP-CLOCK-AP-001";
 IPAddress local_IP(192, 168, 0, 1);
 IPAddress gateway(192, 168, 0, 1);
 IPAddress subnet(255, 255, 255, 0);
+
+#define USE_HT16K33 true
