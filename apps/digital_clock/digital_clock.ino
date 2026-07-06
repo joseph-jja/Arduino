@@ -25,7 +25,11 @@
 #include "Config.h"
 #include "Constants.h"
 
-Adafruit_AlphaNum4 alpha4 = Adafruit_AlphaNum4();
+// depedning on the display type this might need to be changed
+// for 7 segment use this
+// for 14 segment use AlphaNum4
+Adafruit_7segment alpha4 = Adafruit_7segment();
+//Adafruit_AlphaNum4 alpha4 = Adafruit_AlphaNum4();
 
 #define SERIAL_BAUD 115200
 #define TIME_BUFFER_SIZE 30
