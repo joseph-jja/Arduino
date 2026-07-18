@@ -90,7 +90,7 @@ void loop_gps() {
           year = gps.date.year();
           month = gps.date.month();
           day = gps.date.day();
-          snprintf(gpsdata.gps_date, sizeof(gpsdata.gps_date), %4d/%02d/%02d", year, month, day);
+          snprintf(gpsdata.gps_date, sizeof(gpsdata.gps_date), "%4d/%02d/%02d", year, month, day);
           Serial.print("Got valid date ");
           Serial.println(gpsdata.gps_date);
         }
