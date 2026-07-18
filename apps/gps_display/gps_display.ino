@@ -4,7 +4,7 @@
 // I2C display -> SSD1306
 #include "Config.h"
 #include "gps_config.h"
-#include "sdd1306_config.h"
+#include "ssd1306_config.h"
 #include <Fonts/FreeMono9pt7b.h>
 
 #include "WiFi.h"
