@@ -13,8 +13,9 @@
 // Matter Contact Sensor Endpoint
 MatterContactSensor ContactSensor;
 
-// Use an RTC GPIO
-#define SENSOR_PIN GPIO_NUM_2 
+// Use an RTC GPIOus
+
+#define SENSOR_PIN 5 
 
 // CONFIG_ENABLE_CHIPOBLE is enabled when BLE is used to commission the Matter Network
 #if !CONFIG_ENABLE_CHIPOBLE
@@ -22,7 +23,7 @@ MatterContactSensor ContactSensor;
 const char *ssid = "your-ssid";          // Change this to your WiFi SSID
 const char *password = "your-password";  // Change this to your WiFi password
 #endif
-
+ 
 // LED will be used to indicate the Contact Sensor state
 // set your board RGB LED pin here
 #ifdef RGB_BUILTIN
