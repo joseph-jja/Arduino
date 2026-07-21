@@ -57,7 +57,7 @@ void setup() {
     // 4. Configure Sleep
     // Wake up when the pin level changes (e.g., HIGH to LOW)
     #ifdef ESP32_S3_ENABLED 
-    esp_sleep_enable_ext0_wakeup(1 << SENSOR_PIN, ESP_GPIO_WAKEUP_GPIO_LOW);
+    esp_sleep_enable_ext0_wakeup((gpio_num_t)SENSOR_PIN, ESP_EXT1_WAKEUP_ANY_LOW);
     #else
     esp_deep_sleep_enable_gpio_wakeup(1 << SENSOR_PIN, ESP_GPIO_WAKEUP_GPIO_LOW);
     #endif
