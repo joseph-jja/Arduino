@@ -18,7 +18,8 @@ MatterContactSensor ContactSensor = MatterContactSensor();
 
 // Use an RTC GPIOus
 
-#define SENSOR_PIN 5
+#define SENSOR_PIN 4
+const gpio_num_t WAKEUP_PIN = (gpio_num_t)(1 << SENSOR_PIN);
 
 // CONFIG_ENABLE_CHIPOBLE is enabled when BLE is used to commission the Matter Network
 #if !CONFIG_ENABLE_CHIPOBLE
@@ -44,6 +45,21 @@ bool button_state = true;                      // false = released | true = pres
 const uint32_t debouceTime = 250;              // button debouncing time (ms)
 const uint32_t decommissioningTimeout = 5000;  // keep the button pressed for 5s, or longer, to decommission
 
+void print_wakeup_reason() {
+  esp_sleep_wakeup_cause_t wakeup_reason;
+
+  wakeup_reason = esp_sleep_get_wakeup_cause();
+
+  switch (wakeup_reason) {
+    case ESP_SLEEP_WAKEUP_EXT0:     Serial.println("Wakeup caused by external signal using RTC_IO"); break;
+    case ESP_SLEEP_WAKEUP_EXT1:     Serial.println("Wakeup caused by external signal using RTC_CNTL"); break;
+    case ESP_SLEEP_WAKEUP_TIMER:    Serial.println("Wakeup caused by timer"); break;
+    case ESP_SLEEP_WAKEUP_TOUCHPAD: Serial.println("Wakeup caused by touchpad"); break;
+    case ESP_SLEEP_WAKEUP_ULP:      Serial.println("Wakeup caused by ULP program"); break;
+    default:                        Serial.printf("Wakeup was not caused by deep sleep: %d\n", wakeup_reason); break;
+  }
+}
+
 // look here for code example https://docs.espressif.com/projects/arduino-esp32/en/latest/matter/ep_contact_sensor.html
 void setup() {
   Serial.begin(115200);
@@ -53,7 +69,6 @@ void setup() {
 
   // 2. Read Switch
   pinMode(buttonPin, INPUT_PULLUP);
-  bool isOpen = digitalRead(buttonPin);
 
   // led
   pinMode(ledPin, OUTPUT);
@@ -68,19 +83,23 @@ void setup() {
     Serial.print(".");
   }
   Serial.println();
-  Serial.println("Wifi connected");
+  Serial.println("Wifi connected!");
 #endif
 
   // 3. Update Matter Attribute
   // Update the 'ContactStatus' attribute in the Matter cluster
   ContactSensor.begin();
+  ContactSensor.setContact(true);
   digitalWrite(ledPin, LOW);  // LED OFF
+
+  //Print the wakeup reason for ESP32
+  print_wakeup_reason();
 
   // Matter beginning - Last step, after all EndPoints are initialized
   Matter.begin();
 
   // Check Matter Accessory Commissioning state, which may change during execution of loop()
-  if (!Matter.isDeviceCommissioned()) {
+  /*if (!Matter.isDeviceCommissioned()) {
     Serial.println("");
     Serial.println("Matter Node is not commissioned yet.");
     Serial.println("Initiate the device discovery in your Matter environment.");
@@ -96,27 +115,33 @@ void setup() {
       }
     }
     Serial.println("Matter Node is commissioned and connected to the network. Ready for use.");
-  }
+  }*/
 
 // 4. Configure Sleep
 // Wake up when the pin level changes (e.g., HIGH to LOW)
 #ifdef ESP32_S3_ENABLED
-  esp_sleep_enable_ext0_wakeup((gpio_num_t)(1 << SENSOR_PIN), ESP_EXT1_WAKEUP_ANY_LOW);
+  //esp_sleep_enable_ext0_wakeup(WAKEUP_PIN, ESP_EXT1_WAKEUP_ANY_LOW);
+  //gpio_pulldown_dis(WAKEUP_PIN);
+  //gpio_pullup_en(WAKEUP_PIN);
 #else
-  esp_deep_sleep_enable_gpio_wakeup(1 << SENSOR_PIN, ESP_GPIO_WAKEUP_GPIO_LOW);
+  //esp_deep_sleep_enable_gpio_wakeup(WAKEUP_PIN, ESP_GPIO_WAKEUP_GPIO_LOW);
+  //gpio_pulldown_en(WAKEUP_PIN);
+  //gpio_pullup_dis(WAKEUP_PIN); 
 #endif
 
   // 5. Sleep
-  Serial.println("Going to sleep...");
+  //Serial.println("Going to sleep...");
   //esp_deep_sleep_start();
 }
 
 void loop() {
   // This code will not be reached if you use deep sleep
   bool isOpen = digitalRead(buttonPin);
+  ContactSensor.setContact(isOpen);
   Serial.print("Testing the sketch state: ");
   Serial.print(isOpen);
   Serial.print(" / ");
   Serial.println(ContactSensor.getContact());
+  digitalWrite(ledPin, !isOpen);  // LED ON
   sleep(1);
 }
