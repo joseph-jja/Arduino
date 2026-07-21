@@ -7,6 +7,8 @@
 #endif
 #include "esp_sleep.h"
 
+#define ESP32_S3_ENABLED true
+
 // List of Matter Endpoints for this Node
 // Matter Contact Sensor Endpoint
 MatterContactSensor ContactSensor;
@@ -54,7 +56,11 @@ void setup() {
     
     // 4. Configure Sleep
     // Wake up when the pin level changes (e.g., HIGH to LOW)
+    #ifdef ESP32_S3_ENABLED 
+    esp_sleep_enable_ext0_wakeup(1 << SENSOR_PIN, ESP_GPIO_WAKEUP_GPIO_LOW);
+    #else
     esp_deep_sleep_enable_gpio_wakeup(1 << SENSOR_PIN, ESP_GPIO_WAKEUP_GPIO_LOW);
+    #endif
     
     // 5. Sleep
     Serial.println("Going to sleep...");
