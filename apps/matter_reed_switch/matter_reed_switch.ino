@@ -21,7 +21,7 @@ MatterContactSensor ContactSensor;
 
 // Use an RTC GPIOus
 #define SENSOR_PIN 4
-const gpio_num_t WAKEUP_PIN = (gpio_num_t)(1 << SENSOR_PIN);
+const gpio_num_t WAKEUP_PIN = (gpio_num_t)SENSOR_PIN; // Fixed: Passed raw pin number for ext0 instead of bitshift
 
 // CONFIG_ENABLE_CHIPOBLE is enabled when BLE is used to commission the Matter Network
 #if !CONFIG_ENABLE_CHIPOBLE
