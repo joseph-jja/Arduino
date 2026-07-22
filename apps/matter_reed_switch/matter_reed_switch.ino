@@ -19,7 +19,7 @@
 // Matter Contact Sensor Endpoint
 MatterContactSensor ContactSensor;
 
-// Use an RTC GPIOus
+// Use an RTC GPIO
 #define SENSOR_PIN 4
 const gpio_num_t WAKEUP_PIN = (gpio_num_t)SENSOR_PIN; // Fixed: Passed raw pin number for ext0 instead of bitshift
 
@@ -64,14 +64,12 @@ void print_wakeup_reason() {
 
 // look here for code example https://docs.espressif.com/projects/arduino-esp32/en/latest/matter/ep_contact_sensor.html
 void setup() {
- Serial.begin(115200);
+  Serial.begin(115200);
   delay(1000);
 
-  #ifdef ENABLE_MATTER_CODE
-    // 1. Initialize Matter
-    // Configure your Contact Sensor endpoint here...
-    ContactSensor = MatterContactSensor();
-  #endif
+  // 1. Initialize Matter
+  // Configure your Contact Sensor endpoint here...
+  ContactSensor = MatterContactSensor();
 
   // 2. Read Switch
   pinMode(buttonPin, INPUT_PULLUP);
@@ -92,8 +90,7 @@ void setup() {
   Serial.println("Wifi connected!");
 #endif
 
-  #ifdef ENABLE_MATTER_CODE
-// 3. Update Matter Attribute
+  // 3. Update Matter Attribute
   // Update the 'ContactStatus' attribute in the Matter cluster
   ContactSensor.begin();
   
@@ -101,16 +98,14 @@ void setup() {
   bool initialOpenState = digitalRead(buttonPin);
   ContactSensor.setContact(initialOpenState);
   digitalWrite(ledPin, !initialOpenState);
-#endif
 
   //Print the wakeup reason for ESP32
   print_wakeup_reason();
 
-  #ifdef ENABLE_MATTER_CODE
-
   // Matter beginning - Last step, after all EndPoints are initialized
   Matter.begin();
 
+#ifdef ENABLE_MATTER_CODE
   // Check Matter Accessory Commissioning state, which may change during execution of loop()
   if (!Matter.isDeviceCommissioned()) {
     Serial.println("");
@@ -129,7 +124,7 @@ void setup() {
     }
     Serial.println("Matter Node is commissioned and connected to the network. Ready for use.");
   }
-#endif
+#endif // Fixed typo here (was #indif)
 
 #ifdef ENABLE_SLEEP_CODE
 // 4. Configure Sleep
@@ -138,12 +133,8 @@ void setup() {
   // EXT0 configuration for ESP32-S3: 
   // WAKEUP_PIN, level (1 = wake up when pin goes HIGH, i.e., door opens)
   esp_sleep_enable_ext0_wakeup(WAKEUP_PIN, 1);
-  //gpio_pullup_dis(WAKEUP_PIN);
-  //gpio_pulldown_en(WAKEUP_PIN);
 #else
   esp_deep_sleep_enable_gpio_wakeup((1ULL << SENSOR_PIN), ESP_GPIO_WAKEUP_GPIO_HIGH);
-  //gpio_pullup_dis(WAKEUP_PIN);
-  //gpio_pulldown_en(WAKEUP_PIN);
 #endif
 
   // 5. Sleep
@@ -154,10 +145,9 @@ void setup() {
 }
 
 void loop() {
-  #ifdef ENABLE_SLEEP_CODE
-    // do nothing
-  #else
+#ifdef ENABLE_SLEEP_CODE
   // This code will not be reached if you use deep sleep
+#else
   bool isOpen = digitalRead(buttonPin);
   ContactSensor.setContact(isOpen);
   Serial.print("Testing the sketch state: ");
@@ -165,6 +155,6 @@ void loop() {
   Serial.print(" / ");
   Serial.println(ContactSensor.getContact());
   digitalWrite(ledPin, !isOpen);  // LED ON
-  sleep(1);
-  #endif
+  delay(1000); // Fixed standard Arduino delay instead of sleep(1)
+#endif
 }
