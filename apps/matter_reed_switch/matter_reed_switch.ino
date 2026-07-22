@@ -64,7 +64,8 @@ void print_wakeup_reason() {
 
 // look here for code example https://docs.espressif.com/projects/arduino-esp32/en/latest/matter/ep_contact_sensor.html
 void setup() {
-  Serial.begin(115200);
+ Serial.begin(115200);
+  delay(1000);
 
   // 1. Initialize Matter
   // Configure your Contact Sensor endpoint here...
@@ -92,8 +93,11 @@ void setup() {
   // 3. Update Matter Attribute
   // Update the 'ContactStatus' attribute in the Matter cluster
   ContactSensor.begin();
-  ContactSensor.setContact(true);
-  digitalWrite(ledPin, LOW);  // LED OFF
+  
+  // Read current state upon boot (HIGH = Open, LOW = Closed for NC switch)
+  bool initialOpenState = digitalRead(buttonPin);
+  ContactSensor.setContact(initialOpenState);
+  digitalWrite(ledPin, !initialOpenState);
 
   //Print the wakeup reason for ESP32
   print_wakeup_reason();
@@ -126,22 +130,28 @@ void setup() {
 // 4. Configure Sleep
 // Wake up when the pin level changes (e.g., HIGH to LOW)
 #ifdef ESP32_S3_ENABLED
-  esp_sleep_enable_ext0_wakeup(WAKEUP_PIN, ESP_EXT1_WAKEUP_ANY_LOW);
-  gpio_pullup_dis(WAKEUP_PIN);
-  gpio_pulldown_en(WAKEUP_PIN);
+  // EXT0 configuration for ESP32-S3: 
+  // WAKEUP_PIN, level (1 = wake up when pin goes HIGH, i.e., door opens)
+  esp_sleep_enable_ext0_wakeup(WAKEUP_PIN, 1);
+  //gpio_pullup_dis(WAKEUP_PIN);
+  //gpio_pulldown_en(WAKEUP_PIN);
 #else
-  esp_deep_sleep_enable_gpio_wakeup(WAKEUP_PIN, ESP_GPIO_WAKEUP_GPIO_LOW);
-  gpio_pullup_dis(WAKEUP_PIN);
-  gpio_pulldown_en(WAKEUP_PIN);
+  esp_deep_sleep_enable_gpio_wakeup((1ULL << SENSOR_PIN), ESP_GPIO_WAKEUP_GPIO_HIGH);
+  //gpio_pullup_dis(WAKEUP_PIN);
+  //gpio_pulldown_en(WAKEUP_PIN);
 #endif
 
   // 5. Sleep
   Serial.println("Going to sleep...");
+  Serial.flush();
   esp_deep_sleep_start();
 #endif
 }
 
 void loop() {
+  #ifdef ENABLE_SLEEP_CODE
+    // do nothing
+  #else
   // This code will not be reached if you use deep sleep
   bool isOpen = digitalRead(buttonPin);
   ContactSensor.setContact(isOpen);
@@ -151,4 +161,5 @@ void loop() {
   Serial.println(ContactSensor.getContact());
   digitalWrite(ledPin, !isOpen);  // LED ON
   sleep(1);
+  #endif
 }
