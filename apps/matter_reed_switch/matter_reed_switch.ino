@@ -3,9 +3,9 @@
 #include <Matter.h>
 
 #undef CONFIG_ENABLE_CHIPOBLE
-#define ESP32_S3_ENABLED 
-#define ENABLE_MATTER_CODE 
-#define ENABLE_SLEEP_CODE 
+#define ESP32_S3_ENABLED
+#define ENABLE_MATTER_CODE
+#define ENABLE_SLEEP_CODE
 
 #if !CONFIG_ENABLE_CHIPOBLE
 // if the device can be commissioned using BLE, WiFi is not used - save flash space
@@ -53,12 +53,12 @@ void print_wakeup_reason() {
   wakeup_reason = esp_sleep_get_wakeup_cause();
 
   switch (wakeup_reason) {
-    case ESP_SLEEP_WAKEUP_EXT0:     Serial.println("Wakeup caused by external signal using RTC_IO"); break;
-    case ESP_SLEEP_WAKEUP_EXT1:     Serial.println("Wakeup caused by external signal using RTC_CNTL"); break;
-    case ESP_SLEEP_WAKEUP_TIMER:    Serial.println("Wakeup caused by timer"); break;
+    case ESP_SLEEP_WAKEUP_EXT0: Serial.println("Wakeup caused by external signal using RTC_IO"); break;
+    case ESP_SLEEP_WAKEUP_EXT1: Serial.println("Wakeup caused by external signal using RTC_CNTL"); break;
+    case ESP_SLEEP_WAKEUP_TIMER: Serial.println("Wakeup caused by timer"); break;
     case ESP_SLEEP_WAKEUP_TOUCHPAD: Serial.println("Wakeup caused by touchpad"); break;
-    case ESP_SLEEP_WAKEUP_ULP:      Serial.println("Wakeup caused by ULP program"); break;
-    default:                        Serial.printf("Wakeup was not caused by deep sleep: %d\n", wakeup_reason); break;
+    case ESP_SLEEP_WAKEUP_ULP: Serial.println("Wakeup caused by ULP program"); break;
+    default: Serial.printf("Wakeup was not caused by deep sleep: %d\n", wakeup_reason); break;
   }
 }
 
@@ -77,7 +77,7 @@ void setup() {
   pinMode(ledPin, OUTPUT);
 
   // CONFIG_ENABLE_CHIPOBLE is enabled when BLE is used to commission the Matter Network
-#if !CONFIG_ENABLE_CHIPOBLE  
+#if !CONFIG_ENABLE_CHIPOBLE
   // Manually connect to WiFi
   WiFi.begin(ssid, password);
   // Wait for connection
@@ -101,7 +101,7 @@ void setup() {
   // Matter beginning - Last step, after all EndPoints are initialized
   Matter.begin();
 
-  #ifdef ENABLE_MATTER_CODE
+#ifdef ENABLE_MATTER_CODE
   // Check Matter Accessory Commissioning state, which may change during execution of loop()
   if (!Matter.isDeviceCommissioned()) {
     Serial.println("");
@@ -120,9 +120,9 @@ void setup() {
     }
     Serial.println("Matter Node is commissioned and connected to the network. Ready for use.");
   }
-  #indif
+#indif
 
-  #ifdef ENABLE_SLEEP_CODE
+#ifdef ENABLE_SLEEP_CODE
 // 4. Configure Sleep
 // Wake up when the pin level changes (e.g., HIGH to LOW)
 #ifdef ESP32_S3_ENABLED
@@ -138,7 +138,7 @@ void setup() {
   // 5. Sleep
   Serial.println("Going to sleep...");
   esp_deep_sleep_start();
-  #endif
+#endif
 }
 
 void loop() {
