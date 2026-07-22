@@ -67,9 +67,11 @@ void setup() {
  Serial.begin(115200);
   delay(1000);
 
-  // 1. Initialize Matter
-  // Configure your Contact Sensor endpoint here...
-  ContactSensor = MatterContactSensor();
+  #ifdef ENABLE_MATTER_CODE
+    // 1. Initialize Matter
+    // Configure your Contact Sensor endpoint here...
+    ContactSensor = MatterContactSensor();
+  #endif
 
   // 2. Read Switch
   pinMode(buttonPin, INPUT_PULLUP);
@@ -90,7 +92,8 @@ void setup() {
   Serial.println("Wifi connected!");
 #endif
 
-  // 3. Update Matter Attribute
+  #ifdef ENABLE_MATTER_CODE
+// 3. Update Matter Attribute
   // Update the 'ContactStatus' attribute in the Matter cluster
   ContactSensor.begin();
   
@@ -98,14 +101,16 @@ void setup() {
   bool initialOpenState = digitalRead(buttonPin);
   ContactSensor.setContact(initialOpenState);
   digitalWrite(ledPin, !initialOpenState);
+#endif
 
   //Print the wakeup reason for ESP32
   print_wakeup_reason();
 
+  #ifdef ENABLE_MATTER_CODE
+
   // Matter beginning - Last step, after all EndPoints are initialized
   Matter.begin();
 
-#ifdef ENABLE_MATTER_CODE
   // Check Matter Accessory Commissioning state, which may change during execution of loop()
   if (!Matter.isDeviceCommissioned()) {
     Serial.println("");
