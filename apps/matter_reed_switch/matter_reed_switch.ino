@@ -52,6 +52,10 @@ void print_wakeup_reason() {
 
   wakeup_reason = esp_sleep_get_wakeup_cause();
 
+  // Read current state upon boot (HIGH = Open, LOW = Closed for NC switch)
+  bool openState = digitalRead(buttonPin);
+  digitalWrite(ledPin, !openState);
+
   switch (wakeup_reason) {
     case ESP_SLEEP_WAKEUP_EXT0: Serial.println("Wakeup caused by external signal using RTC_IO"); break;
     case ESP_SLEEP_WAKEUP_EXT1: Serial.println("Wakeup caused by external signal using RTC_CNTL"); break;
@@ -99,6 +103,9 @@ void setup() {
   ContactSensor.setContact(initialOpenState);
   digitalWrite(ledPin, !initialOpenState);
 
+  Serial.print("Initial state: ");
+  Serial.println(initialOpenState);
+
   //Print the wakeup reason for ESP32
   print_wakeup_reason();
 
@@ -132,7 +139,7 @@ void setup() {
 #ifdef ESP32_S3_ENABLED
   // EXT0 configuration for ESP32-S3: 
   // WAKEUP_PIN, level (1 = wake up when pin goes HIGH, i.e., door opens)
-  esp_sleep_enable_ext0_wakeup(WAKEUP_PIN, 1);
+  esp_sleep_enable_ext0_wakeup(WAKEUP_PIN, 0);
 #else
   esp_deep_sleep_enable_gpio_wakeup((1ULL << SENSOR_PIN), ESP_GPIO_WAKEUP_GPIO_HIGH);
 #endif
