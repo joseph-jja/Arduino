@@ -120,7 +120,7 @@ void setup() {
     }
     Serial.println("Matter Node is commissioned and connected to the network. Ready for use.");
   }
-#indif
+#endif
 
 #ifdef ENABLE_SLEEP_CODE
 // 4. Configure Sleep
