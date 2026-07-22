@@ -1,7 +1,12 @@
 // Matter Manager
 #include <Arduino.h>
 #include <Matter.h>
+
 #undef CONFIG_ENABLE_CHIPOBLE
+#define ESP32_S3_ENABLED 
+#define ENABLE_MATTER_CODE 
+#define ENABLE_SLEEP_CODE 
+
 #if !CONFIG_ENABLE_CHIPOBLE
 // if the device can be commissioned using BLE, WiFi is not used - save flash space
 #include <WiFi.h>
@@ -10,14 +15,11 @@
 
 #include "config.h"
 
-#define ESP32_S3_ENABLED true
-
 // List of Matter Endpoints for this Node
 // Matter Contact Sensor Endpoint
-MatterContactSensor ContactSensor = MatterContactSensor();
+MatterContactSensor ContactSensor;
 
 // Use an RTC GPIOus
-
 #define SENSOR_PIN 4
 const gpio_num_t WAKEUP_PIN = (gpio_num_t)(1 << SENSOR_PIN);
 
@@ -66,6 +68,7 @@ void setup() {
 
   // 1. Initialize Matter
   // Configure your Contact Sensor endpoint here...
+  ContactSensor = MatterContactSensor();
 
   // 2. Read Switch
   pinMode(buttonPin, INPUT_PULLUP);
@@ -98,8 +101,9 @@ void setup() {
   // Matter beginning - Last step, after all EndPoints are initialized
   Matter.begin();
 
+  #ifdef ENABLE_MATTER_CODE
   // Check Matter Accessory Commissioning state, which may change during execution of loop()
-  /*if (!Matter.isDeviceCommissioned()) {
+  if (!Matter.isDeviceCommissioned()) {
     Serial.println("");
     Serial.println("Matter Node is not commissioned yet.");
     Serial.println("Initiate the device discovery in your Matter environment.");
@@ -115,23 +119,26 @@ void setup() {
       }
     }
     Serial.println("Matter Node is commissioned and connected to the network. Ready for use.");
-  }*/
+  }
+  #indif
 
+  #ifdef ENABLE_SLEEP_CODE
 // 4. Configure Sleep
 // Wake up when the pin level changes (e.g., HIGH to LOW)
 #ifdef ESP32_S3_ENABLED
-  //esp_sleep_enable_ext0_wakeup(WAKEUP_PIN, ESP_EXT1_WAKEUP_ANY_LOW);
-  //gpio_pulldown_dis(WAKEUP_PIN);
-  //gpio_pullup_en(WAKEUP_PIN);
+  esp_sleep_enable_ext0_wakeup(WAKEUP_PIN, ESP_EXT1_WAKEUP_ANY_LOW);
+  gpio_pullup_dis(WAKEUP_PIN);
+  gpio_pulldown_en(WAKEUP_PIN);
 #else
-  //esp_deep_sleep_enable_gpio_wakeup(WAKEUP_PIN, ESP_GPIO_WAKEUP_GPIO_LOW);
-  //gpio_pulldown_en(WAKEUP_PIN);
-  //gpio_pullup_dis(WAKEUP_PIN); 
+  esp_deep_sleep_enable_gpio_wakeup(WAKEUP_PIN, ESP_GPIO_WAKEUP_GPIO_LOW);
+  gpio_pullup_dis(WAKEUP_PIN);
+  gpio_pulldown_en(WAKEUP_PIN);
 #endif
 
   // 5. Sleep
-  //Serial.println("Going to sleep...");
-  //esp_deep_sleep_start();
+  Serial.println("Going to sleep...");
+  esp_deep_sleep_start();
+  #endif
 }
 
 void loop() {
