@@ -3,8 +3,8 @@
 #include <Matter.h>
 
 #undef CONFIG_ENABLE_CHIPOBLE
-#define ESP32_S3_ENABLED
-#define ENABLE_MATTER_CODE
+//#define ESP32_S3_ENABLED
+//#define ENABLE_MATTER_CODE
 #define ENABLE_SLEEP_CODE
 
 #if !CONFIG_ENABLE_CHIPOBLE
@@ -32,12 +32,16 @@ const char *password = WIFI_PASSWORD;  // Change this to your WiFi password
 
 // LED will be used to indicate the Contact Sensor state
 // set your board RGB LED pin here
-#ifdef RGB_BUILTIN
-const uint8_t ledPin = RGB_BUILTIN;
-#else
+//#ifdef RGB_BUILTIN
+//const uint8_t ledPin = RGB_BUILTIN;
+//#else
+#ifdef ESP32_S3_ENABLED
 const uint8_t ledPin = 48;  // Set your pin here if your board has not defined LED_BUILTIN
-#warning "Do not forget to set the RGB LED pin"
+#else
+const uint8_t ledPin = 9;  // Set your pin here if your board has not defined LED_BUILTIN
 #endif
+//#warning "Do not forget to set the RGB LED pin"
+//#endif
 
 const uint8_t buttonPin = SENSOR_PIN;  // Set your pin here. Using BOOT Button.
 
@@ -141,7 +145,7 @@ void setup() {
   // WAKEUP_PIN, level (1 = wake up when pin goes HIGH, i.e., door opens)
   esp_sleep_enable_ext0_wakeup(WAKEUP_PIN, 0);
 #else
-  esp_deep_sleep_enable_gpio_wakeup((1ULL << SENSOR_PIN), ESP_GPIO_WAKEUP_GPIO_HIGH);
+  esp_deep_sleep_enable_gpio_wakeup((1ULL << SENSOR_PIN), ESP_GPIO_WAKEUP_GPIO_LOW);
 #endif
 
   // 5. Sleep
