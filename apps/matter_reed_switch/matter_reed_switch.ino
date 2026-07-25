@@ -79,6 +79,7 @@ void setup() {
   ContactSensor = MatterContactSensor();
 
   // 2. Read Switch
+  gpio_hold_dis((gpio_num_t)ledPin);
   pinMode(buttonPin, INPUT_PULLUP);
 
   // led
@@ -156,6 +157,11 @@ while (millis() - startWait < 3000) {
   // 5. Sleep
   Serial.println("Going to sleep...");
   Serial.flush();
+
+  digitalWrite(ledPin, 0); 
+  gpio_hold_en((gpio_num_t)ledPin);
+  // do we need this?
+  //esp_deep_sleep_pd_config(ESP_PD_DOMAIN_RTC_PERIPH, ESP_PD_OPTION_ON); 
   esp_deep_sleep_start();
 }
 
