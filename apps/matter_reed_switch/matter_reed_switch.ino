@@ -5,7 +5,6 @@
 #undef CONFIG_ENABLE_CHIPOBLE
 //#define ESP32_S3_ENABLED
 //#define ENABLE_MATTER_CODE
-#define ENABLE_SLEEP_CODE
 
 #if !CONFIG_ENABLE_CHIPOBLE
 // if the device can be commissioned using BLE, WiFi is not used - save flash space
@@ -135,9 +134,15 @@ void setup() {
     }
     Serial.println("Matter Node is commissioned and connected to the network. Ready for use.");
   }
-#endif // Fixed typo here (was #indif)
+#endif 
 
-#ifdef ENABLE_SLEEP_CODE
+// Give the Matter stack a couple of seconds to actually transmit the state change
+uint32_t startWait = millis();
+while (millis() - startWait < 3000) {
+  // Keep network background tasks running briefly
+  delay(100); 
+}
+  
 // 4. Configure Sleep
 // Wake up when the pin level changes (e.g., HIGH to LOW)
 #ifdef ESP32_S3_ENABLED
@@ -152,13 +157,10 @@ void setup() {
   Serial.println("Going to sleep...");
   Serial.flush();
   esp_deep_sleep_start();
-#endif
 }
 
 void loop() {
-#ifdef ENABLE_SLEEP_CODE
-  // This code will not be reached if you use deep sleep
-#else
+  /*
   bool isOpen = digitalRead(buttonPin);
   ContactSensor.setContact(isOpen);
   Serial.print("Testing the sketch state: ");
@@ -167,5 +169,5 @@ void loop() {
   Serial.println(ContactSensor.getContact());
   digitalWrite(ledPin, !isOpen);  // LED ON
   delay(1000); // Fixed standard Arduino delay instead of sleep(1)
-#endif
+  */
 }
