@@ -2,9 +2,10 @@
 #include <Arduino.h>
 #include <Matter.h>
 
+#undef RGB_BUILTIN
 #undef CONFIG_ENABLE_CHIPOBLE
 //#define ESP32_S3_ENABLED
-//#define ENABLE_MATTER_CODE
+#define ENABLE_MATTER_CODE
 
 #if !CONFIG_ENABLE_CHIPOBLE
 // if the device can be commissioned using BLE, WiFi is not used - save flash space
@@ -31,16 +32,13 @@ const char *password = WIFI_PASSWORD;  // Change this to your WiFi password
 
 // LED will be used to indicate the Contact Sensor state
 // set your board RGB LED pin here
-//#ifdef RGB_BUILTIN
-//const uint8_t ledPin = RGB_BUILTIN;
-//#else
-#ifdef ESP32_S3_ENABLED
-const uint8_t ledPin = 48;  // Set your pin here if your board has not defined LED_BUILTIN
+#ifdef RGB_BUILTIN
+const uint8_t ledPin = RGB_BUILTIN;
 #else
-const uint8_t ledPin = 9;  // Set your pin here if your board has not defined LED_BUILTIN
+// esp32 s3  
+// const uint8_t ledPin = 48;  // Set your pin here if your board has not defined LED_BUILTIN
+const uint8_t ledPin = 5;  // Set your pin here if your board has not defined LED_BUILTIN
 #endif
-//#warning "Do not forget to set the RGB LED pin"
-//#endif
 
 const uint8_t buttonPin = SENSOR_PIN;  // Set your pin here. Using BOOT Button.
 
