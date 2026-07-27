@@ -72,11 +72,10 @@ void setup() {
   Serial.begin(115200);
   delay(1000);
 
-  // 1. Initialize Matter
   // Configure your Contact Sensor endpoint here...
   ContactSensor = MatterContactSensor();
 
-  // 2. Read Switch
+  // Read Switch
   gpio_hold_dis((gpio_num_t)ledPin);
   pinMode(buttonPin, INPUT_PULLUP);
 
@@ -96,7 +95,7 @@ void setup() {
   Serial.println("Wifi connected!");
 #endif
 
-  // 3. Update Matter Attribute
+  // Begin Matter Attribute
   // Update the 'ContactStatus' attribute in the Matter cluster
   ContactSensor.begin();
   
@@ -142,7 +141,7 @@ while (millis() - startWait < 3000) {
   delay(100); 
 }
   
-// 4. Configure Sleep
+// Configure Sleep
 // Wake up when the pin level changes (e.g., HIGH to LOW)
 #ifdef ESP32_S3_ENABLED
   // EXT0 configuration for ESP32-S3: 
@@ -152,13 +151,14 @@ while (millis() - startWait < 3000) {
   esp_deep_sleep_enable_gpio_wakeup((1ULL << SENSOR_PIN), ESP_GPIO_WAKEUP_GPIO_LOW);
 #endif
 
-  // 5. Sleep
+  // Sleep prep and sleep
+  digitalWrite(ledPin, 0); 
+  gpio_hold_en((gpio_num_t)ledPin);
+
   Serial.println("Going to sleep...");
   Serial.flush();
 
-  digitalWrite(ledPin, 0); 
-  gpio_hold_en((gpio_num_t)ledPin);
-  // do we need this?
+  // do we need this or just use different pin?
   //esp_deep_sleep_pd_config(ESP_PD_DOMAIN_RTC_PERIPH, ESP_PD_OPTION_ON); 
   esp_deep_sleep_start();
 }
