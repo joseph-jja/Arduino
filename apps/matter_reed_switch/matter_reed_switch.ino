@@ -3,7 +3,7 @@
 #include <Matter.h>
 
 #undef RGB_BUILTIN
-#undef CONFIG_ENABLE_CHIPOBLE
+#define CONFIG_ENABLE_CHIPOBLE true
 //#define ESP32_S3_ENABLED
 #define ENABLE_MATTER_CODE
 
@@ -132,6 +132,12 @@ void setup() {
     }
     Serial.println("Matter Node is commissioned and connected to the network. Ready for use.");
   }
+
+  if (Matter.isDeviceCommissioned()) {
+    Serial.println("Matter Node is commissioned and connected to the network. Ready for use.");
+    Serial.printf("Initial state: %s\r\n", ContactSensor.getContact() ? "OPEN" : "CLOSED");
+  }
+   
 #endif 
 
 // Give the Matter stack a couple of seconds to actually transmit the state change
