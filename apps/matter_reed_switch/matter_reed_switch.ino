@@ -4,6 +4,7 @@
 
 #undef RGB_BUILTIN
 #define CONFIG_ENABLE_CHIPOBLE true
+//#undef CONFIG_ENABLE_CHIPOBLE
 //#define ESP32_S3_ENABLED
 #define ENABLE_MATTER_CODE
 
@@ -131,13 +132,18 @@ void setup() {
       }
     }
     Serial.println("Matter Node is commissioned and connected to the network. Ready for use.");
+     // Give the Matter stack a couple of seconds to actually transmit the state change
+    uint32_t waitTime = millis();
+    while (millis() - waitTime < 60000) {
+      // Keep network background tasks running briefly
+      delay(100); 
+    }
   }
 
   if (Matter.isDeviceCommissioned()) {
     Serial.println("Matter Node is commissioned and connected to the network. Ready for use.");
     Serial.printf("Initial state: %s\r\n", ContactSensor.getContact() ? "OPEN" : "CLOSED");
   }
-   
 #endif 
 
 // Give the Matter stack a couple of seconds to actually transmit the state change
