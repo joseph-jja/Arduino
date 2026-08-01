@@ -158,14 +158,14 @@ void loop_accel_n_gyro() {
   }
 
   sensors_event_t a, g, temp;
-  mpu.getEvent(&a, &g, &temp);
 
   double x = 0.0, y = 0.0, z = 0.0;
   for (int i = 0; i < AVERAGE_LOOP_COUNT; i++) {
+    mpu.getEvent(&a, &g, &temp);
     x += a.acceleration.x;
     y += a.acceleration.y;
     z += a.acceleration.z;
-    delay(10);
+    delay(5);
   }
 
   mpudata.AccX = flatten(x / AVERAGE_LOOP_COUNT, ACCEL_OFFSET_X);
