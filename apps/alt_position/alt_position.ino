@@ -8,6 +8,8 @@ void setup() {
   setup_SDD1306();
   setup_accel_n_gyro();
 
+  setTextSize(2);
+
   rotate_display(3);
 }
 
@@ -19,7 +21,15 @@ void loop() {
 
   clear_display();
 
-  write_display(2, 2, "A Roll");
+  // A Roll
+  write_display(1, 1, "Alt");
+  write_number(2, 24, round(10 * results.accAngleX) / 10);
+
+  // A Pitch
+  //write_display(1, 42, "Pitch");
+  //write_number(2, 64, results.accAngleY);
+  
+  /*write_display(2, 2, "A Roll");
   write_number(6, 12, results.accAngleX);
 
   write_display(2, 22, "A Pitch");
@@ -35,7 +45,7 @@ void loop() {
   write_number(6, 92, results.filteredRoll);
 
   write_display(2, 102, "F Pitch");
-  write_number(6, 112, results.filteredPitch);
+  write_number(6, 112, results.filteredPitch);*/
   
 
   show_display();
