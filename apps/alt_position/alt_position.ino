@@ -22,8 +22,8 @@ void loop() {
   clear_display();
 
   // A Roll
-  write_display(1, 1, "Alt");
-  write_number(2, 24, round(10 * results.accAngleX) / 10);
+  write_display(1, 5, "Alt");
+  write_number(2, 32, round(10 * results.accAngleX) / 10);
 
   // A Pitch
   //write_display(1, 42, "Pitch");
