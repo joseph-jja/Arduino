@@ -27,6 +27,7 @@ void setup_accel_n_gyro() {
     Serial.println("Failed to find MPU6050 chip");
     while (!mpu.begin() && i < 50) {
       delay(100);
+      i++;
     }
   }
 
