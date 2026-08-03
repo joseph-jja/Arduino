@@ -30,6 +30,7 @@ void setup_accel_n_gyro() {
     while (!mpu.begin() && i < 50) {
       delay(100);
       i++;
+      yield();
     }
   }
 
@@ -173,6 +174,7 @@ void loop_accel_n_gyro() {
     y += a.acceleration.y;
     z += a.acceleration.z;
     delay(3);
+    yield();
   }
 
   mpudata.AccX = flatten(x / AVERAGE_LOOP_COUNT, ACCEL_OFFSET_X);
