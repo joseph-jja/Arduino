@@ -165,7 +165,7 @@ void loop_accel_n_gyro() {
     x += a.acceleration.x;
     y += a.acceleration.y;
     z += a.acceleration.z;
-    delay(5);
+    delay(3);
   }
 
   mpudata.AccX = flatten(x / AVERAGE_LOOP_COUNT, ACCEL_OFFSET_X);
