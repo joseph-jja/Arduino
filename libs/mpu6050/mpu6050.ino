@@ -97,6 +97,8 @@ void setup_accel_n_gyro() {
       Serial.println("5 Hz");
       break;
   }
+
+  lastUpdatedTime = millis();
 }
 
 void cook_data() {
