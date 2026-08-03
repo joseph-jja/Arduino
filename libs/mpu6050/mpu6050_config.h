@@ -16,7 +16,7 @@ static const float DELTA_FILTER_COEFFICIENT = 1 - FILTER_COEFFICIENT;
 #define ACCEL_OFFSET_Y 0.1
 #define ACCEL_OFFSET_Z 0.12
 
-#define AVERAGE_LOOP_COUNT 6
+#define AVERAGE_LOOP_COUNT 3
 
 typedef struct {
   // updated
