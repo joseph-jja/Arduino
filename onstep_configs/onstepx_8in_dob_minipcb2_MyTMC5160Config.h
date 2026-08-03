@@ -205,7 +205,7 @@
 #define TRACK_BACKLASH_RATE 25         //     20, n. Where n=2..50 (x sidereal rate) during backlash takeup.               Option
                                        //         Too fast motors stall/gears slam or too slow and sluggish in backlash.
 #define TRACK_AUTOSTART OFF            //    OFF, ON Start with tracking enabled.                                          Option
-#define TRACK_COMPENSATION_DEFAULT MODEL //    OFF, No compensation or REFRACTION, REFRACTION_DUAL, MODEL, MODEL_DUAL.       Option
+#define TRACK_COMPENSATION_DEFAULT MODEL_DUAL //    OFF, No compensation or REFRACTION, REFRACTION_DUAL, MODEL, MODEL_DUAL.       Option
 #define TRACK_COMPENSATION_MEMORY OFF  //    OFF, ON Remembers refraction/pointing model compensated tracking settings.    Option
 
 // SLEWING BEHAVIOUR ------------------------------------------ see https://onstep.groups.io/g/main/wiki/Configuration_Mount#SLEWING
@@ -216,7 +216,7 @@
 #define SLEW_RAPID_STOP_DIST 2.0    //    2.0, n, (degrees.) Approx. distance required to stop when a slew              Adjust
                                     //         is aborted or a limit is exceeded.
 #define GOTO_FEATURE ON             //     ON, Use OFF to disable mount Goto features.                                  Infreq
-#define GOTO_OFFSET 0.20            //   0.25, Offset in deg's for goto target unidirectional approach, 0.0 disables    Adjust
+#define GOTO_OFFSET 0.10            //   0.25, Offset in deg's for goto target unidirectional approach, 0.0 disables    Adjust
 #define GOTO_OFFSET_ALIGN OFF       //    OFF, ON skips final phase of goto for align stars so user tends to approach   Option
                                     //         from the correct direction when centering.
 
