@@ -5,6 +5,8 @@
 static const float C2F_MULTIPLIER = 1.8;
 static const float C2F_ADDITION = 32;
 
+bool debugEnabled = false; 
+
 // mpu6050
 Adafruit_MPU6050 mpu;
 
@@ -133,21 +135,23 @@ void cook_data() {
   previousRollFiltered = mpudata.filteredRoll;
   previousPitchFiltered = mpudata.filteredPitch;
 
-  Serial.print("Accelerometer => ");
-  Serial.print("Roll: ");
-  Serial.print(mpudata.accAngleX);
-  Serial.print(" and Pitch: ");
-  Serial.println(mpudata.accAngleY);
-  Serial.print("Gyro Roll: ");
-  Serial.print(mpudata.gyroRollRate);
-  Serial.print(" and Pitch: ");
-  Serial.print(mpudata.gyroPitchRate);
-  Serial.println();
-  Serial.print("Filtered Roll: ");
-  Serial.print(mpudata.filteredRoll);
-  Serial.print(" and Pitch: ");
-  Serial.print(mpudata.filteredPitch);
-  Serial.println();
+  if (debugEnabled) {
+    Serial.print("Accelerometer => ");
+    Serial.print("Roll: ");
+    Serial.print(mpudata.accAngleX);
+    Serial.print(" and Pitch: ");
+    Serial.println(mpudata.accAngleY);
+    Serial.print("Gyro Roll: ");
+    Serial.print(mpudata.gyroRollRate);
+    Serial.print(" and Pitch: ");
+    Serial.print(mpudata.gyroPitchRate);
+    Serial.println();
+    Serial.print("Filtered Roll: ");
+    Serial.print(mpudata.filteredRoll);
+    Serial.print(" and Pitch: ");
+    Serial.print(mpudata.filteredPitch);
+    Serial.println();
+  }
 }
 
 double flatten(double in, double offset) {
@@ -180,7 +184,7 @@ void loop_accel_n_gyro() {
   mpudata.temperatureC = temp.temperature;
   mpudata.temperatureF = (C2F_MULTIPLIER * mpudata.temperatureC) + C2F_ADDITION;
 
-  if (showRawValues) {
+  if (showRawValues && debugEnabled) {
     /* Print out the values */
     Serial.print("RAW Angle ");
     Serial.print("X: ");
@@ -208,7 +212,9 @@ void loop_accel_n_gyro() {
 
   cook_data();
 
-  Serial.println("");
+  if (debugEnabled) {
+    Serial.println("");
+  }
 }
 
 MPU6050_PROCESSED_DATA getMPU6050Data() {
