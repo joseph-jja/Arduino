@@ -1,5 +1,7 @@
 #import "mpu6050_config.h"
 
+#include <Wire.h>
+
 // conversion from C to F
 // 9 / 5 = 1.8
 static const float C2F_MULTIPLIER = 1.8;
@@ -39,6 +41,7 @@ void setup_accel_n_gyro() {
   }
   
   mpu6050_found = true;
+  Wire.setClock(400000); // set I2C to 400 kHz
   
   // we want to detect smaller movements so we use 2G
   mpu.setAccelerometerRange(MPU6050_RANGE_2_G);
