@@ -151,17 +151,17 @@
 // TIME AND LOCATION ---------------------------------------------- see https://onstep.groups.io/g/main/wiki/Configuration_Mount#TLS
 #define TIME_LOCATION_SOURCE OFF //    OFF, DS3231 (I2C,) SD3031 (I2C,) TEENSY (T3.2 etc,) GPS, or NTP source.       Option
                                     //         Provides Date/Time, and if available, PPS & Lat/Long also.
-#define TIME_LOCATION_PPS_SENSE HIGH //    OFF, HIGH senses PPS (pulse per second,) signal rising edge, or use LOW for   Option
+#define TIME_LOCATION_PPS_SENSE OFF //    OFF, HIGH senses PPS (pulse per second,) signal rising edge, or use LOW for   Option
                                     //         falling edge, or use BOTH for rising and falling edges.
 // PPS sync
-#define TIME_LOCATION_PPS_SYNC ON
+//#define TIME_LOCATION_PPS_SYNC ON
 
 //#define SERIAL_GPS                  SoftSerial
 //#define SERIAL_GPS_BAUD               9600 // this I changed to 34800 and 115200, and tested
 //#define SERIAL_GPS_TX 10
 //#define SERIAL_GPS_RX 12
 //#define PPS_SENSE_PIN 13
-#define PPS_SENSE_PIN 28
+//#define PPS_SENSE_PIN 28
 
 // STATUS ------------------------------------------------------ see https://onstep.groups.io/g/main/wiki/Configuration_Mount#STATUS
 #define STATUS_MOUNT_LED ON       //    OFF, ON Flashes proportional to rate of movement or solid on for slews.       Option
