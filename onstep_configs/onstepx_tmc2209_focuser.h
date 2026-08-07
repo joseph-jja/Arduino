@@ -113,7 +113,17 @@
 
 // If runtime axis settings are enabled changes in the section below will be ignored (disable in SWS or by wiping NV/EEPROM):
 // \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/
-#define AXIS4_STEPS_PER_MICRON        0.5 //    0.5, n. Steps per micrometer. Figure this out by testing or other means.      Adjust
+// an F9 Depth of Focus is 233 microns
+// an F6 Depth of Focus is 104 microns
+// needed info
+// - stepper motor steps 400 
+// - microsteps 8 
+// - gear ratio 48:16 (3:1) 
+// - drawtube 1 turn movement distance in 1mm (rc6 => 18 mm to 20 mm)
+// total steps = 400 * 8 * 3 = 9600
+// 18mm = 18000 microns
+// 9600 / 18000 = 0.533
+#define AXIS4_STEPS_PER_MICRON        0.5333 //    0.5, n. Steps per micrometer. Figure this out by testing or other means.      Adjust
 #define AXIS4_REVERSE                 OFF //    OFF, ON Reverses movement direction, or reverse wiring instead to correct.    Option
 #define AXIS4_LIMIT_MIN                 0 //      0, n. Where n=0..500 (millimeters.) Minimum allowed position.               Adjust
 #define AXIS4_LIMIT_MAX                50 //     50, n. Where n=0..500 (millimeters.) Maximum allowed position.               Adjust
