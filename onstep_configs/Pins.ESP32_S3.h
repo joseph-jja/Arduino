@@ -37,7 +37,7 @@
 // The multi-purpose pins (Aux3..Aux8 can be analog pwm/dac if supported)
 #define AUX0_PIN                18               // Status LED
 #define AUX1_PIN                40               // ESP32 S3 Mini
-#define AUX2_PIN                3                // ESP8266 RST, SPI MISO/Fault
+#define AUX2_PIN                11                // ESP8266 RST, SPI MISO/Fault
 #define AUX3_PIN                39                // Limit SW, Home SW
 //#define AUX4_PIN                47               // Reticle LED, Home SW
 // lots of free pins to choose from
@@ -80,26 +80,24 @@
 
 // Axis1 RA/Azm step/dir driver
 #define AXIS1_ENABLE_PIN    4
-//#define AXIS1_M0_PIN        6      // Dedicated MOSI
-//#define AXIS1_M1_PIN        7      // Dedicated SCK
-//#define AXIS1_M2_PIN        15     // Unique CSN
-#define AXIS1_M3_PIN        AUX1_PIN     // Dedicated MISO/FAULT
+#define AXIS1_M0_PIN            OFF              // hardwired for TMC UART address 0
+#define AXIS1_M1_PIN            OFF              // hardwired for TMC UART address 0
+#define AXIS1_M2_PIN            OFF              // UART TX
+#define AXIS1_M3_PIN            OFF              // UART RX
 #define AXIS1_STEP_PIN      5
 #define AXIS1_DIR_PIN       6
-#define AXIS1_FAULT_PIN     AXIS1_M3_PIN      // Optional fault pin
 #ifndef AXIS1_SENSE_HOME_PIN
   #define AXIS1_SENSE_HOME_PIN  AUX3_PIN
 #endif
 
 // Axis2 Dec/Alt step/dir driver
 #define AXIS2_ENABLE_PIN    4
-//#define AXIS2_M0_PIN        9      // Dedicated MOSI
-//#define AXIS2_M1_PIN        10     // Dedicated SCK
-//#define AXIS2_M2_PIN        11     // Unique CSN
-#define AXIS2_M3_PIN        AUX2_PIN     // Dedicated MISO/FAULT
+#define AXIS2_M0_PIN            OFF              // hardwired for TMC UART address 1
+#define AXIS2_M1_PIN            OFF              // hardwired for TMC UART address 1
+#define AXIS2_M2_PIN            OFF              // N/C
+#define AXIS2_M3_PIN            OFF              // UART RX
 #define AXIS2_STEP_PIN      3
 #define AXIS2_DIR_PIN       10
-#define AXIS2_FAULT_PIN     AXIS2_M3_PIN      // Optional fault pin
 #ifndef AXIS2_SENSE_HOME_PIN
   #define AXIS2_SENSE_HOME_PIN  AUX4_PIN
 #endif
