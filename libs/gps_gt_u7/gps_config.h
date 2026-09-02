@@ -13,8 +13,8 @@ typedef struct {
     bool updated;
     
     // gps location
-    float latitude;
-    float longitude;
+    double latitude;
+    double longitude;
 
     // time and date 
     char gps_date[12];
