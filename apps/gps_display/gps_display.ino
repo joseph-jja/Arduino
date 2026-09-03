@@ -164,7 +164,7 @@ void displayInfo() {
   write_display(100 - (strlen(buffer) * 12), 27, buffer);  
 
   degrees = trunc(longitude);
-  minutesTemp = ((abs(longitude) - abs(longitude)) * 100) * 60 / 100;
+  minutesTemp = ((abs(longitude) - abs(degrees)) * 100) * 60 / 100;
   minutes = abs(floor(minutesTemp));
   seconds = (minutesTemp - trunc(minutesTemp)) * 100 * 60 / 100;
 
