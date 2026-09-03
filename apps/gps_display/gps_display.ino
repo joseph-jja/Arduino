@@ -147,8 +147,8 @@ void displayInfo() {
   long intPart;
   long floatPart;
 
-  double latitude = myGPS.latitude > 0 ? floor(myGPS.latitude * 100) / 100 : ceil(myGPS.latitude * 100) / 100;
-  double longitude = myGPS.longitude > 0 ? floor(myGPS.longitude * 100) / 100 : ceil(myGPS.longitude * 100) / 100; 
+  double latitude = myGPS.latitude > 0 ? floor(myGPS.latitude * 10000) / 10000 : ceil(myGPS.latitude * 10000) / 10000;
+  double longitude = myGPS.longitude > 0 ? floor(myGPS.longitude * 10000) / 10000 : ceil(myGPS.longitude * 10000) / 10000; 
 
   intPart = trunc(latitude);
   floatPart = abs(floor(((abs(latitude) - abs(intPart)) * 100) * 60 / 100));
