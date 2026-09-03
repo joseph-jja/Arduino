@@ -144,26 +144,26 @@ void displayInfo() {
 
   clear_display();
   char buffer[10];
-  long intPart;
-  long floatPart;
+  long degrees;
+  long minutes;
 
   double latitude = myGPS.latitude > 0 ? floor(myGPS.latitude * 10000) / 10000 : ceil(myGPS.latitude * 10000) / 10000;
   double longitude = myGPS.longitude > 0 ? floor(myGPS.longitude * 10000) / 10000 : ceil(myGPS.longitude * 10000) / 10000; 
 
-  intPart = trunc(latitude);
-  floatPart = abs(floor(((abs(latitude) - abs(intPart)) * 100) * 60 / 100));
+  degrees = trunc(latitude);
+  minutes = abs(floor(((abs(latitude) - abs(degrees)) * 100) * 60 / 100));
 
   memset(buffer, '\0', 10);
-  snprintf(buffer, sizeof(buffer), "%d:%d", intPart, floatPart);
+  snprintf(buffer, sizeof(buffer), "%d:%d", degrees, minutes);
 
   write_display(2, 11, "Latitude:");
   write_display(100 - (strlen(buffer) * 12), 27, buffer);  
 
-  intPart = trunc(longitude);
-  floatPart = abs(floor(((abs(longitude) - abs(intPart)) * 100) * 60 / 100));
+  degrees = trunc(longitude);
+  minutes = abs(floor(((abs(longitude) - abs(degrees)) * 100) * 60 / 100));
 
   memset(buffer, '\0', 10);
-  snprintf(buffer, sizeof(buffer),  "%d:%d", intPart, floatPart);
+  snprintf(buffer, sizeof(buffer),  "%d:%d", degrees, minutes);
 
   write_display(2, 41, "Longitude:");
   write_display(100 - (strlen(buffer) * 12), 61, buffer);  
