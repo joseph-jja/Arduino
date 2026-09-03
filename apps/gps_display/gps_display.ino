@@ -78,7 +78,7 @@ void setup() {
 
   setDisplayFont(&FreeMono9pt7b); 
 
-  setup_wifi_client();
+  //setup_wifi_client();
 
 #ifdef ESP32
   BaseType_t coreID = xPortGetCoreID();
@@ -147,10 +147,10 @@ void displayInfo() {
   long intPart;
   long floatPart;
 
-  float latitude = floor(myGPS.latitude * 100) / 100;
-  float longitude = floor(myGPS.longitude * 100) / 100;
+  double latitude = myGPS.latitude > 0 ? floor(myGPS.latitude * 100) / 100 : ceil(myGPS.latitude * 100) / 100;
+  double longitude = myGPS.longitude > 0 ? floor(myGPS.longitude * 100) / 100 : ceil(myGPS.longitude * 100) / 100; 
 
-  intPart = floor(latitude);
+  intPart = trunc(latitude);
   floatPart = abs(floor(((abs(latitude) - abs(intPart)) * 100) * 60 / 100));
 
   memset(buffer, '\0', 10);
@@ -159,7 +159,7 @@ void displayInfo() {
   write_display(2, 11, "Latitude:");
   write_display(100 - (strlen(buffer) * 12), 27, buffer);  
 
-  intPart = floor(longitude);
+  intPart = trunc(longitude);
   floatPart = abs(floor(((abs(longitude) - abs(intPart)) * 100) * 60 / 100));
 
   memset(buffer, '\0', 10);
