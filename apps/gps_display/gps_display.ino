@@ -143,7 +143,7 @@ void displayInfo() {
   Serial.println();
 
   clear_display();
-  char buffer[10];
+  char buffer[16];
   long degrees;
   long minutes;
 
