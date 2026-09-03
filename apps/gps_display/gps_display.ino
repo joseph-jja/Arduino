@@ -158,7 +158,7 @@ void displayInfo() {
   seconds = (minutesTemp - trunc(minutesTemp)) * 100 * 60 / 100;
 
   memset(buffer, '\0', 10);
-  snprintf(buffer, sizeof(buffer), "%d:%d:%d", degrees, minutes, seconds);
+  snprintf(buffer, sizeof(buffer), "%d:%d", degrees, minutes);
 
   write_display(2, 11, "Latitude:");
   write_display(100 - (strlen(buffer) * 12), 27, buffer);  
@@ -169,7 +169,7 @@ void displayInfo() {
   seconds = (minutesTemp - trunc(minutesTemp)) * 100 * 60 / 100;
 
   memset(buffer, '\0', 10);
-  snprintf(buffer, sizeof(buffer),  "%d:%d:%d", degrees, minutes, seconds);
+  snprintf(buffer, sizeof(buffer), "%d:%d", degrees, minutes);
 
   write_display(2, 41, "Longitude:");
   write_display(100 - (strlen(buffer) * 12), 61, buffer);  
