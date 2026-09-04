@@ -145,9 +145,9 @@ void displayInfo() {
   clear_display();
   char buffer[16];
   long degrees;
-  long minutes;
-  long minutesTemp;
-  long seconds;
+  double minutes;
+  double minutesTemp;
+  double seconds;
 
   // force 6 decimal places
   double latitude = myGPS.latitude > 0 ? floor(myGPS.latitude * 1000000) / 1000000 : ceil(myGPS.latitude * 1000000) / 1000000;
@@ -155,7 +155,7 @@ void displayInfo() {
   
   degrees = trunc(latitude);
   minutesTemp = (abs(latitude) - abs(degrees)) * 60;
-  minutes = trunc(minutesTemp);seconds = (minutesTemp - trunc(minutesTemp)) * 100 * 60 / 100;
+  minutes = trunc(minutesTemp);
   seconds = trunc((minutesTemp - minutes) * 60);
 
   Serial.print("latitude ");
@@ -173,7 +173,7 @@ void displayInfo() {
 
   degrees = trunc(longitude);
   minutesTemp = (abs(longitude) - abs(degrees)) * 60;
-  minutes = trunc(minutesTemp);seconds = (minutesTemp - trunc(minutesTemp)) * 100 * 60 / 100;
+  minutes = trunc(minutesTemp);
   seconds = trunc((minutesTemp - minutes) * 60);
 
   Serial.print("longitude ");
