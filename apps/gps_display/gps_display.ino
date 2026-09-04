@@ -166,7 +166,7 @@ void displayInfo() {
   Serial.println(seconds);
   
   memset(buffer, '\0', 10);
-  snprintf(buffer, sizeof(buffer), "%d:%d", degrees, minutes);
+  snprintf(buffer, sizeof(buffer), "%d:%2d", degrees, minutes);
 
   write_display(2, 11, "Latitude:");
   write_display(100 - (strlen(buffer) * 12), 27, buffer);  
@@ -184,7 +184,7 @@ void displayInfo() {
   Serial.println(seconds);
 
   memset(buffer, '\0', 10);
-  snprintf(buffer, sizeof(buffer), "%d:%d", degrees, minutes);
+  snprintf(buffer, sizeof(buffer), "%d:%2d", degrees, minutes);
 
   write_display(2, 41, "Longitude:");
   write_display(100 - (strlen(buffer) * 12), 61, buffer);  
