@@ -145,9 +145,9 @@ void displayInfo() {
   clear_display();
   char buffer[16];
   long degrees;
-  double minutes;
+  long minutes;
   double minutesTemp;
-  double seconds;
+  long seconds;
 
   // force 6 decimal places
   double latitude = myGPS.latitude > 0 ? floor(myGPS.latitude * 1000000) / 1000000 : ceil(myGPS.latitude * 1000000) / 1000000;
