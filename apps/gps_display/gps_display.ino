@@ -158,6 +158,13 @@ void displayInfo() {
   minutes = trunc(minutesTemp);seconds = (minutesTemp - trunc(minutesTemp)) * 100 * 60 / 100;
   seconds = trunc((minutesTemp - minutes) * 60);
 
+  Serial.print("latitude ");
+  Serial.print(degrees);
+  Serial.print(":");
+  Serial.print(minutes);
+  Serial.print(":");
+  Serial.println(seconds);
+  
   memset(buffer, '\0', 10);
   snprintf(buffer, sizeof(buffer), "%d:%d", degrees, minutes);
 
@@ -168,6 +175,13 @@ void displayInfo() {
   minutesTemp = (abs(longitude) - abs(degrees)) * 60;
   minutes = trunc(minutesTemp);seconds = (minutesTemp - trunc(minutesTemp)) * 100 * 60 / 100;
   seconds = trunc((minutesTemp - minutes) * 60);
+
+  Serial.print("longitude ");
+  Serial.print(degrees);
+  Serial.print(":");
+  Serial.print(minutes);
+  Serial.print(":");
+  Serial.println(seconds);
 
   memset(buffer, '\0', 10);
   snprintf(buffer, sizeof(buffer), "%d:%d", degrees, minutes);
