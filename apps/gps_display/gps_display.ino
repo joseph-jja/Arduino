@@ -149,13 +149,14 @@ void displayInfo() {
   long minutesTemp;
   long seconds;
 
-  double latitude = myGPS.latitude > 0 ? floor(myGPS.latitude * 10000) / 10000 : ceil(myGPS.latitude * 10000) / 10000;
-  double longitude = myGPS.longitude > 0 ? floor(myGPS.longitude * 10000) / 10000 : ceil(myGPS.longitude * 10000) / 10000; 
-
+  // force 6 decimal places
+  double latitude = myGPS.latitude > 0 ? floor(myGPS.latitude * 1000000) / 1000000 : ceil(myGPS.latitude * 1000000) / 1000000;
+  double longitude = myGPS.longitude > 0 ? floor(myGPS.longitude * 1000000) / 1000000 : ceil(myGPS.longitude * 1000000) / 1000000;
+  
   degrees = trunc(latitude);
-  minutesTemp = ((abs(latitude) - abs(degrees)) * 100) * 60 / 100;
-  minutes = abs(floor(minutesTemp));
-  seconds = (minutesTemp - trunc(minutesTemp)) * 100 * 60 / 100;
+  minutesTemp = (abs(latitude) - abs(degrees)) * 60;
+  minutes = trunc(minutesTemp);seconds = (minutesTemp - trunc(minutesTemp)) * 100 * 60 / 100;
+  seconds = trunc((minutesTemp - minutes) * 60);
 
   memset(buffer, '\0', 10);
   snprintf(buffer, sizeof(buffer), "%d:%d", degrees, minutes);
@@ -164,9 +165,9 @@ void displayInfo() {
   write_display(100 - (strlen(buffer) * 12), 27, buffer);  
 
   degrees = trunc(longitude);
-  minutesTemp = ((abs(longitude) - abs(degrees)) * 100) * 60 / 100;
-  minutes = abs(floor(minutesTemp));
-  seconds = (minutesTemp - trunc(minutesTemp)) * 100 * 60 / 100;
+  minutesTemp = (abs(longitude) - abs(degrees)) * 60;
+  minutes = trunc(minutesTemp);seconds = (minutesTemp - trunc(minutesTemp)) * 100 * 60 / 100;
+  seconds = trunc((minutesTemp - minutes) * 60);
 
   memset(buffer, '\0', 10);
   snprintf(buffer, sizeof(buffer), "%d:%d", degrees, minutes);
