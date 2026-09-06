@@ -52,13 +52,23 @@ void loop_gps() {
   memset(gpsdata.message, '\0', sizeof(gpsdata.message));
   memcpy(gpsdata.message, "No data\navailable", sizeof(gpsdata.message));
 
+  long satelliteCount = -1;
+  if (gps.satellites.isValid()) {
+      satelliteCount = gps.satellites.value();
+  }
+  
+  if (satelliteCount >= 0) {
+    memset(gpsdata.message, '\0', sizeof(gpsdata.message));
+    snprintf(gpsdata.message, sizeof(gpsdata.message), "Satellites\nlock:\n%d", satelliteCount);
+  }
+  
   while (gpsSerial.available() > 0 && (millis() - start) < 5000) {
     //Serial.println("Trying to get GPS data.");
     memset(gpsdata.message, '\0', sizeof(gpsdata.message));
     memcpy(gpsdata.message, "Data\navailable", sizeof(gpsdata.message));
     if (gps.encode(gpsSerial.read())) {
 
-      long satelliteCount = gps.satellites.value();
+      satelliteCount = gps.satellites.value();
       if (satelliteCount > 0) {
 
         memset(gpsdata.message, '\0', sizeof(gpsdata.message));
