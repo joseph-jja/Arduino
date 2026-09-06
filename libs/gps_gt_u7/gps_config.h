@@ -8,6 +8,8 @@
 //#define USE_HARDWARE_SERIAL true
 #define GPS_SERIAL_NUMBER  2
 
+//#define ENABLE_DEBUG_LOGStrue
+
 typedef struct {
     // data was updated
     bool updated;
