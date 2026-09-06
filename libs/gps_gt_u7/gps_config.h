@@ -14,6 +14,8 @@
 typedef struct {
     // data was updated
     bool updated;
+
+    char message[40];
     
     // gps location
     double latitude;
