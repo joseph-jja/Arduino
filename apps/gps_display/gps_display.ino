@@ -184,7 +184,7 @@ void displayInfo() {
   Serial.println(seconds);
 
   memset(buffer, '\0', 10);
-  snprintf(buffer, sizeof(buffer), "%d:%2d", degrees, minutes);
+  snprintf(buffer, sizeof(buffer), "%d:%2d:2d", degrees, minutes, seconds);
 
   write_display(2, 40, "Longitude:");
   write_display(8, 60, buffer);  
