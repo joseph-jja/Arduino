@@ -168,8 +168,8 @@ void displayInfo() {
   memset(buffer, '\0', 10);
   snprintf(buffer, sizeof(buffer), "%d:%2d", degrees, minutes);
 
-  write_display(2, 11, "Latitude:");
-  write_display(100 - (strlen(buffer) * 12), 27, buffer);  
+  write_display(2, 10, "Latitude:");
+  write_display(8, 26, buffer);  
 
   degrees = trunc(longitude);
   minutesTemp = (abs(longitude) - abs(degrees)) * 60;
@@ -186,17 +186,17 @@ void displayInfo() {
   memset(buffer, '\0', 10);
   snprintf(buffer, sizeof(buffer), "%d:%2d", degrees, minutes);
 
-  write_display(2, 41, "Longitude:");
-  write_display(100 - (strlen(buffer) * 12), 61, buffer);  
+  write_display(2, 40, "Longitude:");
+  write_display(8, 60, buffer);  
 
   show_display();
   delay(10000);
 
   clear_display();
-  write_display(2, 11, "Date:");
-  write_display(8, 27, myGPS.gps_date);  
-  write_display(2, 41, "Time:");
-  write_display(30, 61, myGPS.gps_time);  
+  write_display(2, 10, "Date:");
+  write_display(8, 26, myGPS.gps_date);  
+  write_display(2, 40, "Time:");
+  write_display(8, 60, myGPS.gps_time);  
 
   show_display();
   delay(3500);
