@@ -56,18 +56,22 @@ void loop_gps() {
       long satelliteCount = gps.satellites.value();
       if (satelliteCount > 0) {
 
-        Serial.print("GPS data read using ");
-        Serial.print(satelliteCount);
-        Serial.println(" satellites.");
-
+        #ifdef ENABLE_DEBUG_LOGS
+          Serial.print("GPS data read using ");
+          Serial.print(satelliteCount);
+          Serial.println(" satellites.");
+        #endif
+        
         if (gps.location.isValid() || gps.location.isUpdated()) {
           gpsdata.latitude = gps.location.lat();
           gpsdata.longitude = gps.location.lng();
-          Serial.print("Got valid latitude and longitude ");
-          Serial.print(gpsdata.latitude, 6);
-          Serial.print(", ");
-          Serial.print(gpsdata.longitude, 6);
-          Serial.println("");
+          #ifdef ENABLE_DEBUG_LOGS
+            Serial.print("Got valid latitude and longitude ");
+            Serial.print(gpsdata.latitude, 6);
+            Serial.print(", ");
+            Serial.print(gpsdata.longitude, 6);
+            Serial.println("");
+          #endif
           gpsdata.updated = true;
         }
         if (gps.time.isValid() || gps.time.isUpdated()) {
@@ -76,14 +80,16 @@ void loop_gps() {
           seconds = gps.time.second();
           memset(gpsdata.gps_time, '\0', sizeof(gpsdata.gps_date));
           snprintf(gpsdata.gps_time, sizeof(gpsdata.gps_time), "%02d:%02d:%02d", hours, minutes, seconds);
-          Serial.print("Got raw time: ");
-          Serial.print(hours);
-          Serial.print(":");
-          Serial.print(minutes);
-          Serial.print(":");
-          Serial.println(seconds);
-          Serial.print("Got cookied time: ");
-          Serial.println(gpsdata.gps_time);
+          #ifdef ENABLE_DEBUG_LOGS
+            Serial.print("Got raw time: ");
+            Serial.print(hours);
+            Serial.print(":");
+            Serial.print(minutes);
+            Serial.print(":");
+            Serial.println(seconds);
+            Serial.print("Got cookied time: ");
+            Serial.println(gpsdata.gps_time);
+          #endif
         }
         if (gps.date.isValid() || gps.date.isUpdated()) {
           memset(gpsdata.gps_date, '\0', sizeof(gpsdata.gps_date));
@@ -91,8 +97,10 @@ void loop_gps() {
           month = gps.date.month();
           day = gps.date.day();
           snprintf(gpsdata.gps_date, sizeof(gpsdata.gps_date), "%4d/%02d/%02d", year, month, day);
-          Serial.print("Got valid date ");
-          Serial.println(gpsdata.gps_date);
+          #ifdef ENABLE_DEBUG_LOGS
+            Serial.print("Got valid date ");
+            Serial.println(gpsdata.gps_date);
+          #endif
         }
       }
     }
