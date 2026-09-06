@@ -112,6 +112,7 @@ void loop_gps() {
       }
     }
   }
+  Serial.flush();
 }
 
 // get the DPS data
