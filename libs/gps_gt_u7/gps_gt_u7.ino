@@ -49,13 +49,20 @@ void loop_gps() {
 
   long start = millis();
 
+  memset(gpsdata.message, '\0', sizeof(gpsdata.message));
+  memcpy(gpsdata.message, "No data\navailable", sizeof(gpsdata.message));
+
   while (gpsSerial.available() > 0 && (millis() - start) < 5000) {
     //Serial.println("Trying to get GPS data.");
+    memset(gpsdata.message, '\0', sizeof(gpsdata.message));
+    memcpy(gpsdata.message, "Data\navailable", sizeof(gpsdata.message));
     if (gps.encode(gpsSerial.read())) {
 
       long satelliteCount = gps.satellites.value();
       if (satelliteCount > 0) {
 
+        memset(gpsdata.message, '\0', sizeof(gpsdata.message));
+        snprintf(gpsdata.message, sizeof(gpsdata.message), "Satellite\ncount:\n%d", satelliteCount);
         #ifdef ENABLE_DEBUG_LOGS
           Serial.print("GPS data read using ");
           Serial.print(satelliteCount);
