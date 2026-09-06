@@ -119,6 +119,7 @@ void displayInfo() {
   if (millis() > 5000 && !myGPS.updated) {
     Serial.print("Message: ");
     Serial.print(myGPS.message);
+    Serial.println("");
     Serial.println(F("No GPS data received. Possibly a wiring or antenna issue."));
     // You may want to reset the ESP32 here if no data is received for a long time
     write_display(2, 16, myGPS.message);
