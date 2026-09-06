@@ -4,8 +4,9 @@
 #define GPS_TX_PIN   33
 #define GPS_RX_PIN   34
 
-// uncomment for hardware serial
-//#define USE_HARDWARE_SERIAL true
+// comment for software serial 
+// esp32 uses hardware serial
+#define USE_HARDWARE_SERIAL true
 #define GPS_SERIAL_NUMBER  2
 
 //#define ENABLE_DEBUG_LOGStrue
