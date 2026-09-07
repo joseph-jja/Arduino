@@ -1,8 +1,8 @@
 #pragma once
 
 // change these to the pins of your setup
-#define GPS_TX_PIN   33
-#define GPS_RX_PIN   34
+#define GPS_TX_PIN   17
+#define GPS_RX_PIN   16
 
 // comment for software serial 
 // esp32 uses hardware serial
