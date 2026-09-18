@@ -156,6 +156,10 @@
 // PPS sync
 //#define TIME_LOCATION_PPS_SYNC ON
 
+// TX => DE+ => teensy 4.0 pin 12
+// RX => RA- => teensy 4.0 pin 10
+// PPS => RA+ => teensy 4.0 pin 13
+// teensy 4.0 pin 11 DE-
 //#define SERIAL_GPS                  SoftSerial
 //#define SERIAL_GPS_BAUD               9600 // this I changed to 34800 and 115200, and tested
 //#define SERIAL_GPS_TX 10
