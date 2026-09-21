@@ -39,14 +39,14 @@
 #define AUX1_PIN                14               // ESP32 S3 Mini
 #define AUX2_PIN                2                // ESP8266 RST, SPI MISO/Fault
 #define AUX3_PIN                42                // Limit SW, Home SW
-#define AUX4_PIN                18               // Reticle LED, Home SW
+#define AUX4_PIN                36               // Reticle LED, Home SW
 // lots of free pins to choose from
 //#define AUX5_PIN              DAC_PIN(A14)     // true analog output
 
 // Misc. pins
 // TODO update
 #ifndef ONE_WIRE_PIN
-  #define ONE_WIRE_PIN          0               // Default Pin for OneWire bus
+  #define ONE_WIRE_PIN          37               // Default Pin for OneWire bus
 #endif
 
 #define ADDON_GPIO0_PIN       AUX1_PIN         // ESP8266 GPIO0 or SPI MISO/Fault
@@ -62,9 +62,9 @@
 #endif
 
 // For a piezo buzzer
-#ifndef STATUS_BUZZER_PIN 
-  #define STATUS_BUZZER_PIN     3               // Tone
-#endif
+//#ifndef STATUS_BUZZER_PIN 
+//  #define STATUS_BUZZER_PIN     3               // Tone
+//#endif
 
 // The PPS pin is a 3.3V logic input, OnStep measures time between rising edges and adjusts the internal sidereal clock frequency
 #ifndef PPS_SENSE_PIN
@@ -96,7 +96,7 @@
 #define AXIS2_M1_PIN            OFF              // hardwired for TMC UART address 1
 #define AXIS2_M2_PIN            SERIAL_TMC_TX              // N/C
 #define AXIS2_M3_PIN            SERIAL_TMC_RX              // UART RX
-#define AXIS2_STEP_PIN      3
+#define AXIS2_STEP_PIN      18
 #define AXIS2_DIR_PIN       10
 #ifndef AXIS2_SENSE_HOME_PIN
   #define AXIS2_SENSE_HOME_PIN  AUX4_PIN
