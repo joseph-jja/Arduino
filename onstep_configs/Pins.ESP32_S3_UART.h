@@ -35,24 +35,24 @@
 
 
 // The multi-purpose pins (Aux3..Aux8 can be analog pwm/dac if supported)
-#define AUX0_PIN                12               // Status LED
+#define AUX0_PIN                7               // Status LED
 #define AUX1_PIN                14               // ESP32 S3 Mini
 #define AUX2_PIN                2                // ESP8266 RST, SPI MISO/Fault
 #define AUX3_PIN                42                // Limit SW, Home SW
-#define AUX4_PIN                36               // Reticle LED, Home SW
+#define AUX4_PIN                21               // Reticle LED, Home SW
 // lots of free pins to choose from
 //#define AUX5_PIN              DAC_PIN(A14)     // true analog output
 
 // Misc. pins
 // TODO update
 #ifndef ONE_WIRE_PIN
-  #define ONE_WIRE_PIN          37               // Default Pin for OneWire bus
+  #define ONE_WIRE_PIN          47               // Default Pin for OneWire bus
 #endif
 
 #define ADDON_GPIO0_PIN       AUX1_PIN         // ESP8266 GPIO0 or SPI MISO/Fault
 #define ADDON_RESET_PIN       AUX2_PIN         // ESP8266 RST or SPI MISO/Fault
 // The PEC index sense is a logic level input, resets the PEC index on rising edge then waits for 60 seconds before allowing another reset
-#define PEC_SENSE_PIN           48               // PEC Sense, analog or digital
+#define PEC_SENSE_PIN           12               // PEC Sense, analog or digital
 
 // The status LED is a two wire jumper with a 10k resistor in series to limit the current to the LED
 #define STATUS_LED_PIN          AUX0_PIN         // Default LED Cathode (-)
