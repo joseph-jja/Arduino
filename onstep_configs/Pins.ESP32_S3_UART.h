@@ -33,9 +33,8 @@
   #define SERIAL_TMC_ADDRESS_MAP(x) ((x==4)?2 : x) // Axis1(0) is 0, Axis2(1) is 1, Axis3(2) is 2, Axis4(3) is 3, Axis5(4) is 2
 #endif
 
-
 // The multi-purpose pins (Aux3..Aux8 can be analog pwm/dac if supported)
-#define AUX0_PIN                0                // Status LED (Boot pin: ensure not pulled LOW at power-on)
+#define AUX0_PIN                7                // Status LED (Moved off GPIO 0 to a clean GPIO)
 #define AUX1_PIN                14               // ESP32 S3 Mini
 #define AUX2_PIN                2                // ESP8266 RST, SPI MISO/Fault
 #define AUX3_PIN                42               // Limit SW, Home SW
@@ -72,8 +71,8 @@
 #define AXIS1_ENABLE_PIN    4
 #define AXIS1_M0_PIN            OFF              // hardwired for TMC UART address 0
 #define AXIS1_M1_PIN            OFF              // hardwired for TMC UART address 0
-#define AXIS1_M2_PIN            13    // UART TX
-#define AXIS1_M3_PIN            11    // UART RX
+#define AXIS1_M2_PIN            SERIAL_TMC_TX    // UART TX
+#define AXIS1_M3_PIN            SERIAL_TMC_RX    // UART RX
 #define AXIS1_STEP_PIN      5
 #define AXIS1_DIR_PIN       6
 #ifndef AXIS1_SENSE_HOME_PIN
@@ -84,8 +83,8 @@
 #define AXIS2_ENABLE_PIN    4
 #define AXIS2_M0_PIN            OFF              // hardwired for TMC UART address 1
 #define AXIS2_M1_PIN            OFF              // hardwired for TMC UART address 1
-#define AXIS2_M2_PIN            13    // N/C
-#define AXIS2_M3_PIN            11    // UART RX
+#define AXIS2_M2_PIN            SERIAL_TMC_TX    // N/C
+#define AXIS2_M3_PIN            SERIAL_TMC_RX    // UART RX
 #define AXIS2_STEP_PIN      18
 #define AXIS2_DIR_PIN       10
 #ifndef AXIS2_SENSE_HOME_PIN
@@ -95,7 +94,7 @@
 // ST4 interface
 #define ST4_RA_W_PIN        39      // ST4 RA- West
 #define ST4_DEC_S_PIN       38      // ST4 DE- South
-#define ST4_DEC_N_PIN       40      // ST4 DE+ North
+#define ST4_DEC_N_PIN       40      // ST4 DE- North
 #define ST4_RA_E_PIN        41      // ST4 RA+ East
 
 #else
