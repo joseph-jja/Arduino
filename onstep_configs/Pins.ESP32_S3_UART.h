@@ -35,23 +35,19 @@
 
 
 // The multi-purpose pins (Aux3..Aux8 can be analog pwm/dac if supported)
-#define AUX0_PIN                7               // Status LED
+#define AUX0_PIN                0                // Status LED (Boot pin: ensure not pulled LOW at power-on)
 #define AUX1_PIN                14               // ESP32 S3 Mini
 #define AUX2_PIN                2                // ESP8266 RST, SPI MISO/Fault
-#define AUX3_PIN                42                // Limit SW, Home SW
+#define AUX3_PIN                42               // Limit SW, Home SW
 #define AUX4_PIN                21               // Reticle LED, Home SW
-// lots of free pins to choose from
-//#define AUX5_PIN              DAC_PIN(A14)     // true analog output
 
 // Misc. pins
-// TODO update
 #ifndef ONE_WIRE_PIN
-  #define ONE_WIRE_PIN          47               // Default Pin for OneWire bus
+  #define ONE_WIRE_PIN          47               // Pin for OneWire bus (safe on N16R8)
 #endif
 
 #define ADDON_GPIO0_PIN       AUX1_PIN         // ESP8266 GPIO0 or SPI MISO/Fault
 #define ADDON_RESET_PIN       AUX2_PIN         // ESP8266 RST or SPI MISO/Fault
-// The PEC index sense is a logic level input, resets the PEC index on rising edge then waits for 60 seconds before allowing another reset
 #define PEC_SENSE_PIN           12               // PEC Sense, analog or digital
 
 // The status LED is a two wire jumper with a 10k resistor in series to limit the current to the LED
@@ -61,29 +57,23 @@
   #define RETICLE_LED_PIN       AUX4_PIN         // Default LED Cathode (-)
 #endif
 
-// For a piezo buzzer
-//#ifndef STATUS_BUZZER_PIN 
-//  #define STATUS_BUZZER_PIN     3               // Tone
-//#endif
-
-// The PPS pin is a 3.3V logic input, OnStep measures time between rising edges and adjusts the internal sidereal clock frequency
+// The PPS pin is a 3.3V logic input, OnStep measures time between rising edges
 #ifndef PPS_SENSE_PIN
-  #define PPS_SENSE_PIN         1               // PPS time source, GPS for example
+  #define PPS_SENSE_PIN         1                // PPS time source (GPS)
 #endif
 
 #ifndef LIMIT_SENSE_PIN
-  #define LIMIT_SENSE_PIN       AUX3_PIN         // The limit switch sense is a logic level input normally pull high (2k resistor,) shorted to ground it stops gotos/tracking
+  #define LIMIT_SENSE_PIN       AUX3_PIN         // Limit switch logic input
 #endif
 
-// hint that the driver mode pins are dedicated (not shared SPI bus except possibly MISO)
 #define DEDICATED_MODE_PINS
 
 // Axis1 RA/Azm step/dir driver
 #define AXIS1_ENABLE_PIN    4
 #define AXIS1_M0_PIN            OFF              // hardwired for TMC UART address 0
 #define AXIS1_M1_PIN            OFF              // hardwired for TMC UART address 0
-#define AXIS1_M2_PIN            SERIAL_TMC_TX              // UART TX
-#define AXIS1_M3_PIN            SERIAL_TMC_RX              // UART RX
+#define AXIS1_M2_PIN            13    // UART TX
+#define AXIS1_M3_PIN            11    // UART RX
 #define AXIS1_STEP_PIN      5
 #define AXIS1_DIR_PIN       6
 #ifndef AXIS1_SENSE_HOME_PIN
@@ -94,8 +84,8 @@
 #define AXIS2_ENABLE_PIN    4
 #define AXIS2_M0_PIN            OFF              // hardwired for TMC UART address 1
 #define AXIS2_M1_PIN            OFF              // hardwired for TMC UART address 1
-#define AXIS2_M2_PIN            SERIAL_TMC_TX              // N/C
-#define AXIS2_M3_PIN            SERIAL_TMC_RX              // UART RX
+#define AXIS2_M2_PIN            13    // N/C
+#define AXIS2_M3_PIN            11    // UART RX
 #define AXIS2_STEP_PIN      18
 #define AXIS2_DIR_PIN       10
 #ifndef AXIS2_SENSE_HOME_PIN
@@ -106,7 +96,7 @@
 #define ST4_RA_W_PIN        39      // ST4 RA- West
 #define ST4_DEC_S_PIN       38      // ST4 DE- South
 #define ST4_DEC_N_PIN       40      // ST4 DE+ North
-#define ST4_RA_E_PIN        41     // ST4 RA+ East
+#define ST4_RA_E_PIN        41      // ST4 RA+ East
 
 #else
 #error "Wrong processor for this configuration!"
