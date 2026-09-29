@@ -13,6 +13,7 @@
   #define SERIAL_A              Serial
 #endif
 #if SERIAL_B_BAUD_DEFAULT != OFF
+  // Smart Web Server
   #define SERIAL_B              Serial1
   #ifndef SERIAL_B_RX
       #define SERIAL_B_RX           15
@@ -22,6 +23,7 @@
   #endif
 #endif
 #if SERIAL_C_BAUD_DEFAULT != OFF
+  // GPS
   #define SERIAL_C              Serial2
   #ifndef SERIAL_C_RX
       #define SERIAL_C_RX           44
@@ -29,9 +31,6 @@
   #ifndef SERIAL_C_RX
       #define SERIAL_C_TX           43
   #endif
-#endif
-#if SERIAL_D_BAUD_DEFAULT != OFF
-  #define SERIAL_D              Serial3
 #endif
 
 // Use the following settings for any TMC UART driver (TMC2209) that may be present
