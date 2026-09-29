@@ -9,6 +9,7 @@
 // Serial2: RX1 Pin GPIO6, TX1 Pin GPIO5
 
 #if SERIAL_A_BAUD_DEFAULT != OFF
+  // ESP32 S3 this is the USB-CDC port
   #define SERIAL_A              Serial
 #endif
 #if SERIAL_B_BAUD_DEFAULT != OFF
