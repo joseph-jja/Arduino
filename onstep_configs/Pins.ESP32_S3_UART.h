@@ -13,6 +13,12 @@
 #endif
 #if SERIAL_B_BAUD_DEFAULT != OFF
   #define SERIAL_B              Serial1
+  #ifndef SERIAL_B_RX
+      #define SERIAL_B_RX           15
+  #endif
+  #ifndef SERIAL_B_RX
+      #define SERIAL_B_TX           16
+  #endif
 #endif
 #if SERIAL_C_BAUD_DEFAULT != OFF
   #define SERIAL_C              Serial2
