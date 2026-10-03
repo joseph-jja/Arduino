@@ -109,9 +109,16 @@ void loop_magnetometer() {
   Serial.print(magneto.magneticZ);
   Serial.println(" uTesla ");
 
+  // normalize these to 0-360
   magneto.compassHeading = atan2(magneto.compassY, magneto.compassX) * RAD_TO_DEG;
+  if (magneto.compassHeading < 0 ) {
+      magneto.compassHeading += 360;
+  }
   magneto.magneticHeading = atan2(magneto.magneticY, magneto.magneticX) * RAD_TO_DEG;
-
+  if (magneto.magneticHeading < 0 ) {
+      magneto.magneticHeading += 360;
+  }
+  
   Serial.print("Headings: ");
   Serial.print("Compass: ");
   Serial.print(magneto.compassHeading);
