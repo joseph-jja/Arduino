@@ -45,8 +45,8 @@
 #define SERIAL_TMC_HARDWARE_UART
 #define SERIAL_TMC                Serial1         // Use a single hardware serial port to up to four drivers
 #define SERIAL_TMC_BAUD            460800         // Baud rate
-#define SERIAL_TMC_RX                   8         // Recieving data
-#define SERIAL_TMC_TX                   6         // Transmit data
+#define SERIAL_TMC_RX                   6         // Recieving data
+#define SERIAL_TMC_TX                   8         // Transmit data
 #define SERIAL_TMC_ADDRESS_MAP(x)       0         // Axis4(3) is 0
 
 #define STATUS_LED_PIN                 15
